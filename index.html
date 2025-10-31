@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+   <title>Quel est votre profil digestif ? - Quiz personnalisé</title>
+   <style>
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+           -webkit-tap-highlight-color: transparent;
+       }
+
+        html, body {
+            height: 100vh;
+            height: 100dvh;
+            width: 100%;
+            overflow: hidden;
+        }
+
+       body {
+           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, 'Helvetica Neue', Arial, sans-serif;
+           background: #ffffff;
+           margin: 0;
+           padding: 0;
+       }
+
+       .app-container {
+           background: #ffffff;
+           width: 100%;
+           height: 100vh;
+           height: 100dvh;
+           display: flex;
+           flex-direction: column;
+           overflow: hidden;
+       }
+
+       @media (min-width: 600px) {
+           .app-container {
+               max-width: 500px;
+               margin: 0 auto;
+           }
+
+           .legal-toggle {
+               display: none !important;
+           }
+
+           .legal-dropdown {
+               display: none !important;
+           }
+
+           .legal-links {
+               display: flex;
+           }
+       }
+
+       .app-header {
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+           padding: 12px 16px;
+           background: white;
+           border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+           flex-shrink: 0;
+           z-index: 10;
+           height: 48px;
+           position: relative;
+       }
+
+       .back-button {
+           background: none;
+           border: none;
+           color: #64748b;
+           cursor: pointer;
+           padding: 6px;
+           border-radius: 8px;
+           transition: all 0.2s ease;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           width: 32px;
+           height: 32px;
+       }
+
+       .back-button:hover {
+           background: rgba(139, 92, 246, 0.1);
+           color: #7c3aed;
+       }
+
+       .back-button svg {
+           width: 18px;
+           height: 18px;
+       }
+
+       .app-logo {
+           font-size: 1rem;
+           font-weight: 600;
+           background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+           -webkit-background-clip: text;
+           -webkit-text-fill-color: transparent;
+           background-clip: text;
+           position: absolute;
+           left: 50%;
+           transform: translateX(-50%);
+       }
+
+       .header-right {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+       }
+
+       .step-counter {
+           font-size: 0.8rem;
+           color: #64748b;
+           font-weight: 500;
+           min-width: 44px;
+           text-align: right;
+       }
+
+       .legal-toggle {
+           display: none;
+           align-items: center;
+           justify-content: center;
+           width: 32px;
+           height: 32px;
+           border-radius: 999px;
+           border: 1px solid rgba(148, 163, 184, 0.4);
+           background: rgba(148, 163, 184, 0.4);
+           color: #1e293b;
+           font-weight: 700;
+           font-size: 1rem;
+           cursor: pointer;
+           transition: background 0.2s ease, color 0.2s ease;
+       }
+
+       .legal-toggle:focus-visible {
+           outline: 2px solid #7c3aed;
+           outline-offset: 2px;
+       }
+
+       .legal-toggle:hover {
+           background: rgba(15, 23, 42, 0.45);
+           color: white;
+       }
+
+       .legal-dropdown {
+           position: absolute;
+           top: calc(100% + 8px);
+           right: 16px;
+           background: #ffffff;
+           border: 1px solid rgba(15, 23, 42, 0.08);
+           border-radius: 12px;
+           box-shadow: 0 12px 30px rgba(15, 23, 42, 0.15);
+           padding: 14px 16px;
+           min-width: 220px;
+           display: none;
+           z-index: 30;
+           text-align: left;
+       }
+
+       .legal-dropdown.show {
+           display: block;
+       }
+
+       .legal-dropdown-links {
+           display: flex;
+           flex-direction: column;
+           gap: 10px;
+       }
+
+       .legal-dropdown-links .legal-separator {
+           display: none;
+       }
+
+       .legal-dropdown a {
+           display: block;
+           color: #1f2937;
+           text-decoration: none;
+           font-weight: 500;
+           font-size: 0.9rem;
+       }
+
+       .legal-dropdown a:hover {
+           color: #7c3aed;
+           text-decoration: underline;
+       }
+
+       .legal-links {
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 8px;
+           flex-wrap: wrap;
+           font-size: 0.8rem;
+           color: #64748b;
+           text-align: center;
+       }
+
+       .legal-links a {
+           color: inherit;
+           text-decoration: none;
+           font-weight: 500;
+       }
+
+       .legal-links a:hover {
+           color: #7c3aed;
+           text-decoration: underline;
+       }
+
+       .legal-separator {
+           color: rgba(100, 116, 139, 0.6);
+       }
+
+       @media (max-width: 599px) {
+           .legal-links {
+               display: none;
+           }
+
+           .legal-toggle {
+               display: inline-flex;
+           }
+
+           .legal-dropdown {
+               right: 12px;
+           }
+       }
+
+       .progress-bar {
+           height: 2px;
+           background: rgba(0, 0, 0, 0.05);
+           position: relative;
+           overflow: hidden;
+           flex-shrink: 0;
+       }
+
+       .progress-fill {
+           height: 100%;
+           background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%);
+           transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+       }
+
+       .app-content {
+           flex: 1;
+           display: flex;
+           flex-direction: column;
+           overflow: hidden;
+           padding: 16px;
+           min-height: 0;
+       }
+
+       .question-section {
+           display: none;
+           flex: 1;
+           flex-direction: column;
+           animation: slideIn 0.3s ease;
+           overflow: hidden;
+       }
+
+       .question-section.active {
+           display: flex;
+       }
+
+       @keyframes slideIn {
+           from {
+               opacity: 0;
+               transform: translateY(10px);
+           }
+           to {
+               opacity: 1;
+               transform: translateY(0);
+           }
+       }
+
+       .question-content {
+           flex: 1;
+           display: flex;
+           flex-direction: column;
+           overflow-y: auto;
+           overflow-x: hidden;
+           -webkit-overflow-scrolling: touch;
+           padding: 4px;
+           margin: -4px;
+       }
+
+       .question-header {
+           margin-bottom: 20px;
+           flex-shrink: 0;
+       }
+
+       .question-title {
+           font-size: 1.4rem;
+           font-weight: 700;
+           color: #1e293b;
+           margin-bottom: 8px;
+           line-height: 1.3;
+       }
+
+       .question-subtitle {
+           font-size: 0.95rem;
+           color: #64748b;
+           line-height: 1.5;
+       }
+
+       .options-container {
+           display: flex;
+           flex-direction: column;
+           gap: 10px;
+           flex: 1;
+           min-height: 0;
+       }
+
+       .option-card {
+           background: white;
+           border: 2px solid #e5e7eb;
+           border-radius: 12px;
+           padding: 16px;
+           cursor: pointer;
+           transition: all 0.2s ease;
+           display: flex;
+           align-items: center;
+           gap: 12px;
+           flex-shrink: 0;
+       }
+
+       .option-card:hover {
+           border-color: #8b5cf6;
+           background: rgba(139, 92, 246, 0.02);
+       }
+
+       .option-card.selected {
+           border-color: #8b5cf6;
+           background: rgba(139, 92, 246, 0.05);
+       }
+
+       .option-emoji {
+           font-size: 1.8rem;
+           flex-shrink: 0;
+       }
+
+       .option-text {
+           flex: 1;
+       }
+
+       .option-label {
+           font-size: 1rem;
+           font-weight: 600;
+           color: #1e293b;
+           margin-bottom: 2px;
+       }
+
+       .option-description {
+           font-size: 0.85rem;
+           color: #64748b;
+           line-height: 1.4;
+       }
+
+       .option-card input[type="checkbox"] {
+           width: 20px;
+           height: 20px;
+           cursor: pointer;
+           flex-shrink: 0;
+           accent-color: #8b5cf6;
+       }
+
+       .continue-button {
+           width: 100%;
+           background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+           color: white;
+           border: none;
+           border-radius: 12px;
+           padding: 16px;
+           font-size: 1rem;
+           font-weight: 600;
+           cursor: pointer;
+           margin-top: 16px;
+           transition: all 0.2s ease;
+           flex-shrink: 0;
+           box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+       }
+
+       .continue-button:hover {
+           transform: translateY(-1px);
+           box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+       }
+
+       .continue-button:active {
+           transform: translateY(0);
+       }
+
+       .continue-button:disabled {
+           opacity: 0.5;
+           cursor: not-allowed;
+           transform: none;
+       }
+
+       .email-step {
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
+       }
+
+       .input-field {
+           width: 100%;
+           padding: 14px;
+           border: 2px solid #e5e7eb;
+           border-radius: 10px;
+           font-size: 0.95rem;
+           transition: all 0.2s ease;
+           font-family: inherit;
+       }
+
+       .input-field:focus {
+           outline: none;
+           border-color: #8b5cf6;
+           background: rgba(139, 92, 246, 0.02);
+       }
+
+       .result-section {
+           display: none;
+           flex-direction: column;
+           gap: 20px;
+           animation: slideIn 0.3s ease;
+       }
+
+       .result-section.active {
+           display: flex;
+       }
+
+       .result-card {
+           background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+           border: 2px solid rgba(139, 92, 246, 0.2);
+           border-radius: 16px;
+           padding: 24px;
+       }
+
+       .result-title {
+           font-size: 1.3rem;
+           font-weight: 700;
+           color: #1e293b;
+           margin-bottom: 12px;
+       }
+
+       .result-text {
+           font-size: 0.95rem;
+           color: #475569;
+           line-height: 1.6;
+           margin-bottom: 12px;
+       }
+
+       .result-highlight {
+           background: white;
+           border-left: 4px solid #8b5cf6;
+           padding: 16px;
+           border-radius: 8px;
+           margin: 16px 0;
+       }
+
+       .result-highlight-title {
+           font-size: 1rem;
+           font-weight: 600;
+           color: #7c3aed;
+           margin-bottom: 8px;
+       }
+
+       .cta-button {
+           width: 100%;
+           background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+           color: white;
+           border: none;
+           border-radius: 12px;
+           padding: 18px;
+           font-size: 1.1rem;
+           font-weight: 600;
+           cursor: pointer;
+           transition: all 0.2s ease;
+           box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+           margin-top: 8px;
+       }
+
+       .cta-button:hover {
+           transform: translateY(-2px);
+           box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+       }
+
+       .loader {
+           display: none;
+           flex-direction: column;
+           align-items: center;
+           justify-content: center;
+           height: 100%;
+           gap: 20px;
+       }
+
+       .loader.active {
+           display: flex;
+       }
+
+       .spinner {
+           width: 50px;
+           height: 50px;
+           border: 3px solid rgba(139, 92, 246, 0.2);
+           border-top-color: #8b5cf6;
+           border-radius: 50%;
+           animation: spin 0.8s linear infinite;
+       }
+
+       @keyframes spin {
+           to { transform: rotate(360deg); }
+       }
+
+       .loader-text {
+           font-size: 1rem;
+           color: #64748b;
+           text-align: center;
+       }
+   </style>
+</head>
+<body>
+   <div class="app-container">
+       <header class="app-header">
+           <button class="back-button" id="backButton" aria-label="Retour">
+               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+               </svg>
+           </button>
+           <div class="app-logo">Profil Digestif</div>
+           <div class="header-right">
+               <span class="step-counter" id="stepCounter">1/8</span>
+               <button class="legal-toggle" id="legalToggle" aria-label="Menu légal">ℹ</button>
+               <div class="legal-links">
+                   <a href="#" target="_blank">CGV</a>
+                   <span class="legal-separator">•</span>
+                   <a href="#" target="_blank">Mentions légales</a>
+                   <span class="legal-separator">•</span>
+                   <a href="#" target="_blank">Politique de confidentialité</a>
+               </div>
+           </div>
+       </header>
+
+       <div class="legal-dropdown" id="legalDropdown">
+           <div class="legal-dropdown-links">
+               <a href="#" target="_blank">CGV</a>
+               <a href="#" target="_blank">Mentions légales</a>
+               <a href="#" target="_blank">Politique de confidentialité</a>
+           </div>
+       </div>
+
+       <div class="progress-bar">
+           <div class="progress-fill" id="progressFill" style="width: 12.5%"></div>
+       </div>
+
+       <main class="app-content">
+           <!-- Question 1 -->
+           <section class="question-section active" id="q1">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Quel symptôme digestif vous gâche le plus la vie au quotidien ?</h2>
+                       <p class="question-subtitle">Sélectionnez celui qui vous affecte le plus</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="ballonnements">
+                           <span class="option-emoji">🔥</span>
+                           <div class="option-text">
+                               <div class="option-label">Ballonnements persistants</div>
+                               <div class="option-description">Ventre gonflé comme une femme enceinte</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="douleurs">
+                           <span class="option-emoji">💥</span>
+                           <div class="option-text">
+                               <div class="option-label">Douleurs et crampes abdominales</div>
+                               <div class="option-description">Sensations insupportables</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="transit">
+                           <span class="option-emoji">🚽</span>
+                           <div class="option-text">
+                               <div class="option-label">Transit erratique</div>
+                               <div class="option-description">Constipation, diarrhée ou alternance</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="peur">
+                           <span class="option-emoji">😰</span>
+                           <div class="option-text">
+                               <div class="option-label">Peur constante de manger</div>
+                               <div class="option-description">Angoisse avant/après les repas</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="tous">
+                           <span class="option-emoji">🌪️</span>
+                           <div class="option-text">
+                               <div class="option-label">Tous ces symptômes à la fois</div>
+                               <div class="option-description">C'est un calvaire quotidien</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button class="continue-button" disabled>Continuer</button>
+           </section>
+
+           <!-- Question 2 -->
+           <section class="question-section" id="q2">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Depuis combien de temps vivez-vous avec ces troubles digestifs ?</h2>
+                       <p class="question-subtitle">Cela nous aide à comprendre votre parcours</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="moins-6-mois">
+                           <span class="option-emoji">🕐</span>
+                           <div class="option-text">
+                               <div class="option-label">Moins de 6 mois</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="6-mois-2-ans">
+                           <span class="option-emoji">📅</span>
+                           <div class="option-text">
+                               <div class="option-label">Entre 6 mois et 2 ans</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="2-5-ans">
+                           <span class="option-emoji">⏰</span>
+                           <div class="option-text">
+                               <div class="option-label">Entre 2 et 5 ans</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="plus-5-ans">
+                           <span class="option-emoji">😔</span>
+                           <div class="option-text">
+                               <div class="option-label">Plus de 5 ans</div>
+                               <div class="option-description">J'en peux plus…</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button class="continue-button" disabled>Continuer</button>
+           </section>
+
+           <!-- Question 3 -->
+           <section class="question-section" id="q3">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Comment vos problèmes digestifs affectent-ils votre quotidien ?</h2>
+                       <p class="question-subtitle">Sélectionnez toutes les réponses qui s'appliquent</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="sorties">
+                           <input type="checkbox" />
+                           <span class="option-emoji">❌</span>
+                           <div class="option-text">
+                               <div class="option-label">J'évite les sorties au restaurant ou entre amis</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="incomprise">
+                           <input type="checkbox" />
+                           <span class="option-emoji">😔</span>
+                           <div class="option-text">
+                               <div class="option-label">Je me sens incomprise par mon entourage</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="travail">
+                           <input type="checkbox" />
+                           <span class="option-emoji">💼</span>
+                           <div class="option-text">
+                               <div class="option-label">Ça impacte mon travail ou ma performance</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="fatigue">
+                           <input type="checkbox" />
+                           <span class="option-emoji">😴</span>
+                           <div class="option-text">
+                               <div class="option-label">Je suis constamment fatiguée</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="tete">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🧠</span>
+                           <div class="option-text">
+                               <div class="option-label">J'ai l'impression que c'est "dans ma tête"</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="couple">
+                           <input type="checkbox" />
+                           <span class="option-emoji">💔</span>
+                           <div class="option-text">
+                               <div class="option-label">Ma vie de couple en souffre</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button class="continue-button" disabled>Continuer</button>
+           </section>
+
+           <!-- Question 4 -->
+           <section class="question-section" id="q4">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Qu'avez-vous déjà essayé pour soulager vos symptômes ?</h2>
+                       <p class="question-subtitle">Sélectionnez toutes les réponses qui s'appliquent</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="medicaments">
+                           <input type="checkbox" />
+                           <span class="option-emoji">💊</span>
+                           <div class="option-text">
+                               <div class="option-label">Médicaments</div>
+                               <div class="option-description">Anti-spasmodiques, laxatifs…</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="regimes">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🥗</span>
+                           <div class="option-text">
+                               <div class="option-label">Régimes restrictifs</div>
+                               <div class="option-description">FODMAP, sans gluten, sans lactose…</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="probiotiques">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🦠</span>
+                           <div class="option-text">
+                               <div class="option-label">Probiotiques du commerce</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="consultations">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🩺</span>
+                           <div class="option-text">
+                               <div class="option-label">Consultations médicales</div>
+                               <div class="option-description">Sans solution durable</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="naturel">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🌿</span>
+                           <div class="option-text">
+                               <div class="option-label">Remèdes naturels</div>
+                               <div class="option-description">Tisanes, huiles essentielles…</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="rien">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🙅‍♀️</span>
+                           <div class="option-text">
+                               <div class="option-label">Rien de tout ça</div>
+                               <div class="option-description">Je ne sais plus quoi essayer</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button class="continue-button" disabled>Continuer</button>
+           </section>
+
+           <!-- Question 5 -->
+           <section class="question-section" id="q5">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Quelle phrase vous correspond le plus en ce moment ?</h2>
+                       <p class="question-subtitle">Soyez honnête avec vous-même</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="marre">
+                           <span class="option-emoji">😤</span>
+                           <div class="option-text">
+                               <div class="option-label">"J'en ai marre, je veux une solution MAINTENANT"</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="espoir">
+                           <span class="option-emoji">😞</span>
+                           <div class="option-text">
+                               <div class="option-label">"Je commence à perdre espoir…"</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="sceptique">
+                           <span class="option-emoji">🤔</span>
+                           <div class="option-text">
+                               <div class="option-label">"Je suis sceptique mais prête à essayer encore"</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="determinee">
+                           <span class="option-emoji">💪</span>
+                           <div class="option-text">
+                               <div class="option-label">"Je suis déterminée à régler ça, quoi qu'il en coûte"</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="perdue">
+                           <span class="option-emoji">🆘</span>
+                           <div class="option-text">
+                               <div class="option-label">"Je me sens perdue, je ne sais plus quoi faire"</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button class="continue-button" disabled>Continuer</button>
+           </section>
+
+           <!-- Question 6 -->
+           <section class="question-section" id="q6">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Si vous pouviez résoudre vos problèmes digestifs, qu'est-ce qui changerait dans votre vie ?</h2>
+                       <p class="question-subtitle">Imaginez votre vie sans ces troubles</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="sorties-plaisir">
+                           <span class="option-emoji">🎉</span>
+                           <div class="option-text">
+                               <div class="option-label">Je pourrais enfin profiter des sorties sans stress</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="manger-plaisir">
+                           <span class="option-emoji">🍽️</span>
+                           <div class="option-text">
+                               <div class="option-label">Je mangerais à nouveau avec plaisir et sans peur</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="energie">
+                           <span class="option-emoji">⚡</span>
+                           <div class="option-text">
+                               <div class="option-label">J'aurais plus d'énergie et de joie de vivre</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="bien-etre">
+                           <span class="option-emoji">🧘‍♀️</span>
+                           <div class="option-text">
+                               <div class="option-label">Je me sentirais enfin bien dans mon corps</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="tout">
+                           <span class="option-emoji">🌟</span>
+                           <div class="option-text">
+                               <div class="option-label">Toutes ces réponses !</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button class="continue-button" disabled>Continuer</button>
+           </section>
+
+           <!-- Question 7 -->
+           <section class="question-section" id="q7">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Vos symptômes s'aggravent-ils quand vous êtes stressée ou anxieuse ?</h2>
+                       <p class="question-subtitle">La connexion intestin-cerveau est importante</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="toujours">
+                           <span class="option-emoji">✅</span>
+                           <div class="option-text">
+                               <div class="option-label">Oui, toujours</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="parfois">
+                           <span class="option-emoji">🤷‍♀️</span>
+                           <div class="option-text">
+                               <div class="option-label">Oui, parfois</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="non">
+                           <span class="option-emoji">❌</span>
+                           <div class="option-text">
+                               <div class="option-label">Non, pas vraiment</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="ne-sais-pas">
+                           <span class="option-emoji">🤔</span>
+                           <div class="option-text">
+                               <div class="option-label">Je ne sais pas</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button class="continue-button" disabled>Continuer</button>
+           </section>
+
+           <!-- Question 8 -->
+           <section class="question-section" id="q8">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Dans combien de temps aimeriez-vous voir des résultats ?</h2>
+                       <p class="question-subtitle">Chaque parcours est unique</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="urgent">
+                           <span class="option-emoji">⚡</span>
+                           <div class="option-text">
+                               <div class="option-label">Le plus vite possible</div>
+                               <div class="option-description">J'ai un événement important</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="3-4-semaines">
+                           <span class="option-emoji">📅</span>
+                           <div class="option-text">
+                               <div class="option-label">Dans les 3-4 semaines</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="peu-importe">
+                           <span class="option-emoji">🎯</span>
+                           <div class="option-text">
+                               <div class="option-label">Peu importe, tant que ça marche</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="progressif">
+                           <span class="option-emoji">🌱</span>
+                           <div class="option-text">
+                               <div class="option-label">Je préfère une solution progressive mais durable</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button class="continue-button" disabled>Continuer</button>
+           </section>
+
+           <!-- Question Email -->
+           <section class="question-section" id="emailQuestion">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Découvrez votre profil digestif personnalisé</h2>
+                       <p class="question-subtitle">Entrez votre email pour recevoir vos résultats détaillés et des conseils personnalisés</p>
+                   </div>
+                   <div class="email-step">
+                       <input type="email" class="input-field" id="emailInput" placeholder="votre.email@exemple.com" required>
+                   </div>
+               </div>
+               <button class="continue-button">Découvrir mon profil</button>
+           </section>
+
+           <!-- Loader -->
+           <div class="loader" id="loader">
+               <div class="spinner"></div>
+               <p class="loader-text">Analyse de votre profil digestif en cours...</p>
+           </div>
+
+           <!-- Résultats -->
+           <section class="result-section" id="results">
+               <div class="result-card">
+                   <h2 class="result-title">🎯 Votre Profil : <span id="profileType">Intestin Hypersensible</span></h2>
+                   <p class="result-text" id="resultMirror">
+                       D'après vos réponses, vous souffrez probablement de troubles digestifs depuis plusieurs années. 
+                       Vous avez déjà essayé différentes solutions sans succès durable. Vous n'êtes pas seule : 
+                       <strong>plus de 5 millions de Françaises vivent la même chose</strong>.
+                   </p>
+               </div>
+
+               <div class="result-card">
+                   <h3 class="result-title">❌ Pourquoi ça n'a pas marché jusqu'ici</h3>
+                   <p class="result-text">
+                       Le problème : les solutions classiques (médicaments, régimes FODMAP, probiotiques) 
+                       <strong>ne s'attaquent pas à la vraie cause</strong>…
+                   </p>
+                   <p class="result-text">
+                       ⚠️ Elles traitent les symptômes, pas l'origine du déséquilibre.
+                   </p>
+               </div>
+
+               <div class="result-card">
+                   <h3 class="result-title">✅ La vraie cause (mécanisme unique)</h3>
+                   <div class="result-highlight">
+                       <p class="result-highlight-title">La bonne nouvelle :</p>
+                       <p class="result-text">
+                           Des recherches récentes montrent que votre microbiote peut être 
+                           <strong>rééquilibré naturellement en 21 jours</strong>…
+                       </p>
+                       <p class="result-text">
+                           🔬 À condition d'utiliser une approche holistique et personnalisée.
+                       </p>
+                   </div>
+               </div>
+
+               <div class="result-card">
+                   <h3 class="result-title">📹 Découvrez la solution</h3>
+                   <p class="result-text">
+                       Regardez cette courte vidéo de 12 minutes où Anne-Sophie Cortasse, naturopathe 
+                       et ancienne souffrante chronique, vous révèle :
+                   </p>
+                   <p class="result-text">
+                       ✨ Pourquoi vos efforts n'ont pas fonctionné<br>
+                       ✨ Le « rééquilibrage naturel du microbiote » en 21 jours<br>
+                       ✨ Comment des centaines de femmes ont retrouvé une vie normale
+                   </p>
+               </div>
+
+               <button class="cta-button" onclick="window.location.href='#vsl'">
+                   Voir la vidéo maintenant →
+               </button>
+           </section>
+       </main>
+   </div>
+
+   <script>
+       // État de l'application
+       let currentStep = 1;
+       const totalSteps = 8;
+       const answers = {};
+
+       // Éléments DOM
+       const backButton = document.getElementById('backButton');
+       const stepCounter = document.getElementById('stepCounter');
+       const progressFill = document.getElementById('progressFill');
+       const legalToggle = document.getElementById('legalToggle');
+       const legalDropdown = document.getElementById('legalDropdown');
+
+       // Toggle menu légal
+       if (legalToggle) {
+           legalToggle.addEventListener('click', (e) => {
+               e.stopPropagation();
+               legalDropdown.classList.toggle('show');
+           });
+       }
+
+       document.addEventListener('click', (e) => {
+           if (legalDropdown && !legalDropdown.contains(e.target) && e.target !== legalToggle) {
+               legalDropdown.classList.remove('show');
+           }
+       });
+
+       // Gestion du bouton retour
+       backButton.addEventListener('click', () => {
+           if (currentStep > 1) {
+               goToStep(currentStep - 1);
+           }
+       });
+
+       // Mise à jour de l'interface
+       function updateUI() {
+           stepCounter.textContent = `${currentStep}/${totalSteps}`;
+           const progress = (currentStep / totalSteps) * 100;
+           progressFill.style.width = `${progress}%`;
+           backButton.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+       }
+
+       // Navigation entre les questions
+       function goToStep(step) {
+           document.querySelectorAll('.question-section').forEach(section => {
+               section.classList.remove('active');
+           });
+           
+           const targetSection = document.getElementById(`q${step}`) || document.getElementById('emailQuestion');
+           if (targetSection) {
+               targetSection.classList.add('active');
+               currentStep = step;
+               updateUI();
+           }
+       }
+
+       // Gestion des options à choix unique
+       document.querySelectorAll('.question-section').forEach((section, index) => {
+           const questionId = `q${index + 1}`;
+           const options = section.querySelectorAll('.option-card');
+           const continueBtn = section.querySelector('.continue-button');
+           const hasCheckboxes = section.querySelector('input[type="checkbox"]') !== null;
+
+           if (!hasCheckboxes) {
+               options.forEach(option => {
+                   option.addEventListener('click', () => {
+                       options.forEach(opt => opt.classList.remove('selected'));
+                       option.classList.add('selected');
+                       answers[questionId] = option.dataset.value;
+                       if (continueBtn) continueBtn.disabled = false;
+                   });
+               });
+           } else {
+               // Gestion des cases à cocher
+               options.forEach(option => {
+                   const checkbox = option.querySelector('input[type="checkbox"]');
+                   if (checkbox) {
+                       option.addEventListener('click', (e) => {
+                           if (e.target !== checkbox) {
+                               checkbox.checked = !checkbox.checked;
+                           }
+                           option.classList.toggle('selected', checkbox.checked);
+                           
+                           const checkedValues = Array.from(section.querySelectorAll('input[type="checkbox"]:checked'))
+                               .map(cb => cb.parentElement.dataset.value);
+                           
+                           answers[questionId] = checkedValues;
+                           if (continueBtn) continueBtn.disabled = checkedValues.length === 0;
+                       });
+                   }
+               });
+           }
+
+           if (continueBtn) {
+               continueBtn.addEventListener('click', () => {
+                   if (index + 1 < totalSteps) {
+                       goToStep(index + 2);
+                   } else {
+                       showEmailQuestion();
+                   }
+               });
+           }
+       });
+
+       // Afficher la question email
+       function showEmailQuestion() {
+           document.querySelectorAll('.question-section').forEach(section => {
+               section.classList.remove('active');
+           });
+           document.getElementById('emailQuestion').classList.add('active');
+       }
+
+       // Gestion de l'email
+       const emailInput = document.getElementById('emailInput');
+       const emailSection = document.getElementById('emailQuestion');
+       const emailContinueBtn = emailSection.querySelector('.continue-button');
+
+       emailContinueBtn.addEventListener('click', () => {
+           const email = emailInput.value.trim();
+           if (!email || !email.includes('@')) {
+               alert('Merci de renseigner une adresse email valide.');
+               return;
+           }
+           
+           answers.email = email;
+           showResults();
+       });
+
+       // Afficher les résultats
+       function showResults() {
+           const loader = document.getElementById('loader');
+           const results = document.getElementById('results');
+           
+           emailSection.classList.remove('active');
+           loader.classList.add('active');
+           
+           setTimeout(() => {
+               loader.classList.remove('active');
+               results.classList.add('active');
+               
+               // Personnalisation basique du profil
+               const profileType = document.getElementById('profileType');
+               const mainSymptom = answers.q1;
+               
+               if (mainSymptom === 'ballonnements') {
+                   profileType.textContent = 'Intestin Hypersensible au Stress';
+               } else if (mainSymptom === 'douleurs') {
+                   profileType.textContent = 'Syndrome de l\'Intestin Irritable';
+               } else if (mainSymptom === 'transit') {
+                   profileType.textContent = 'Microbiote Déséquilibré Chronique';
+               } else if (mainSymptom === 'peur') {
+                   profileType.textContent = 'Anxiété Digestive Chronique';
+               } else {
+                   profileType.textContent = 'Dysbiose Intestinale Complexe';
+               }
+               
+               // Scroll en haut
+               document.querySelector('.app-content').scrollTop = 0;
+           }, 2000);
+       }
+
+       // Initialisation
+       updateUI();
+   </script>
+</body>
+</html>
