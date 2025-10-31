@@ -41,18 +41,6 @@
                max-width: 500px;
                margin: 0 auto;
            }
-
-           .legal-toggle {
-               display: none !important;
-           }
-
-           .legal-dropdown {
-               display: none !important;
-           }
-
-           .legal-links {
-               display: flex;
-           }
        }
 
        .app-header {
@@ -119,74 +107,6 @@
            text-align: right;
        }
 
-       .legal-toggle {
-           display: none;
-           align-items: center;
-           justify-content: center;
-           width: 32px;
-           height: 32px;
-           border-radius: 999px;
-           border: 1px solid rgba(148, 163, 184, 0.4);
-           background: rgba(148, 163, 184, 0.4);
-           color: #1e293b;
-           font-weight: 700;
-           font-size: 1rem;
-           cursor: pointer;
-           transition: background 0.2s ease, color 0.2s ease;
-       }
-
-       .legal-toggle:focus-visible {
-           outline: 2px solid #7c3aed;
-           outline-offset: 2px;
-       }
-
-       .legal-toggle:hover {
-           background: rgba(15, 23, 42, 0.45);
-           color: white;
-       }
-
-       .legal-dropdown {
-           position: absolute;
-           top: calc(100% + 8px);
-           right: 16px;
-           background: #ffffff;
-           border: 1px solid rgba(15, 23, 42, 0.08);
-           border-radius: 12px;
-           box-shadow: 0 12px 30px rgba(15, 23, 42, 0.15);
-           padding: 14px 16px;
-           min-width: 220px;
-           display: none;
-           z-index: 30;
-           text-align: left;
-       }
-
-       .legal-dropdown.show {
-           display: block;
-       }
-
-       .legal-dropdown-links {
-           display: flex;
-           flex-direction: column;
-           gap: 10px;
-       }
-
-       .legal-dropdown-links .legal-separator {
-           display: none;
-       }
-
-       .legal-dropdown a {
-           display: block;
-           color: #1f2937;
-           text-decoration: none;
-           font-weight: 500;
-           font-size: 0.9rem;
-       }
-
-       .legal-dropdown a:hover {
-           color: #7c3aed;
-           text-decoration: underline;
-       }
-
        .legal-links {
            display: flex;
            align-items: center;
@@ -213,17 +133,16 @@
            color: rgba(100, 116, 139, 0.6);
        }
 
+       .legal-footer {
+           padding: 12px 16px;
+           background: white;
+           border-top: 1px solid rgba(0, 0, 0, 0.05);
+           flex-shrink: 0;
+       }
+
        @media (max-width: 599px) {
            .legal-links {
-               display: none;
-           }
-
-           .legal-toggle {
-               display: inline-flex;
-           }
-
-           .legal-dropdown {
-               right: 12px;
+               justify-content: center;
            }
        }
 
@@ -528,24 +447,8 @@
            <div class="app-logo">Profil Digestif</div>
            <div class="header-right">
                <span class="step-counter" id="stepCounter">1/8</span>
-               <button class="legal-toggle" id="legalToggle" aria-label="Menu légal">ℹ</button>
-               <div class="legal-links">
-                   <a href="#" target="_blank">CGV</a>
-                   <span class="legal-separator">•</span>
-                   <a href="#" target="_blank">Mentions légales</a>
-                   <span class="legal-separator">•</span>
-                   <a href="#" target="_blank">Politique de confidentialité</a>
-               </div>
            </div>
        </header>
-
-       <div class="legal-dropdown" id="legalDropdown">
-           <div class="legal-dropdown-links">
-               <a href="#" target="_blank">CGV</a>
-               <a href="#" target="_blank">Mentions légales</a>
-               <a href="#" target="_blank">Politique de confidentialité</a>
-           </div>
-       </div>
 
        <div class="progress-bar">
            <div class="progress-fill" id="progressFill" style="width: 12.5%"></div>
@@ -988,6 +891,16 @@
                </button>
            </section>
        </main>
+
+       <footer class="legal-footer">
+           <div class="legal-links">
+               <a href="#" target="_blank">CGV</a>
+               <span class="legal-separator">•</span>
+               <a href="#" target="_blank">Mentions légales</a>
+               <span class="legal-separator">•</span>
+               <a href="#" target="_blank">Politique de confidentialité</a>
+           </div>
+       </footer>
    </div>
 
    <script>
@@ -1000,22 +913,6 @@
        const backButton = document.getElementById('backButton');
        const stepCounter = document.getElementById('stepCounter');
        const progressFill = document.getElementById('progressFill');
-       const legalToggle = document.getElementById('legalToggle');
-       const legalDropdown = document.getElementById('legalDropdown');
-
-       // Toggle menu légal
-       if (legalToggle) {
-           legalToggle.addEventListener('click', (e) => {
-               e.stopPropagation();
-               legalDropdown.classList.toggle('show');
-           });
-       }
-
-       document.addEventListener('click', (e) => {
-           if (legalDropdown && !legalDropdown.contains(e.target) && e.target !== legalToggle) {
-               legalDropdown.classList.remove('show');
-           }
-       });
 
        // Gestion du bouton retour
        backButton.addEventListener('click', () => {
