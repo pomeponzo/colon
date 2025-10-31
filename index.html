@@ -230,6 +230,12 @@
            min-height: 0;
        }
 
+       .options-grid {
+           display: grid;
+           grid-template-columns: repeat(2, minmax(0, 1fr));
+           gap: 14px;
+       }
+
        .option-card {
            background: white;
            border: 2px solid #e5e7eb;
@@ -241,6 +247,47 @@
            align-items: center;
            gap: 12px;
            flex-shrink: 0;
+       }
+
+       .option-card.image-option {
+           flex-direction: column;
+           align-items: stretch;
+           gap: 12px;
+           padding: 12px;
+       }
+
+       .option-card.image-option .option-text {
+           text-align: center;
+       }
+
+       .option-card.image-option .option-label {
+           font-size: 1.05rem;
+       }
+
+       .option-card.image-option .option-arrow {
+           align-self: flex-end;
+           width: 32px;
+           height: 32px;
+           border-radius: 50%;
+           background: #f1f5f9;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           color: #1e293b;
+           font-weight: 600;
+           font-size: 1rem;
+       }
+
+       .option-card.image-option.selected .option-arrow {
+           background: rgba(139, 92, 246, 0.15);
+           color: #7c3aed;
+       }
+
+       .option-image {
+           width: 100%;
+           border-radius: 10px;
+           object-fit: cover;
+           aspect-ratio: 3 / 4;
        }
 
        .option-card:hover {
@@ -312,6 +359,12 @@
            opacity: 0.5;
            cursor: not-allowed;
            transform: none;
+       }
+
+       @media (max-width: 599px) {
+           .options-grid {
+               grid-template-columns: 1fr;
+           }
        }
 
        .email-step {
@@ -446,70 +499,111 @@
            </button>
            <div class="app-logo">Profil Digestif</div>
            <div class="header-right">
-               <span class="step-counter" id="stepCounter">1/8</span>
+               <span class="step-counter" id="stepCounter">1/9</span>
            </div>
        </header>
 
        <div class="progress-bar">
-           <div class="progress-fill" id="progressFill" style="width: 12.5%"></div>
+           <div class="progress-fill" id="progressFill" style="width: 11.1%"></div>
        </div>
 
        <main class="app-content">
-           <!-- Question 1 -->
-           <section class="question-section active" id="q1">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">Quel symptôme digestif vous gâche le plus la vie au quotidien ?</h2>
-                       <p class="question-subtitle">Sélectionnez celui qui vous affecte le plus</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="ballonnements">
-                           <span class="option-emoji">🔥</span>
-                           <div class="option-text">
-                               <div class="option-label">Ballonnements persistants</div>
-                               <div class="option-description">Ventre gonflé comme une femme enceinte</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="douleurs">
-                           <span class="option-emoji">💥</span>
-                           <div class="option-text">
-                               <div class="option-label">Douleurs et crampes abdominales</div>
-                               <div class="option-description">Sensations insupportables</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="transit">
-                           <span class="option-emoji">🚽</span>
-                           <div class="option-text">
-                               <div class="option-label">Transit erratique</div>
-                               <div class="option-description">Constipation, diarrhée ou alternance</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="peur">
-                           <span class="option-emoji">😰</span>
-                           <div class="option-text">
-                               <div class="option-label">Peur constante de manger</div>
-                               <div class="option-description">Angoisse avant/après les repas</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="tous">
-                           <span class="option-emoji">🌪️</span>
-                           <div class="option-text">
-                               <div class="option-label">Tous ces symptômes à la fois</div>
-                               <div class="option-description">C'est un calvaire quotidien</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <button class="continue-button" disabled>Continuer</button>
-           </section>
+            <!-- Question 1 -->
+            <section class="question-section active" id="q1">
+                <div class="question-content">
+                    <div class="question-header">
+                        <h2 class="question-title">What is your age range?</h2>
+                        <p class="question-subtitle">We only use your age to personalize your results.</p>
+                    </div>
+                    <div class="options-container options-grid">
+                        <div class="option-card image-option" data-value="18-29">
+                            <img src="https://via.placeholder.com/300x400?text=18-29" alt="Femme âgée de 18 à 29 ans" class="option-image">
+                            <div class="option-text">
+                                <div class="option-label">18-29</div>
+                            </div>
+                            <div class="option-arrow">→</div>
+                        </div>
+                        <div class="option-card image-option" data-value="30-39">
+                            <img src="https://via.placeholder.com/300x400?text=30-39" alt="Femme âgée de 30 à 39 ans" class="option-image">
+                            <div class="option-text">
+                                <div class="option-label">30-39</div>
+                            </div>
+                            <div class="option-arrow">→</div>
+                        </div>
+                        <div class="option-card image-option" data-value="40-49">
+                            <img src="https://via.placeholder.com/300x400?text=40-49" alt="Femme âgée de 40 à 49 ans" class="option-image">
+                            <div class="option-text">
+                                <div class="option-label">40-49</div>
+                            </div>
+                            <div class="option-arrow">→</div>
+                        </div>
+                        <div class="option-card image-option" data-value="50+">
+                            <img src="https://via.placeholder.com/300x400?text=50%2B" alt="Femme de 50 ans et plus" class="option-image">
+                            <div class="option-text">
+                                <div class="option-label">50+</div>
+                            </div>
+                            <div class="option-arrow">→</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="continue-button" disabled>Continuer</button>
+            </section>
 
-           <!-- Question 2 -->
-           <section class="question-section" id="q2">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">Depuis combien de temps vivez-vous avec ces troubles digestifs ?</h2>
-                       <p class="question-subtitle">Cela nous aide à comprendre votre parcours</p>
-                   </div>
+            <!-- Question 2 -->
+            <section class="question-section" id="q2">
+                <div class="question-content">
+                    <div class="question-header">
+                        <h2 class="question-title">Quel symptôme digestif vous gâche le plus la vie au quotidien ?</h2>
+                        <p class="question-subtitle">Sélectionnez celui qui vous affecte le plus</p>
+                    </div>
+                    <div class="options-container">
+                        <div class="option-card" data-value="ballonnements">
+                            <span class="option-emoji">🔥</span>
+                            <div class="option-text">
+                                <div class="option-label">Ballonnements persistants</div>
+                                <div class="option-description">Ventre gonflé comme une femme enceinte</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="douleurs">
+                            <span class="option-emoji">💥</span>
+                            <div class="option-text">
+                                <div class="option-label">Douleurs et crampes abdominales</div>
+                                <div class="option-description">Sensations insupportables</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="transit">
+                            <span class="option-emoji">🚽</span>
+                            <div class="option-text">
+                                <div class="option-label">Transit erratique</div>
+                                <div class="option-description">Constipation, diarrhée ou alternance</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="peur">
+                            <span class="option-emoji">😰</span>
+                            <div class="option-text">
+                                <div class="option-label">Peur constante de manger</div>
+                                <div class="option-description">Angoisse avant/après les repas</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="tous">
+                            <span class="option-emoji">🌪️</span>
+                            <div class="option-text">
+                                <div class="option-label">Tous ces symptômes à la fois</div>
+                                <div class="option-description">C'est un calvaire quotidien</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="continue-button" disabled>Continuer</button>
+            </section>
+
+            <!-- Question 3 -->
+            <section class="question-section" id="q3">
+                <div class="question-content">
+                    <div class="question-header">
+                        <h2 class="question-title">Depuis combien de temps vivez-vous avec ces troubles digestifs ?</h2>
+                        <p class="question-subtitle">Cela nous aide à comprendre votre parcours</p>
+                    </div>
                    <div class="options-container">
                        <div class="option-card" data-value="moins-6-mois">
                            <span class="option-emoji">🕐</span>
@@ -541,8 +635,8 @@
                <button class="continue-button" disabled>Continuer</button>
            </section>
 
-           <!-- Question 3 -->
-           <section class="question-section" id="q3">
+           <!-- Question 4 -->
+           <section class="question-section" id="q4">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Comment vos problèmes digestifs affectent-ils votre quotidien ?</h2>
@@ -596,8 +690,8 @@
                <button class="continue-button" disabled>Continuer</button>
            </section>
 
-           <!-- Question 4 -->
-           <section class="question-section" id="q4">
+           <!-- Question 5 -->
+           <section class="question-section" id="q5">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Qu'avez-vous déjà essayé pour soulager vos symptômes ?</h2>
@@ -656,8 +750,8 @@
                <button class="continue-button" disabled>Continuer</button>
            </section>
 
-           <!-- Question 5 -->
-           <section class="question-section" id="q5">
+           <!-- Question 6 -->
+           <section class="question-section" id="q6">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Quelle phrase vous correspond le plus en ce moment ?</h2>
@@ -699,8 +793,8 @@
                <button class="continue-button" disabled>Continuer</button>
            </section>
 
-           <!-- Question 6 -->
-           <section class="question-section" id="q6">
+           <!-- Question 7 -->
+           <section class="question-section" id="q7">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Si vous pouviez résoudre vos problèmes digestifs, qu'est-ce qui changerait dans votre vie ?</h2>
@@ -742,8 +836,8 @@
                <button class="continue-button" disabled>Continuer</button>
            </section>
 
-           <!-- Question 7 -->
-           <section class="question-section" id="q7">
+           <!-- Question 8 -->
+           <section class="question-section" id="q8">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Vos symptômes s'aggravent-ils quand vous êtes stressée ou anxieuse ?</h2>
@@ -779,8 +873,8 @@
                <button class="continue-button" disabled>Continuer</button>
            </section>
 
-           <!-- Question 8 -->
-           <section class="question-section" id="q8">
+           <!-- Question 9 -->
+           <section class="question-section" id="q9">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Dans combien de temps aimeriez-vous voir des résultats ?</h2>
@@ -906,7 +1000,7 @@
    <script>
        // État de l'application
        let currentStep = 1;
-       const totalSteps = 8;
+       const totalSteps = 9;
        const answers = {};
 
        // Éléments DOM
@@ -1029,7 +1123,7 @@
                
                // Personnalisation basique du profil
                const profileType = document.getElementById('profileType');
-               const mainSymptom = answers.q1;
+               const mainSymptom = answers.q2;
                
                if (mainSymptom === 'ballonnements') {
                    profileType.textContent = 'Intestin Hypersensible au Stress';
