@@ -565,7 +565,6 @@
                         </div>
                     </div>
                 </div>
-                <button class="continue-button" disabled>Continuer</button>
             </section>
 
             <!-- Question 2 -->
@@ -613,7 +612,6 @@
                         </div>
                     </div>
                 </div>
-                <button class="continue-button" disabled>Continuer</button>
             </section>
 
             <!-- Question 3 -->
@@ -650,9 +648,8 @@
                            </div>
                        </div>
                    </div>
-               </div>
-               <button class="continue-button" disabled>Continuer</button>
-           </section>
+                </div>
+            </section>
 
            <!-- Question 4 -->
            <section class="question-section" id="q4">
@@ -765,9 +762,9 @@
                            </div>
                        </div>
                    </div>
-               </div>
-               <button class="continue-button" disabled>Continuer</button>
-           </section>
+                </div>
+                <button class="continue-button" disabled>Continuer</button>
+            </section>
 
            <!-- Question 6 -->
            <section class="question-section" id="q6">
@@ -809,7 +806,6 @@
                        </div>
                    </div>
                </div>
-               <button class="continue-button" disabled>Continuer</button>
            </section>
 
            <!-- Question 7 -->
@@ -852,7 +848,6 @@
                        </div>
                    </div>
                </div>
-               <button class="continue-button" disabled>Continuer</button>
            </section>
 
            <!-- Question 8 -->
@@ -889,7 +884,6 @@
                        </div>
                    </div>
                </div>
-               <button class="continue-button" disabled>Continuer</button>
            </section>
 
            <!-- Question 9 -->
@@ -927,7 +921,6 @@
                        </div>
                    </div>
                </div>
-               <button class="continue-button" disabled>Continuer</button>
            </section>
 
            <!-- Question Email -->
@@ -1070,6 +1063,14 @@
                        option.classList.add('selected');
                        answers[questionId] = option.dataset.value;
                        if (continueBtn) continueBtn.disabled = false;
+
+                       if (!continueBtn && options.length > 0) {
+                           if (index + 1 < totalSteps) {
+                               goToStep(index + 2);
+                           } else {
+                               showEmailQuestion();
+                           }
+                       }
                    });
                });
            } else {
