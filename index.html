@@ -236,6 +236,10 @@
            gap: 14px;
        }
 
+       .options-grid-mobile-2 {
+           grid-template-columns: repeat(2, minmax(0, 1fr));
+       }
+
        .option-card {
            background: white;
            border: 2px solid #e5e7eb;
@@ -375,6 +379,10 @@
        @media (max-width: 599px) {
            .options-grid {
                grid-template-columns: 1fr;
+           }
+
+           .options-grid-mobile-2 {
+               grid-template-columns: repeat(2, minmax(0, 1fr));
            }
        }
 
@@ -526,7 +534,7 @@
                         <h2 class="question-title">What is your age range?</h2>
                         <p class="question-subtitle">We only use your age to personalize your results.</p>
                     </div>
-                    <div class="options-container options-grid">
+                    <div class="options-container options-grid options-grid-mobile-2">
                         <div class="option-card image-option" data-value="18-29">
                             <img src="https://via.placeholder.com/300x400?text=18-29" alt="Femme âgée de 18 à 29 ans" class="option-image">
                             <div class="option-text">
