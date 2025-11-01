@@ -1463,9 +1463,12 @@
    <script>
 (function () {
   const q  = (s, r=document)=>r.querySelector(s);
-  const qa = (s, r=document)=>Array.from(r.querySelectorAll(s));
+  const qa = (s, r=document)=>{
+    try { return Array.from(r.querySelectorAll(s)); }
+    catch { return []; }
+  };
 
-  // Candidats "submit" très larges (comporte cas SIO classiques + fallback)
+  // Candidats "submit" très larges (sans :matches)
   const SUBMIT_SEL = [
     'button[type="submit"]',
     'input[type="submit"]',
@@ -1475,7 +1478,9 @@
     '[data-test-id="send-form-button"]',
     '[data-testid="send-form-button"]',
     'button[id^="button-"]',
-    'button:matches(:not([type]), [type="button"])' // fallback si SIO gère submit en JS
+    // fallback si SIO gère le submit en JS sur un <button> sans type
+    'button:not([type])',
+    'button[type="button"]'
   ].join(', ');
 
   // Heuristique "email" très large
