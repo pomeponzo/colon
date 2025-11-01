@@ -748,17 +748,13 @@
 
    </style>
    <style id="sioEmailGate">
-      /* Masquer le champ email SIO partout, sauf dans notre mount */
-      input[name="email"] { display: none !important; }
-      #sioFieldsMount input[name="email"] { display: block !important; }
-
-      /* Optionnel: pleine largeur pour le bouton SIO une fois déplacé */
-      #sioFieldsMount .sio-submit,
-      #sioFieldsMount [type="submit"] {
-        width: 100% !important;
-        height: 48px !important;
-        border-radius: 12px !important;
-      }
+     /* Style du bouton une fois déplacé */
+     #sioFieldsMount .sio-submit,
+     #sioFieldsMount [type="submit"] {
+       width: 100% !important;
+       height: 48px !important;
+       border-radius: 12px !important;
+     }
    </style>
 </head>
 <body>
@@ -1466,8 +1462,8 @@
    </script>
    <script>
 (function () {
-  const q  = (sel, root=document)=>root.querySelector(sel);
-  const qa = (sel, root=document)=>Array.from(root.querySelectorAll(sel));
+  const q  = (s, r=document)=>r.querySelector(s);
+  const qa = (s, r=document)=>Array.from(r.querySelectorAll(s));
 
   const SUBMIT_SEL = [
     'button[type="submit"]','input[type="submit"]',
@@ -1475,11 +1471,13 @@
     '[data-test-id="send-form-button"]','[data-testid="send-form-button"]','button[id^="button-"]'
   ].join(', ');
 
-  function moveEmailFieldAndButton() {
+  let alreadyMounted = false;
+
+  function moveIntoSlot(emailInput, submitBtn) {
     const slot = document.getElementById('sioEmailSlot');
     if (!slot) return;
 
-    // Crée le "mount" propre à l’étape
+    // Crée le mount si besoin
     let mount = q('#sioFieldsMount', slot);
     if (!mount) {
       mount = document.createElement('div');
@@ -1487,21 +1485,11 @@
       mount.style.display = 'flex';
       mount.style.flexDirection = 'column';
       mount.style.gap = '12px';
-      // Nettoie le placeholder
       slot.innerHTML = '';
       slot.appendChild(mount);
     }
 
-    // 1) Récupère l’input email SIO le plus récent
-    const inputs = qa('input[name="email"]');
-    const emailInput = inputs.length ? inputs[inputs.length - 1] : null;
-    if (!emailInput) return; // SIO pas encore injecté
-
-    // 2) Trouve le <form> parent
-    const form = emailInput.closest('form') || emailInput.form;
-    if (!form) return;
-
-    // 3) Déplace l’input dans un wrapper stylé
+    // Wra p input pour garder ton style
     if (!mount.contains(emailInput)) {
       const wrap = document.createElement('div');
       wrap.className = 'input-field';
@@ -1509,7 +1497,6 @@
       wrap.style.border = '2px solid #e5e7eb';
       wrap.style.borderRadius = '10px';
 
-      // Style input
       emailInput.style.width = '100%';
       emailInput.style.border = '0';
       emailInput.style.outline = 'none';
@@ -1520,16 +1507,13 @@
       mount.appendChild(wrap);
     }
 
-    // 4) Déplace le bouton submit SIO sous le champ
-    let submitBtn = q(SUBMIT_SEL, form);
-    if (submitBtn && submitBtn.closest('#sioFieldsMount') !== mount) {
-      // S’il y a un conteneur de bouton spécifique dans SIO, on le déplace aussi
+    // Range le bouton SIO
+    if (submitBtn && !mount.contains(submitBtn)) {
       const btnRow = document.createElement('div');
       btnRow.style.display = 'flex';
       btnRow.style.flexDirection = 'column';
       btnRow.style.gap = '8px';
 
-      // Harmonise un peu le bouton
       submitBtn.style.width = '100%';
       submitBtn.style.height = '48px';
       submitBtn.style.borderRadius = '12px';
@@ -1538,57 +1522,78 @@
       mount.appendChild(btnRow);
     }
 
-    // 5) Masque ton bouton "Continuer" (on utilise le vrai bouton SIO)
+    // Cache ton bouton "Continuer"
     const quizContinue = q('#emailQuestion .continue-button');
     if (quizContinue) quizContinue.style.display = 'none';
 
-    // 6) Enlève le loader s’il traîne encore
+    // Cache l’ancien conteneur SIO d’où viennent les éléments
+    const originForm = emailInput.closest('form');
+    if (originForm) {
+      const originContainer = originForm.closest('[id^="column-"], [id^="row-"], section, div');
+      if (originContainer) originContainer.style.display = 'none';
+    }
+
+    // Enlève le loader
     const loading = document.getElementById('sioEmailLoading');
     if (loading) loading.remove();
+
+    alreadyMounted = true;
   }
 
-  // Lancer le déplacement quand l’étape email s’ouvre
-  function armAtEmailStep() {
-    // Si tu as une fonction globale showEmailQuestion, on l’enveloppe
+  function tryMount() {
+    // On cherche le PLUS RÉCENT input email injecté par SIO et son bouton submit
+    const emailInputs = qa('input[name="email"]');
+    const emailInput  = emailInputs.length ? emailInputs[emailInputs.length - 1] : null;
+    if (!emailInput) return;
+
+    const form = emailInput.closest('form') || emailInput.form;
+    if (!form) return;
+
+    const submitBtn = q(SUBMIT_SEL, form);
+    if (!submitBtn) return;
+
+    moveIntoSlot(emailInput, submitBtn);
+  }
+
+  // 1) Quand on ouvre l’étape email, on insiste jusqu’à trouver le form
+  function whenEmailStepOpens() {
+    const emailSection = document.getElementById('emailQuestion');
+    const runIfVisible = () => {
+      const visible = emailSection && (emailSection.classList.contains('active') || getComputedStyle(emailSection).display !== 'none');
+      if (visible && !alreadyMounted) {
+        // tentatives pendant ~3s
+        let n = 0;
+        const t = setInterval(() => {
+          n++; tryMount();
+          if (alreadyMounted || n >= 12) clearInterval(t);
+        }, 250);
+      }
+    };
+    runIfVisible();
+
+    // Observe toutes modifs DOM : dès que SIO injecte, on monte
+    const mo = new MutationObserver(() => {
+      if (!alreadyMounted) tryMount();
+      runIfVisible();
+    });
+    mo.observe(document.documentElement, { childList: true, subtree: true, attributes: false });
+
+    // Si ta fonction globale existe, on l’enveloppe (bonus)
     if (typeof window.showEmailQuestion === 'function' && !window.showEmailQuestion.__sioWrapped) {
       const original = window.showEmailQuestion;
-      window.showEmailQuestion = function wrappedShowEmailQuestion() {
+      window.showEmailQuestion = function () {
         const r = original.apply(this, arguments);
-        // on laisse le temps à SIO d’injecter son form si besoin
-        setTimeout(() => {
-          moveEmailFieldAndButton();
-          // retries doux si le form arrive un chouïa après
-          let tries = 0, t = setInterval(() => {
-            tries++; moveEmailFieldAndButton();
-            if (tries >= 10) clearInterval(t);
-          }, 250);
-        }, 0);
+        runIfVisible();
         return r;
       };
       window.showEmailQuestion.__sioWrapped = true;
-      return;
     }
-
-    // Fallback : observer l’apparition/activation de la section email
-    const target = document.getElementById('emailQuestion');
-    if (!target) return;
-
-    const tryRun = () => {
-      const visible = getComputedStyle(target).display !== 'none' || target.classList.contains('active');
-      if (visible) {
-        moveEmailFieldAndButton();
-      }
-    };
-    tryRun();
-
-    const mo = new MutationObserver(() => tryRun());
-    mo.observe(document.documentElement, { attributes: true, childList: true, subtree: true });
   }
 
   if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    armAtEmailStep();
+    whenEmailStepOpens();
   } else {
-    document.addEventListener('DOMContentLoaded', armAtEmailStep);
+    document.addEventListener('DOMContentLoaded', whenEmailStepOpens);
   }
 })();
    </script>
