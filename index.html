@@ -1373,8 +1373,10 @@
 
    <script>
        // État de l'application
+       const questionSections = Array.from(document.querySelectorAll('.question-section'))
+           .filter(section => section.id && /^q\d+$/.test(section.id));
        let currentStep = 1;
-       const totalSteps = 12;
+       const totalSteps = questionSections.length || 1;
        const answers = {};
 
        // Éléments DOM
@@ -1385,41 +1387,55 @@
        const sioEmailSlot = document.getElementById('sioEmailSlot');
 
        // Gestion du bouton retour
-       backButton.addEventListener('click', () => {
-           if (currentStep > 1) {
-               goToStep(currentStep - 1);
-           }
-       });
+       if (backButton) {
+           backButton.addEventListener('click', () => {
+               if (currentStep > 1) {
+                   goToStep(currentStep - 1);
+               }
+           });
+       }
 
        // Mise à jour de l'interface
        function updateUI() {
-           stepCounter.textContent = `${currentStep}/${totalSteps}`;
-           const progress = (currentStep / totalSteps) * 100;
-           progressFill.style.width = `${progress}%`;
-           backButton.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+           if (stepCounter) {
+               stepCounter.textContent = `${currentStep}/${totalSteps}`;
+           }
+           const progress = totalSteps ? (currentStep / totalSteps) * 100 : 0;
+           if (progressFill) {
+               progressFill.style.width = `${Math.min(progress, 100)}%`;
+           }
+           if (backButton) {
+               backButton.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+           }
        }
 
        // Navigation entre les questions
        function goToStep(step) {
-           document.querySelectorAll('.question-section').forEach(section => {
+           if (!questionSections.length) {
+               return;
+           }
+
+           const normalizedStep = Math.min(Math.max(step, 1), totalSteps);
+
+           questionSections.forEach(section => {
                section.classList.remove('active');
            });
-           
-           const targetSection = document.getElementById(`q${step}`) || document.getElementById('emailQuestion');
+
+           if (emailSection) {
+               emailSection.classList.remove('active');
+           }
+
+           const targetSection = questionSections[normalizedStep - 1];
            if (targetSection) {
                targetSection.classList.add('active');
-               currentStep = step;
+               currentStep = normalizedStep;
                updateUI();
            }
        }
 
        // Gestion des options à choix unique
-       document.querySelectorAll('.question-section').forEach((section, index) => {
-           if (section.id === 'emailQuestion') {
-               return;
-           }
-
-           const questionId = `q${index + 1}`;
+       questionSections.forEach((section, index) => {
+           const questionId = section.id;
            const options = section.querySelectorAll('.option-card');
            const continueBtn = section.querySelector('.continue-button');
            const hasCheckboxes = section.querySelector('input[type="checkbox"]') !== null;
@@ -1475,7 +1491,7 @@
 
        // Afficher la question email
        function showEmailQuestion() {
-           document.querySelectorAll('.question-section').forEach(section => {
+           questionSections.forEach(section => {
                section.classList.remove('active');
            });
            if (emailSection) {
