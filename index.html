@@ -623,6 +623,45 @@
            color: #64748b;
            text-align: center;
        }
+        
+        /* ——— Q1 : cartes plus petites, pas de scroll, ombre supprimée ——— */
+        .q1 .question-header{ margin-bottom:8px; }
+        .q1 .question-title{ font-size:1.15rem; margin-bottom:4px; }
+        .q1 .question-subtitle{ font-size:.88rem; }
+
+        /* la grille 2×2 garde toute la hauteur dispo */
+        .q1 .options-grid{ gap:10px; grid-auto-rows:1fr; }
+
+        /* carte compacte */
+        .q1 .option-card.image-option{
+          padding:18px 10px 12px;
+          border-radius:12px;
+        }
+
+        /* image moins haute + pas d’ombre + tête qui dépasse */
+        .q1 .option-image-wrapper{ margin-top:-18px; }
+        .q1 .option-image{
+          aspect-ratio: 2 / 3;        /* plus courte que 3/4 → carte plus basse */
+          object-fit: cover;
+          object-position: 50% 0%;
+          transform: translateY(-10px);
+          border-radius:14px;
+          box-shadow: none;           /* supprime l’ombre “bizarre” */
+        }
+
+        /* label et flèche un peu réduits */
+        .q1 .option-label{ font-size:.95rem; font-weight:800; }
+        .q1 .option-text{ padding:0 34px 0 2px; }
+        .q1 .option-arrow{ width:28px; height:28px; }
+
+        /* écrans très courts : compacter encore un peu */
+        @media (max-height: 700px){
+          .q1 .option-card.image-option{ padding:14px 10px 10px; }
+          .q1 .option-image-wrapper{ margin-top:-14px; }
+          .q1 .option-image{ transform: translateY(-8px); }
+          .q1 .question-title{ font-size:1.05rem; }
+        }
+
    </style>
 </head>
 <body>
