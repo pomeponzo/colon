@@ -662,6 +662,71 @@
           .q1 .question-title{ font-size:1.05rem; }
         }
 
+/* ===== Q1 — Grille 2×2 sans scroll, cartes qui s'adaptent, images nickel ===== */
+
+/* 1) Le conteneur Q1 occupe toute la hauteur scrolable */
+.q1 .question-content{ display:flex; flex-direction:column; min-height:0; }
+.q1 .options-container{ flex:1; min-height:0; }
+
+/* 2) Grille 2×2 qui prend 100% de la hauteur disponible */
+.q1 .options-grid{
+  display:grid;
+  height:100%;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, minmax(0,1fr));   /* 2 lignes égales qui tiennent */
+  gap:10px;
+}
+
+/* 3) Chaque carte remplit sa cellule (plus de débordement) */
+.q1 .option-card.image-option{
+  height:100%;
+  border-radius:12px;
+  padding:12px 10px 10px;
+  display:flex;
+  flex-direction:column;
+  overflow:visible; /* pour laisser dépasser un peu la tête */
+}
+
+/* 4) L’image prend l’espace restant ; le label a une hauteur connue */
+.q1 .option-image-wrapper{
+  flex:1;                 /* <-- clé : la zone image occupe tout le restant */
+  display:flex;
+  align-items:stretch;
+  margin-top:-12px;       /* fait remonter la tête */
+}
+.q1 .option-image{
+  width:100%;
+  height:100%;            /* on remplit la zone, pas de hauteur “auto” */
+  object-fit:cover;
+  object-position:50% 0%; /* cadrage vers le haut */
+  border-radius:12px;
+  transform:translateY(-6px); /* légère sortie de cadre */
+  box-shadow:none;        /* pas d’ombre parasite */
+  aspect-ratio:auto;      /* on s’affranchit d’un ratio figé */
+}
+
+/* 5) Zone texte compacte et centrée */
+.q1 .option-text{
+  display:flex; align-items:center; justify-content:center;
+  padding:0 34px 0 2px;
+  min-height:42px;        /* réserve stable pour le libellé + flèche */
+}
+.q1 .option-label{ font-size:.98rem; font-weight:800; }
+.q1 .option-arrow{ width:28px; height:28px; right:0; top:50%; position:absolute; transform:translateY(-50%); border-radius:50%; background:rgba(15,23,42,.06); display:flex; align-items:center; justify-content:center; }
+
+/* 6) Entête un poil compact pour gagner quelques px */
+.q1 .question-header{ margin-bottom:8px; }
+.q1 .question-title{ font-size:1.16rem; margin-bottom:4px; }
+.q1 .question-subtitle{ font-size:.9rem; }
+
+/* Écrans très courts : on compresse encore un chouïa */
+@media (max-height:700px){
+  .q1 .option-card.image-option{ padding:10px 8px 8px; }
+  .q1 .option-image-wrapper{ margin-top:-10px; }
+  .q1 .option-image{ transform:translateY(-5px); }
+  .q1 .option-text{ min-height:38px; }
+}
+
    </style>
 </head>
 <body>
