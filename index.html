@@ -1307,18 +1307,8 @@
                           <div id="sioEmailLoading" class="input-field" style="display:flex;align-items:center;justify-content:center;height:26.7px;">
                               Chargement du formulaire…
                           </div>
-                          <form id="emailFallbackForm" class="email-fallback" novalidate>
-                              <label class="sr-only" for="fallbackEmailInput">Adresse email</label>
-                              <input type="email" id="fallbackEmailInput" class="input-field" placeholder="Votre adresse email" autocomplete="email">
-                              <p class="email-helper-text">Nous vous enverrons vos résultats détaillés à cette adresse.</p>
-                              <p id="emailFallbackMessage" class="email-feedback" aria-live="polite"></p>
-                          </form>
                       </div>
                   </div>
-              </div>
-              <div class="email-step-actions">
-                  <button class="email-back-button" id="emailStepBack" type="button">Retour</button>
-                  <button class="continue-button" type="button">Continuer</button>
               </div>
           </section>
       </main>
@@ -1335,51 +1325,7 @@
        const stepCounter = document.getElementById('stepCounter');
        const progressFill = document.getElementById('progressFill');
        const emailSection = document.getElementById('emailQuestion');
-       const emailBackButton = document.getElementById('emailStepBack');
-       const emailContinueButton = emailSection ? emailSection.querySelector('.continue-button') : null;
-       const emailContinueDefaultText = emailContinueButton ? emailContinueButton.textContent : '';
        const sioEmailSlot = document.getElementById('sioEmailSlot');
-       const emailFallbackForm = document.getElementById('emailFallbackForm');
-       const emailFallbackInput = document.getElementById('fallbackEmailInput');
-       const emailFallbackMessage = document.getElementById('emailFallbackMessage');
-       let emailFallbackVisible = false;
-
-       const resetFallbackMessage = () => {
-           if (emailFallbackMessage) {
-               emailFallbackMessage.textContent = '';
-               emailFallbackMessage.classList.remove('error', 'success');
-           }
-       };
-
-       const showFallbackEmailForm = () => {
-           if (emailFallbackForm && !emailFallbackVisible) {
-               emailFallbackForm.classList.add('active');
-               emailFallbackVisible = true;
-               resetFallbackMessage();
-           }
-       };
-
-       const hideFallbackEmailForm = () => {
-           if (emailFallbackForm) {
-               emailFallbackForm.classList.remove('active');
-           }
-           emailFallbackVisible = false;
-           resetFallbackMessage();
-       };
-
-       if (emailFallbackInput) {
-           emailFallbackInput.addEventListener('input', () => {
-               resetFallbackMessage();
-               if (emailContinueButton && emailContinueButton.disabled) {
-                   emailContinueButton.disabled = false;
-                   emailContinueButton.textContent = emailContinueDefaultText;
-               }
-           });
-       }
-
-       if (emailBackButton) {
-           emailBackButton.style.display = 'none';
-       }
 
        // Gestion du bouton retour
        backButton.addEventListener('click', () => {
@@ -1407,9 +1353,6 @@
                targetSection.classList.add('active');
                currentStep = step;
                updateUI();
-               if (emailBackButton) {
-                   emailBackButton.style.display = targetSection.id === 'emailQuestion' ? 'flex' : 'none';
-               }
            }
        }
 
@@ -1481,9 +1424,6 @@
            if (emailSection) {
                emailSection.classList.add('active');
            }
-           if (emailBackButton) {
-               emailBackButton.style.display = 'flex';
-           }
            currentStep = totalSteps;
            updateUI();
            const appContent = document.querySelector('.app-content');
@@ -1492,104 +1432,20 @@
            }
        }
 
-       if (emailBackButton) {
-           emailBackButton.addEventListener('click', () => {
-               goToStep(totalSteps);
-           });
-       }
-
-       if (emailContinueButton) {
-           emailContinueButton.addEventListener('click', (event) => {
-               const submitSelector = [
-                   'button[type="submit"]',
-                   'input[type="submit"]',
-                   '.sio-subscribe-button',
-                   '.sio-submit',
-                   '[data-element="cta-button"]'
-               ].join(', ');
-
-               const externalFormSelector = 'form:not(#emailFallbackForm)';
-               const submitButton = sioEmailSlot ? sioEmailSlot.querySelector(submitSelector) : null;
-               const form = submitButton ? submitButton.closest('form') : (sioEmailSlot ? sioEmailSlot.querySelector(externalFormSelector) : null);
-
-               if (form) {
-                   event.preventDefault();
-                   if (submitButton && typeof submitButton.click === 'function') {
-                       submitButton.click();
-                   } else if (typeof form.requestSubmit === 'function') {
-                       form.requestSubmit();
-                   } else {
-                       form.submit();
-                   }
-               } else if (emailFallbackForm && emailFallbackForm.classList.contains('active')) {
-                   event.preventDefault();
-                   if (!emailFallbackInput) {
-                       return;
-                   }
-
-                   const emailValue = emailFallbackInput.value.trim();
-                   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                   resetFallbackMessage();
-
-                   if (!emailValue) {
-                       if (emailFallbackMessage) {
-                           emailFallbackMessage.textContent = 'Veuillez saisir votre adresse email.';
-                           emailFallbackMessage.classList.add('error');
-                       }
-                       emailFallbackInput.focus();
-                       return;
-                   }
-
-                   if (!emailPattern.test(emailValue)) {
-                       if (emailFallbackMessage) {
-                           emailFallbackMessage.textContent = 'Adresse email invalide. Merci de vérifier votre saisie.';
-                           emailFallbackMessage.classList.add('error');
-                       }
-                       emailFallbackInput.focus();
-                       emailFallbackInput.select();
-                       return;
-                   }
-
-                   answers.email = emailValue;
-
-                   if (emailFallbackMessage) {
-                       emailFallbackMessage.textContent = 'Merci ! Nous vous enverrons vos résultats très vite.';
-                       emailFallbackMessage.classList.add('success');
-                   }
-
-                   emailContinueButton.disabled = true;
-                   emailContinueButton.textContent = 'Email enregistré';
-                   emailContinueButton.blur();
-               }
-           });
-       }
-
        if (sioEmailSlot) {
-           const hasExternalEmailForm = () => !!sioEmailSlot.querySelector('form:not(#emailFallbackForm)');
-
            const removeLoadingPlaceholder = () => {
                const loading = document.getElementById('sioEmailLoading');
-               if (loading && (hasExternalEmailForm() || emailFallbackVisible)) {
+               if (loading && sioEmailSlot.querySelector('form')) {
                    loading.remove();
                }
            };
 
            const observer = new MutationObserver(() => {
-               if (hasExternalEmailForm()) {
-                   hideFallbackEmailForm();
-               }
                removeLoadingPlaceholder();
            });
 
            observer.observe(sioEmailSlot, { childList: true, subtree: true });
            removeLoadingPlaceholder();
-           setTimeout(() => {
-               if (!hasExternalEmailForm()) {
-                   showFallbackEmailForm();
-                   removeLoadingPlaceholder();
-               }
-           }, 2500);
        }
 
        // Initialisation
