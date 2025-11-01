@@ -251,7 +251,6 @@
            align-items: center;
            gap: 10px;
            flex-shrink: 0;
-           position: relative;
        }
 
        .option-card.image-option {
@@ -261,12 +260,6 @@
            padding: 32px 18px 20px;
            overflow: visible;
            position: relative;
-       }
-
-       .option-card.image-option.image-multi input[type="checkbox"] {
-           position: absolute;
-           opacity: 0;
-           pointer-events: none;
        }
 
        .option-card.image-option .option-image-wrapper {
@@ -382,96 +375,6 @@
            cursor: pointer;
            flex-shrink: 0;
            accent-color: #8b5cf6;
-       }
-
-       .option-card[data-exclusive="true"]::after {
-           content: "";
-       }
-
-       .info-screen {
-           display: flex;
-           flex-direction: column;
-           gap: 20px;
-           align-items: center;
-           text-align: center;
-       }
-
-       .info-screen h3 {
-           font-size: 1.4rem;
-           font-weight: 700;
-           color: #1e293b;
-       }
-
-       .info-screen p {
-           font-size: 0.95rem;
-           color: #475569;
-           line-height: 1.6;
-       }
-
-       .info-illustration {
-           width: 100%;
-           max-width: 320px;
-           border-radius: 16px;
-           overflow: hidden;
-           box-shadow: 0 12px 28px rgba(15, 23, 42, 0.18);
-       }
-
-       .info-illustration img {
-           width: 100%;
-           display: block;
-       }
-
-       .info-bullets {
-           width: 100%;
-           display: flex;
-           flex-direction: column;
-           gap: 12px;
-           text-align: left;
-       }
-
-       .info-bullets li {
-           list-style: none;
-           background: rgba(139, 92, 246, 0.08);
-           border: 1px solid rgba(139, 92, 246, 0.15);
-           border-radius: 12px;
-           padding: 12px 14px;
-           font-size: 0.92rem;
-           color: #4338ca;
-       }
-
-       .survey-insight {
-           margin-top: 20px;
-           padding: 14px 16px;
-           border-radius: 12px;
-           background: rgba(79, 70, 229, 0.08);
-           border: 1px solid rgba(79, 70, 229, 0.16);
-           display: flex;
-           gap: 12px;
-           align-items: flex-start;
-           font-size: 0.85rem;
-           color: #3730a3;
-       }
-
-       .survey-insight-icon {
-           width: 28px;
-           height: 28px;
-           border-radius: 50%;
-           background: white;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           font-size: 1.1rem;
-           box-shadow: 0 4px 8px rgba(79, 70, 229, 0.2);
-       }
-
-       .survey-insight-text {
-           flex: 1;
-           line-height: 1.5;
-       }
-
-       .info-note {
-           font-size: 0.9rem;
-           color: #334155;
        }
 
        .continue-button {
@@ -764,12 +667,12 @@
            </button>
            <div class="app-logo">Profil Digestif</div>
            <div class="header-right">
-               <span class="step-counter" id="stepCounter">1/19</span>
+               <span class="step-counter" id="stepCounter">1/10</span>
            </div>
        </header>
 
        <div class="progress-bar">
-           <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+           <div class="progress-fill" id="progressFill" style="width: 10%"></div>
        </div>
 
        <main class="app-content">
@@ -1149,32 +1052,32 @@
            <section class="question-section" id="q9">
                <div class="question-content">
                    <div class="question-header">
-                       <h2 class="question-title">Do your digestive issues get worse when you're stressed or anxious?</h2>
-                       <p class="question-subtitle">Choose the option that feels the most accurate</p>
+                       <h2 class="question-title">Vos symptômes s'aggravent-ils quand vous êtes stressée ou anxieuse ?</h2>
+                       <p class="question-subtitle">La connexion intestin-cerveau est importante</p>
                    </div>
                    <div class="options-container">
-                       <div class="option-card" data-value="always">
-                           <span class="option-emoji">🥵</span>
+                       <div class="option-card" data-value="toujours">
+                           <span class="option-emoji">✅</span>
                            <div class="option-text">
-                               <div class="option-label">Always</div>
+                               <div class="option-label">Oui, toujours</div>
                            </div>
                        </div>
-                       <div class="option-card" data-value="sometimes">
-                           <span class="option-emoji">😟</span>
+                       <div class="option-card" data-value="parfois">
+                           <span class="option-emoji">🤷‍♀️</span>
                            <div class="option-text">
-                               <div class="option-label">Sometimes</div>
+                               <div class="option-label">Oui, parfois</div>
                            </div>
                        </div>
-                       <div class="option-card" data-value="rarely">
-                           <span class="option-emoji">🙂</span>
+                       <div class="option-card" data-value="non">
+                           <span class="option-emoji">❌</span>
                            <div class="option-text">
-                               <div class="option-label">Rarely</div>
+                               <div class="option-label">Non, pas vraiment</div>
                            </div>
                        </div>
-                       <div class="option-card" data-value="never">
-                           <span class="option-emoji">😌</span>
+                       <div class="option-card" data-value="ne-sais-pas">
+                           <span class="option-emoji">🤔</span>
                            <div class="option-text">
-                               <div class="option-label">Never</div>
+                               <div class="option-label">Je ne sais pas</div>
                            </div>
                        </div>
                    </div>
@@ -1216,411 +1119,6 @@
                        </div>
                    </div>
                </div>
-           </section>
-
-
-           <!-- Question 11 -->
-           <section class="question-section" id="q11">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">When do you usually experience digestive discomfort?</h2>
-                       <p class="question-subtitle">Choose all that apply</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="after-meal">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🍽️</span>
-                           <div class="option-text">
-                               <div class="option-label">Right after a meal</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="morning">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🌅</span>
-                           <div class="option-text">
-                               <div class="option-label">First thing in the morning</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="after-drinking">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🥤</span>
-                           <div class="option-text">
-                               <div class="option-label">After drinking</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="bedtime">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🌙</span>
-                           <div class="option-text">
-                               <div class="option-label">At bedtime</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="irregularly">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🔄</span>
-                           <div class="option-text">
-                               <div class="option-label">Irregularly</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="none" data-exclusive="true">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🚫</span>
-                           <div class="option-text">
-                               <div class="option-label">None of above</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <button class="continue-button" disabled>Continue</button>
-           </section>
-
-           <!-- Question 12 -->
-           <section class="question-section" id="q12">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">How often do you experience digestive issues?</h2>
-                       <p class="question-subtitle">Choose one answer</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="often">
-                           <span class="option-emoji">🥺</span>
-                           <div class="option-text">
-                               <div class="option-label">Often</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="sometimes">
-                           <span class="option-emoji">😕</span>
-                           <div class="option-text">
-                               <div class="option-label">Sometimes</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="rarely">
-                           <span class="option-emoji">🙂</span>
-                           <div class="option-text">
-                               <div class="option-label">Rarely</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="not-sure">
-                           <span class="option-emoji">🤔</span>
-                           <div class="option-text">
-                               <div class="option-label">I'm not sure</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </section>
-
-           <!-- Question 13 -->
-           <section class="question-section" id="q13">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">What's the most irritating issue you want to get rid of?</h2>
-                       <p class="question-subtitle">Choose all that apply</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="options-grid options-grid-mobile-2">
-                           <div class="option-card image-option image-multi" data-value="stomach-pain">
-                               <input type="checkbox" />
-                               <div class="option-image-wrapper">
-                                   <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80" alt="Stomach pain" class="option-image">
-                               </div>
-                               <div class="option-text">
-                                   <div class="option-label">Stomach Pain</div>
-                                   <div class="option-arrow">→</div>
-                               </div>
-                           </div>
-                           <div class="option-card image-option image-multi" data-value="bloating-gas">
-                               <input type="checkbox" />
-                               <div class="option-image-wrapper">
-                                   <img src="https://images.unsplash.com/photo-1529665253569-6d01c0eaf7b6?auto=format&fit=crop&w=600&q=80" alt="Bloating and gas" class="option-image">
-                               </div>
-                               <div class="option-text">
-                                   <div class="option-label">Bloating / Gas</div>
-                                   <div class="option-arrow">→</div>
-                               </div>
-                           </div>
-                           <div class="option-card image-option image-multi" data-value="constipation-diarrhea">
-                               <input type="checkbox" />
-                               <div class="option-image-wrapper">
-                                   <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80" alt="Constipation or diarrhea" class="option-image">
-                               </div>
-                               <div class="option-text">
-                                   <div class="option-label">Constipation / Diarrhea</div>
-                                   <div class="option-arrow">→</div>
-                               </div>
-                           </div>
-                           <div class="option-card image-option image-multi" data-value="stress-anxiety">
-                               <input type="checkbox" />
-                               <div class="option-image-wrapper">
-                                   <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80&sat=-100" alt="Stress and anxiety" class="option-image">
-                               </div>
-                               <div class="option-text">
-                                   <div class="option-label">Stress / Anxiety</div>
-                                   <div class="option-arrow">→</div>
-                               </div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="none" data-exclusive="true">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🚫</span>
-                           <div class="option-text">
-                               <div class="option-label">None of above</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <button class="continue-button" disabled>Continue</button>
-           </section>
-
-           <!-- Question 14 -->
-           <section class="question-section" id="q14">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">Which best describes your bowel movements?</h2>
-                       <p class="question-subtitle">Choose the option that fits you most</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="after-meal">
-                           <span class="option-emoji">⏱️</span>
-                           <div class="option-text">
-                               <div class="option-label">Right after a meal</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="less-once">
-                           <span class="option-emoji">📉</span>
-                           <div class="option-text">
-                               <div class="option-label">Less than once a day</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="once-day">
-                           <span class="option-emoji">✅</span>
-                           <div class="option-text">
-                               <div class="option-label">Once a day</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="more-day">
-                           <span class="option-emoji">🔁</span>
-                           <div class="option-text">
-                               <div class="option-label">More than once a day</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="irregular">
-                           <span class="option-emoji">🌪️</span>
-                           <div class="option-text">
-                               <div class="option-label">Completely irregular</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </section>
-
-           <!-- Question 15 -->
-           <section class="question-section" id="q15">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">How often do you eat fermented foods?</h2>
-                       <p class="question-subtitle">Such as yogurt, kombucha, pickles, and sauerkraut</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="never">
-                           <span class="option-emoji">😶</span>
-                           <div class="option-text">
-                               <div class="option-label">Never</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="rarely">
-                           <span class="option-emoji">😐</span>
-                           <div class="option-text">
-                               <div class="option-label">Rarely</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="often">
-                           <span class="option-emoji">😊</span>
-                           <div class="option-text">
-                               <div class="option-label">Often</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="daily">
-                           <span class="option-emoji">🤩</span>
-                           <div class="option-text">
-                               <div class="option-label">Every day</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </section>
-
-           <!-- Question 16 -->
-           <section class="question-section" id="q16">
-               <div class="question-content">
-                   <div class="info-screen">
-                       <div class="info-illustration">
-                           <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&q=80" alt="Gut and brain connection illustration">
-                       </div>
-                       <h3>Did you know your gut and brain are connected?</h3>
-                       <p>Your issue may not be only in the gut — it could also be linked to the gut–brain connection. Both need to be addressed together, because each directly affects the other.</p>
-                       <ul class="info-bullets">
-                           <li>A stressed brain → cramps, bloating, and digestive discomfort.</li>
-                           <li>Gut inflammation → lower mood and reduced energy.</li>
-                           <li>90% of serotonin is produced in the gut, influencing your mood.</li>
-                       </ul>
-                       <p class="info-note">Let's finish the quiz and get to your results.</p>
-                   </div>
-               </div>
-               <button class="continue-button">Continue</button>
-           </section>
-
-           <!-- Question 17 -->
-           <section class="question-section" id="q17">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">When you feel stressed or anxious, do you sometimes tend to...</h2>
-                       <p class="question-subtitle">Choose all that apply</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="overeat">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🍔</span>
-                           <div class="option-text">
-                               <div class="option-label">Overeat</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="skip-meals">
-                           <input type="checkbox" />
-                           <span class="option-emoji">⏳</span>
-                           <div class="option-text">
-                               <div class="option-label">Skip meals</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="irregular-eating">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🌀</span>
-                           <div class="option-text">
-                               <div class="option-label">Eat irregularly</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="fast-food">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🍩</span>
-                           <div class="option-text">
-                               <div class="option-label">Eat fast food or sweets</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="none" data-exclusive="true">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🚫</span>
-                           <div class="option-text">
-                               <div class="option-label">None of the above</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <button class="continue-button" disabled>Continue</button>
-           </section>
-
-           <!-- Question 18 -->
-           <section class="question-section" id="q18">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">How much do your digestive issues impact your daily mood and energy?</h2>
-                       <p class="question-subtitle">Choose the statement that fits best</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="a-lot">
-                           <span class="option-emoji">😣</span>
-                           <div class="option-text">
-                               <div class="option-label">A lot</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="sometimes">
-                           <span class="option-emoji">😕</span>
-                           <div class="option-text">
-                               <div class="option-label">Sometimes</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="rarely">
-                           <span class="option-emoji">🙂</span>
-                           <div class="option-text">
-                               <div class="option-label">Rarely</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="never">
-                           <span class="option-emoji">😌</span>
-                           <div class="option-text">
-                               <div class="option-label">Never</div>
-                           </div>
-                       </div>
-                   </div>
-                   <div class="survey-insight">
-                       <div class="survey-insight-icon">ℹ️</div>
-                       <div class="survey-insight-text">
-                           <strong>Approximately 2 out of 3 U.S. adults</strong> report digestive problems related to stress and anxiety.<br>
-                           <em>Health.com survey • June 11–19, 2025</em>
-                       </div>
-                   </div>
-               </div>
-           </section>
-
-           <!-- Question 19 -->
-           <section class="question-section" id="q19">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">Do you have/have you had the following diseases of the digestive system?</h2>
-                       <p class="question-subtitle">Choose all that apply</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="ibs">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🌀</span>
-                           <div class="option-text">
-                               <div class="option-label">IBS (Irritable Bowel Syndrome)</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="gastritis">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🔥</span>
-                           <div class="option-text">
-                               <div class="option-label">Gastritis</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="colitis">
-                           <input type="checkbox" />
-                           <span class="option-emoji">⚠️</span>
-                           <div class="option-text">
-                               <div class="option-label">Colitis</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="chronic-diarrhea">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🚽</span>
-                           <div class="option-text">
-                               <div class="option-label">Chronic diarrhea syndrome</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="gerd">
-                           <input type="checkbox" />
-                           <span class="option-emoji">💧</span>
-                           <div class="option-text">
-                               <div class="option-label">GERD (acid reflux)</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="diverticulitis">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🩺</span>
-                           <div class="option-text">
-                               <div class="option-label">Diverticulitis</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="other">
-                           <input type="checkbox" />
-                           <span class="option-emoji">✍️</span>
-                           <div class="option-text">
-                               <div class="option-label">Other</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <button class="continue-button" disabled>Continue</button>
            </section>
            <!-- Question Email -->
            <section class="question-section" id="emailQuestion">
@@ -1711,7 +1209,7 @@
    <script>
        // État de l'application
        let currentStep = 1;
-       const totalSteps = 19;
+       const totalSteps = 10;
        const answers = {};
 
        // Éléments DOM
@@ -1781,40 +1279,17 @@
                            if (e.target !== checkbox) {
                                checkbox.checked = !checkbox.checked;
                            }
-
-                           const isExclusive = option.dataset.exclusive === 'true';
-
-                           if (isExclusive && checkbox.checked) {
-                               section.querySelectorAll('.option-card').forEach(otherOption => {
-                                   if (otherOption === option) return;
-                                   const otherCheckbox = otherOption.querySelector('input[type="checkbox"]');
-                                   if (otherCheckbox) {
-                                       otherCheckbox.checked = false;
-                                       otherOption.classList.remove('selected');
-                                   }
-                               });
-                           } else if (!isExclusive && checkbox.checked) {
-                               section.querySelectorAll('.option-card[data-exclusive="true"]').forEach(exclusiveOption => {
-                                   const exclusiveCheckbox = exclusiveOption.querySelector('input[type="checkbox"]');
-                                   if (exclusiveCheckbox) {
-                                       exclusiveCheckbox.checked = false;
-                                       exclusiveOption.classList.remove('selected');
-                                   }
-                               });
-                           }
-
                            option.classList.toggle('selected', checkbox.checked);
-
-                           const checkedValues = Array.from(section.querySelectorAll('input[type="checkbox"]'))
-                               .filter(cb => cb.checked)
+                           
+                           const checkedValues = Array.from(section.querySelectorAll('input[type="checkbox"]:checked'))
                                .map(cb => cb.parentElement.dataset.value);
-
+                           
                            answers[questionId] = checkedValues;
                            if (continueBtn) continueBtn.disabled = checkedValues.length === 0;
                        });
                    }
                });
-          }
+           }
 
            if (continueBtn) {
                continueBtn.addEventListener('click', () => {
