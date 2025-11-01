@@ -21,13 +21,13 @@
 
        body {
            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, 'Helvetica Neue', Arial, sans-serif;
-           background: #f8f9fa;
+           background: #ffffff;
            margin: 0;
            padding: 0;
        }
 
        .app-container {
-           background: #f8f9fa;
+           background: #ffffff;
            width: 100%;
            height: 100vh;
            height: 100dvh;
@@ -165,7 +165,7 @@
            display: flex;
            flex-direction: column;
            overflow: hidden;
-           padding: 20px 16px 16px 16px;
+           padding: 16px;
            min-height: 0;
        }
 
@@ -204,20 +204,20 @@
        }
 
        .question-header {
-           margin-bottom: 24px;
+           margin-bottom: 20px;
            flex-shrink: 0;
        }
 
        .question-title {
-           font-size: 1.75rem;
+           font-size: 1.4rem;
            font-weight: 700;
            color: #1e293b;
-           margin-bottom: 10px;
-           line-height: 1.2;
+           margin-bottom: 8px;
+           line-height: 1.3;
        }
 
        .question-subtitle {
-           font-size: 1rem;
+           font-size: 0.95rem;
            color: #64748b;
            line-height: 1.5;
        }
@@ -230,80 +230,6 @@
            min-height: 0;
        }
 
-       /* CRITICAL: Grid pour la question d'âge avec images */
-       .options-grid-age {
-           display: grid;
-           grid-template-columns: repeat(2, 1fr);
-           gap: 12px;
-           width: 100%;
-       }
-
-       /* CRITICAL: Style spécifique pour les cartes d'âge avec images */
-       .option-card-age {
-           background: white;
-           border: 2px solid transparent;
-           border-radius: 16px;
-           cursor: pointer;
-           transition: all 0.2s ease;
-           position: relative;
-           overflow: hidden;
-           aspect-ratio: 3/4;
-           display: flex;
-           flex-direction: column;
-           padding: 0;
-       }
-
-       .option-card-age:hover {
-           border-color: #8b5cf6;
-           transform: translateY(-2px);
-           box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
-       }
-
-       .option-card-age.selected {
-           border-color: #7c3aed;
-           background: rgba(139, 92, 246, 0.05);
-       }
-
-       /* CRITICAL: Container pour l'image qui dépasse */
-       .age-image-container {
-           width: 100%;
-           height: 75%;
-           overflow: hidden;
-           position: relative;
-           flex-shrink: 0;
-           background: #f8f9fa;
-       }
-
-       .age-image {
-           width: 100%;
-           height: 110%;
-           object-fit: cover;
-           object-position: center top;
-           display: block;
-       }
-
-       /* CRITICAL: Zone du texte de l'âge */
-       .age-label-container {
-           flex: 1;
-           display: flex;
-           align-items: center;
-           justify-content: space-between;
-           padding: 16px 20px;
-           background: white;
-       }
-
-       .age-label {
-           font-size: 1.5rem;
-           font-weight: 700;
-           color: #1e293b;
-       }
-
-       .age-arrow {
-           width: 20px;
-           height: 20px;
-           color: #64748b;
-       }
-
        .options-grid {
            display: grid;
            grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -311,158 +237,214 @@
        }
 
        .options-grid-mobile-2 {
-           display: grid;
            grid-template-columns: repeat(2, minmax(0, 1fr));
-           gap: 12px;
        }
 
        .option-card {
            background: white;
-           border: 2px solid #e2e8f0;
+           border: 2px solid #e5e7eb;
            border-radius: 12px;
-           padding: 18px 16px;
+           padding: 16px;
            cursor: pointer;
            transition: all 0.2s ease;
            display: flex;
+           align-items: center;
+           gap: 12px;
+           flex-shrink: 0;
+       }
+
+       .option-card.image-option {
            flex-direction: column;
-           gap: 8px;
-           min-height: 80px;
+           align-items: center;
+           gap: 16px;
+           padding: 32px 18px 20px;
+           overflow: visible;
+           position: relative;
+       }
+
+       .option-card.image-option .option-image-wrapper {
+           width: 100%;
+           display: flex;
+           justify-content: center;
+           position: relative;
+           margin-top: -36px;
+       }
+
+       .option-card.image-option .option-image {
+           width: 100%;
+           display: block;
+           aspect-ratio: 3 / 4;
+           object-fit: cover;
+           object-position: top center;
+           border-radius: 16px;
+           box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+           transform: translateY(-18px);
+       }
+
+       .option-card.image-option .option-text {
+           width: 100%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           padding: 0 44px 0 4px;
+           position: relative;
+       }
+
+       .option-card.image-option .option-label {
+           font-size: 1.05rem;
+           text-align: center;
+       }
+
+       .option-card.image-option .option-arrow {
+           position: absolute;
+           right: 0;
+           top: 50%;
+           transform: translateY(-50%);
+           width: 36px;
+           height: 36px;
+           border-radius: 50%;
+           background: rgba(15, 23, 42, 0.05);
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           color: #1e293b;
+           font-weight: 600;
+           font-size: 1rem;
+           box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+           transition: all 0.2s ease;
+       }
+
+       .option-card.image-option.selected .option-arrow {
+           background: rgba(139, 92, 246, 0.15);
+           color: #7c3aed;
+           transform: translateY(-50%) scale(1.05);
+       }
+
+       @media (max-width: 599px) {
+           .option-card.image-option {
+               padding: 28px 16px 18px;
+               gap: 14px;
+           }
+
+           .option-card.image-option .option-image-wrapper {
+               margin-top: -32px;
+           }
+
+           .option-card.image-option .option-arrow {
+               width: 32px;
+               height: 32px;
+               right: 2px;
+           }
        }
 
        .option-card:hover {
            border-color: #8b5cf6;
-           transform: translateY(-2px);
-           box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+           background: rgba(139, 92, 246, 0.02);
        }
 
        .option-card.selected {
-           border-color: #7c3aed;
+           border-color: #8b5cf6;
            background: rgba(139, 92, 246, 0.05);
        }
 
-       .option-icon {
+       .option-emoji {
            font-size: 1.8rem;
-           line-height: 1;
+           flex-shrink: 0;
        }
 
        .option-text {
-           font-size: 0.95rem;
+           flex: 1;
+       }
+
+       .option-label {
+           font-size: 1rem;
+           font-weight: 600;
            color: #1e293b;
-           font-weight: 500;
-           line-height: 1.3;
+           margin-bottom: 2px;
        }
 
-       .option-checkbox {
-           display: flex;
-           align-items: flex-start;
-           gap: 12px;
+       .option-description {
+           font-size: 0.85rem;
+           color: #64748b;
+           line-height: 1.4;
        }
 
-       .option-checkbox input[type="checkbox"] {
+       .option-card input[type="checkbox"] {
            width: 20px;
            height: 20px;
-           margin-top: 2px;
-           flex-shrink: 0;
            cursor: pointer;
-           accent-color: #7c3aed;
+           flex-shrink: 0;
+           accent-color: #8b5cf6;
        }
 
        .continue-button {
            width: 100%;
-           padding: 16px;
            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
            color: white;
            border: none;
            border-radius: 12px;
+           padding: 16px;
            font-size: 1rem;
            font-weight: 600;
            cursor: pointer;
-           transition: all 0.3s ease;
            margin-top: 16px;
+           transition: all 0.2s ease;
            flex-shrink: 0;
+           box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+       }
+
+       .continue-button:hover {
+           transform: translateY(-1px);
+           box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+       }
+
+       .continue-button:active {
+           transform: translateY(0);
        }
 
        .continue-button:disabled {
-           background: #cbd5e1;
+           opacity: 0.5;
            cursor: not-allowed;
-           opacity: 0.6;
+           transform: none;
        }
 
-       .continue-button:not(:disabled):hover {
-           transform: translateY(-2px);
-           box-shadow: 0 8px 16px rgba(139, 92, 246, 0.3);
-       }
+       @media (max-width: 599px) {
+           .options-grid {
+               grid-template-columns: 1fr;
+           }
 
-       /* Email section */
-       .email-section {
-           display: flex;
-           flex-direction: column;
-           gap: 16px;
-           flex: 1;
-           justify-content: center;
+           .options-grid-mobile-2 {
+               grid-template-columns: repeat(2, minmax(0, 1fr));
+           }
        }
 
        .email-step {
            display: flex;
            flex-direction: column;
-           gap: 8px;
+           gap: 12px;
        }
 
        .input-field {
            width: 100%;
-           padding: 16px;
-           border: 2px solid #e2e8f0;
-           border-radius: 12px;
-           font-size: 1rem;
-           font-family: inherit;
+           padding: 14px;
+           border: 2px solid #e5e7eb;
+           border-radius: 10px;
+           font-size: 0.95rem;
            transition: all 0.2s ease;
+           font-family: inherit;
        }
 
        .input-field:focus {
            outline: none;
            border-color: #8b5cf6;
-           box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+           background: rgba(139, 92, 246, 0.02);
        }
 
-       /* Loader */
-       .loader {
-           display: none;
-           flex-direction: column;
-           align-items: center;
-           justify-content: center;
-           gap: 20px;
-           padding: 40px 20px;
-       }
-
-       .loader.active {
-           display: flex;
-       }
-
-       .spinner {
-           width: 50px;
-           height: 50px;
-           border: 4px solid rgba(139, 92, 246, 0.2);
-           border-top-color: #8b5cf6;
-           border-radius: 50%;
-           animation: spin 1s linear infinite;
-       }
-
-       @keyframes spin {
-           to { transform: rotate(360deg); }
-       }
-
-       .loader-text {
-           color: #64748b;
-           font-size: 1rem;
-           text-align: center;
-       }
-
-       /* Results */
        .result-section {
            display: none;
            flex-direction: column;
            gap: 20px;
-           padding-bottom: 20px;
+           animation: slideIn 0.3s ease;
        }
 
        .result-section.active {
@@ -470,10 +452,10 @@
        }
 
        .result-card {
-           background: white;
+           background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+           border: 2px solid rgba(139, 92, 246, 0.2);
            border-radius: 16px;
            padding: 24px;
-           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
        }
 
        .result-title {
@@ -484,161 +466,497 @@
        }
 
        .result-text {
-           font-size: 1rem;
+           font-size: 0.95rem;
            color: #475569;
            line-height: 1.6;
            margin-bottom: 12px;
        }
 
-       .result-text:last-child {
-           margin-bottom: 0;
-       }
-
        .result-highlight {
-           background: rgba(139, 92, 246, 0.05);
+           background: white;
            border-left: 4px solid #8b5cf6;
            padding: 16px;
            border-radius: 8px;
-           margin-top: 12px;
+           margin: 16px 0;
        }
 
        .result-highlight-title {
-           font-weight: 700;
+           font-size: 1rem;
+           font-weight: 600;
            color: #7c3aed;
            margin-bottom: 8px;
        }
 
        .cta-button {
            width: 100%;
-           padding: 18px;
            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
            color: white;
            border: none;
            border-radius: 12px;
+           padding: 18px;
            font-size: 1.1rem;
            font-weight: 600;
            cursor: pointer;
-           transition: all 0.3s ease;
+           transition: all 0.2s ease;
+           box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+           margin-top: 8px;
        }
 
        .cta-button:hover {
            transform: translateY(-2px);
-           box-shadow: 0 8px 16px rgba(139, 92, 246, 0.3);
+           box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+       }
+
+       .loader {
+           display: none;
+           flex-direction: column;
+           align-items: center;
+           justify-content: center;
+           height: 100%;
+           gap: 20px;
+       }
+
+       .loader.active {
+           display: flex;
+       }
+
+       .spinner {
+           width: 50px;
+           height: 50px;
+           border: 3px solid rgba(139, 92, 246, 0.2);
+           border-top-color: #8b5cf6;
+           border-radius: 50%;
+           animation: spin 0.8s linear infinite;
+       }
+
+       @keyframes spin {
+           to { transform: rotate(360deg); }
+       }
+
+       .loader-text {
+           font-size: 1rem;
+           color: #64748b;
+           text-align: center;
        }
    </style>
 </head>
 <body>
    <div class="app-container">
        <header class="app-header">
-           <button class="back-button" id="backButton">
+           <button class="back-button" id="backButton" aria-label="Retour">
                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                </svg>
            </button>
-           <div class="app-logo">DigestZen</div>
+           <div class="app-logo">Profil Digestif</div>
            <div class="header-right">
                <span class="step-counter" id="stepCounter">1/9</span>
            </div>
        </header>
 
        <div class="progress-bar">
-           <div class="progress-fill" id="progressFill" style="width: 11.11%"></div>
+           <div class="progress-fill" id="progressFill" style="width: 11.1%"></div>
        </div>
 
        <main class="app-content">
-           <!-- Question 1: Âge avec images -->
-           <section class="question-section active" id="q1">
+            <!-- Question 1 -->
+            <section class="question-section active" id="q1">
+                <div class="question-content">
+                    <div class="question-header">
+                        <h2 class="question-title">What is your age range?</h2>
+                        <p class="question-subtitle">We only use your age to personalize your results.</p>
+                    </div>
+                    <div class="options-container options-grid options-grid-mobile-2">
+                        <div class="option-card image-option" data-value="18-29">
+                            <div class="option-image-wrapper">
+                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca78095ce_1.png" alt="Femme âgée de 18 à 29 ans" class="option-image">
+                            </div>
+                            <div class="option-text">
+                                <div class="option-label">18-29</div>
+                                <div class="option-arrow">→</div>
+                            </div>
+                        </div>
+                        <div class="option-card image-option" data-value="30-39">
+                            <div class="option-image-wrapper">
+                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca85bcd66_11.png" alt="Femme âgée de 30 à 39 ans" class="option-image">
+                            </div>
+                            <div class="option-text">
+                                <div class="option-label">30-39</div>
+                                <div class="option-arrow">→</div>
+                            </div>
+                        </div>
+                        <div class="option-card image-option" data-value="40-49">
+                            <div class="option-image-wrapper">
+                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904cf88c27a4_14.png" alt="Femme âgée de 40 à 49 ans" class="option-image">
+                            </div>
+                            <div class="option-text">
+                                <div class="option-label">40-49</div>
+                                <div class="option-arrow">→</div>
+                            </div>
+                        </div>
+                        <div class="option-card image-option" data-value="50+">
+                            <div class="option-image-wrapper">
+                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca9d70e30_13.png" alt="Femme de 50 ans et plus" class="option-image">
+                            </div>
+                            <div class="option-text">
+                                <div class="option-label">50+</div>
+                                <div class="option-arrow">→</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Question 2 -->
+            <section class="question-section" id="q2">
+                <div class="question-content">
+                    <div class="question-header">
+                        <h2 class="question-title">Quel symptôme digestif vous gâche le plus la vie au quotidien ?</h2>
+                        <p class="question-subtitle">Sélectionnez celui qui vous affecte le plus</p>
+                    </div>
+                    <div class="options-container">
+                        <div class="option-card" data-value="ballonnements">
+                            <span class="option-emoji">🔥</span>
+                            <div class="option-text">
+                                <div class="option-label">Ballonnements persistants</div>
+                                <div class="option-description">Ventre gonflé comme une femme enceinte</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="douleurs">
+                            <span class="option-emoji">💥</span>
+                            <div class="option-text">
+                                <div class="option-label">Douleurs et crampes abdominales</div>
+                                <div class="option-description">Sensations insupportables</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="transit">
+                            <span class="option-emoji">🚽</span>
+                            <div class="option-text">
+                                <div class="option-label">Transit erratique</div>
+                                <div class="option-description">Constipation, diarrhée ou alternance</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="peur">
+                            <span class="option-emoji">😰</span>
+                            <div class="option-text">
+                                <div class="option-label">Peur constante de manger</div>
+                                <div class="option-description">Angoisse avant/après les repas</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="tous">
+                            <span class="option-emoji">🌪️</span>
+                            <div class="option-text">
+                                <div class="option-label">Tous ces symptômes à la fois</div>
+                                <div class="option-description">C'est un calvaire quotidien</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Question 3 -->
+            <section class="question-section" id="q3">
+                <div class="question-content">
+                    <div class="question-header">
+                        <h2 class="question-title">Depuis combien de temps vivez-vous avec ces troubles digestifs ?</h2>
+                        <p class="question-subtitle">Cela nous aide à comprendre votre parcours</p>
+                    </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="moins-6-mois">
+                           <span class="option-emoji">🕐</span>
+                           <div class="option-text">
+                               <div class="option-label">Moins de 6 mois</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="6-mois-2-ans">
+                           <span class="option-emoji">📅</span>
+                           <div class="option-text">
+                               <div class="option-label">Entre 6 mois et 2 ans</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="2-5-ans">
+                           <span class="option-emoji">⏰</span>
+                           <div class="option-text">
+                               <div class="option-label">Entre 2 et 5 ans</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="plus-5-ans">
+                           <span class="option-emoji">😔</span>
+                           <div class="option-text">
+                               <div class="option-label">Plus de 5 ans</div>
+                               <div class="option-description">J'en peux plus…</div>
+                           </div>
+                       </div>
+                   </div>
+                </div>
+            </section>
+
+           <!-- Question 4 -->
+           <section class="question-section" id="q4">
                <div class="question-content">
                    <div class="question-header">
-                       <h2 class="question-title">What is your age range?</h2>
-                       <p class="question-subtitle">We only use your age to personalize your results.</p>
+                       <h2 class="question-title">Comment vos problèmes digestifs affectent-ils votre quotidien ?</h2>
+                       <p class="question-subtitle">Sélectionnez toutes les réponses qui s'appliquent</p>
                    </div>
                    <div class="options-container">
-                       <div class="options-grid-age">
-                           <div class="option-card-age" data-value="18-29">
-                               <div class="age-image-container">
-                                   <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=600&fit=crop&crop=faces" 
-                                        alt="18-29" 
-                                        class="age-image">
-                               </div>
-                               <div class="age-label-container">
-                                   <span class="age-label">18-29</span>
-                                   <svg class="age-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                   </svg>
-                               </div>
+                       <div class="option-card" data-value="sorties">
+                           <input type="checkbox" />
+                           <span class="option-emoji">❌</span>
+                           <div class="option-text">
+                               <div class="option-label">J'évite les sorties au restaurant ou entre amis</div>
                            </div>
-
-                           <div class="option-card-age" data-value="30-39">
-                               <div class="age-image-container">
-                                   <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=600&fit=crop&crop=faces" 
-                                        alt="30-39" 
-                                        class="age-image">
-                               </div>
-                               <div class="age-label-container">
-                                   <span class="age-label">30-39</span>
-                                   <svg class="age-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                   </svg>
-                               </div>
+                       </div>
+                       <div class="option-card" data-value="incomprise">
+                           <input type="checkbox" />
+                           <span class="option-emoji">😔</span>
+                           <div class="option-text">
+                               <div class="option-label">Je me sens incomprise par mon entourage</div>
                            </div>
-
-                           <div class="option-card-age" data-value="40-49">
-                               <div class="age-image-container">
-                                   <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop&crop=faces" 
-                                        alt="40-49" 
-                                        class="age-image">
-                               </div>
-                               <div class="age-label-container">
-                                   <span class="age-label">40-49</span>
-                                   <svg class="age-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                   </svg>
-                               </div>
+                       </div>
+                       <div class="option-card" data-value="travail">
+                           <input type="checkbox" />
+                           <span class="option-emoji">💼</span>
+                           <div class="option-text">
+                               <div class="option-label">Ça impacte mon travail ou ma performance</div>
                            </div>
+                       </div>
+                       <div class="option-card" data-value="fatigue">
+                           <input type="checkbox" />
+                           <span class="option-emoji">😴</span>
+                           <div class="option-text">
+                               <div class="option-label">Je suis constamment fatiguée</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="tete">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🧠</span>
+                           <div class="option-text">
+                               <div class="option-label">J'ai l'impression que c'est "dans ma tête"</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="couple">
+                           <input type="checkbox" />
+                           <span class="option-emoji">💔</span>
+                           <div class="option-text">
+                               <div class="option-label">Ma vie de couple en souffre</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <button class="continue-button" disabled>Continuer</button>
+           </section>
 
-                           <div class="option-card-age" data-value="50+">
-                               <div class="age-image-container">
-                                   <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=600&fit=crop&crop=faces" 
-                                        alt="50+" 
-                                        class="age-image">
-                               </div>
-                               <div class="age-label-container">
-                                   <span class="age-label">50+</span>
-                                   <svg class="age-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                   </svg>
-                               </div>
+           <!-- Question 5 -->
+           <section class="question-section" id="q5">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Qu'avez-vous déjà essayé pour soulager vos symptômes ?</h2>
+                       <p class="question-subtitle">Sélectionnez toutes les réponses qui s'appliquent</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="medicaments">
+                           <input type="checkbox" />
+                           <span class="option-emoji">💊</span>
+                           <div class="option-text">
+                               <div class="option-label">Médicaments</div>
+                               <div class="option-description">Anti-spasmodiques, laxatifs…</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="regimes">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🥗</span>
+                           <div class="option-text">
+                               <div class="option-label">Régimes restrictifs</div>
+                               <div class="option-description">FODMAP, sans gluten, sans lactose…</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="probiotiques">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🦠</span>
+                           <div class="option-text">
+                               <div class="option-label">Probiotiques du commerce</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="consultations">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🩺</span>
+                           <div class="option-text">
+                               <div class="option-label">Consultations médicales</div>
+                               <div class="option-description">Sans solution durable</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="naturel">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🌿</span>
+                           <div class="option-text">
+                               <div class="option-label">Remèdes naturels</div>
+                               <div class="option-description">Tisanes, huiles essentielles…</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="rien">
+                           <input type="checkbox" />
+                           <span class="option-emoji">🙅‍♀️</span>
+                           <div class="option-text">
+                               <div class="option-label">Rien de tout ça</div>
+                               <div class="option-description">Je ne sais plus quoi essayer</div>
+                           </div>
+                       </div>
+                   </div>
+                </div>
+                <button class="continue-button" disabled>Continuer</button>
+            </section>
+
+           <!-- Question 6 -->
+           <section class="question-section" id="q6">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Quelle phrase vous correspond le plus en ce moment ?</h2>
+                       <p class="question-subtitle">Soyez honnête avec vous-même</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="marre">
+                           <span class="option-emoji">😤</span>
+                           <div class="option-text">
+                               <div class="option-label">"J'en ai marre, je veux une solution MAINTENANT"</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="espoir">
+                           <span class="option-emoji">😞</span>
+                           <div class="option-text">
+                               <div class="option-label">"Je commence à perdre espoir…"</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="sceptique">
+                           <span class="option-emoji">🤔</span>
+                           <div class="option-text">
+                               <div class="option-label">"Je suis sceptique mais prête à essayer encore"</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="determinee">
+                           <span class="option-emoji">💪</span>
+                           <div class="option-text">
+                               <div class="option-label">"Je suis déterminée à régler ça, quoi qu'il en coûte"</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="perdue">
+                           <span class="option-emoji">🆘</span>
+                           <div class="option-text">
+                               <div class="option-label">"Je me sens perdue, je ne sais plus quoi faire"</div>
                            </div>
                        </div>
                    </div>
                </div>
            </section>
 
-           <!-- Question 2 -->
-           <section class="question-section" id="q2">
+           <!-- Question 7 -->
+           <section class="question-section" id="q7">
                <div class="question-content">
                    <div class="question-header">
-                       <h2 class="question-title">Quel est votre symptôme principal ?</h2>
-                       <p class="question-subtitle">Celui qui vous gêne le plus au quotidien</p>
+                       <h2 class="question-title">Si vous pouviez résoudre vos problèmes digestifs, qu'est-ce qui changerait dans votre vie ?</h2>
+                       <p class="question-subtitle">Imaginez votre vie sans ces troubles</p>
                    </div>
                    <div class="options-container">
-                       <div class="options-grid-mobile-2">
-                           <div class="option-card" data-value="ballonnements">
-                               <span class="option-icon">🎈</span>
-                               <span class="option-text">Ballonnements</span>
+                       <div class="option-card" data-value="sorties-plaisir">
+                           <span class="option-emoji">🎉</span>
+                           <div class="option-text">
+                               <div class="option-label">Je pourrais enfin profiter des sorties sans stress</div>
                            </div>
-                           <div class="option-card" data-value="douleurs">
-                               <span class="option-icon">⚡</span>
-                               <span class="option-text">Douleurs abdominales</span>
+                       </div>
+                       <div class="option-card" data-value="manger-plaisir">
+                           <span class="option-emoji">🍽️</span>
+                           <div class="option-text">
+                               <div class="option-label">Je mangerais à nouveau avec plaisir et sans peur</div>
                            </div>
-                           <div class="option-card" data-value="transit">
-                               <span class="option-icon">🔄</span>
-                               <span class="option-text">Transit irrégulier</span>
+                       </div>
+                       <div class="option-card" data-value="energie">
+                           <span class="option-emoji">⚡</span>
+                           <div class="option-text">
+                               <div class="option-label">J'aurais plus d'énergie et de joie de vivre</div>
                            </div>
-                           <div class="option-card" data-value="peur">
-                               <span class="option-icon">😰</span>
-                               <span class="option-text">Peur de manger</span>
+                       </div>
+                       <div class="option-card" data-value="bien-etre">
+                           <span class="option-emoji">🧘‍♀️</span>
+                           <div class="option-text">
+                               <div class="option-label">Je me sentirais enfin bien dans mon corps</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="tout">
+                           <span class="option-emoji">🌟</span>
+                           <div class="option-text">
+                               <div class="option-label">Toutes ces réponses !</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </section>
+
+           <!-- Question 8 -->
+           <section class="question-section" id="q8">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Vos symptômes s'aggravent-ils quand vous êtes stressée ou anxieuse ?</h2>
+                       <p class="question-subtitle">La connexion intestin-cerveau est importante</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="toujours">
+                           <span class="option-emoji">✅</span>
+                           <div class="option-text">
+                               <div class="option-label">Oui, toujours</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="parfois">
+                           <span class="option-emoji">🤷‍♀️</span>
+                           <div class="option-text">
+                               <div class="option-label">Oui, parfois</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="non">
+                           <span class="option-emoji">❌</span>
+                           <div class="option-text">
+                               <div class="option-label">Non, pas vraiment</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="ne-sais-pas">
+                           <span class="option-emoji">🤔</span>
+                           <div class="option-text">
+                               <div class="option-label">Je ne sais pas</div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </section>
+
+           <!-- Question 9 -->
+           <section class="question-section" id="q9">
+               <div class="question-content">
+                   <div class="question-header">
+                       <h2 class="question-title">Dans combien de temps aimeriez-vous voir des résultats ?</h2>
+                       <p class="question-subtitle">Chaque parcours est unique</p>
+                   </div>
+                   <div class="options-container">
+                       <div class="option-card" data-value="urgent">
+                           <span class="option-emoji">⚡</span>
+                           <div class="option-text">
+                               <div class="option-label">Le plus vite possible</div>
+                               <div class="option-description">J'ai un événement important</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="3-4-semaines">
+                           <span class="option-emoji">📅</span>
+                           <div class="option-text">
+                               <div class="option-label">Dans les 3-4 semaines</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="peu-importe">
+                           <span class="option-emoji">🎯</span>
+                           <div class="option-text">
+                               <div class="option-label">Peu importe, tant que ça marche</div>
+                           </div>
+                       </div>
+                       <div class="option-card" data-value="progressif">
+                           <span class="option-emoji">🌱</span>
+                           <div class="option-text">
+                               <div class="option-label">Je préfère une solution progressive mais durable</div>
                            </div>
                        </div>
                    </div>
@@ -649,16 +967,14 @@
            <section class="question-section" id="emailQuestion">
                <div class="question-content">
                    <div class="question-header">
-                       <h2 class="question-title">Dernière étape !</h2>
-                       <p class="question-subtitle">Recevez votre profil digestif personnalisé</p>
+                       <h2 class="question-title">Découvrez votre profil digestif personnalisé</h2>
+                       <p class="question-subtitle">Entrez votre email pour recevoir vos résultats détaillés et des conseils personnalisés</p>
                    </div>
-                   <div class="email-section">
-                       <div class="email-step">
-                           <input type="email" class="input-field" id="emailInput" placeholder="votre.email@exemple.com" required>
-                       </div>
+                   <div class="email-step">
+                       <input type="email" class="input-field" id="emailInput" placeholder="votre.email@exemple.com" required>
                    </div>
-                   <button class="continue-button">Découvrir mon profil</button>
                </div>
+               <button class="continue-button">Découvrir mon profil</button>
            </section>
 
            <!-- Loader -->
@@ -689,7 +1005,34 @@
                    </p>
                </div>
 
-               <button class="cta-button" onclick="alert('Redirection vers VSL')">
+               <div class="result-card">
+                   <h3 class="result-title">✅ La vraie cause (mécanisme unique)</h3>
+                   <div class="result-highlight">
+                       <p class="result-highlight-title">La bonne nouvelle :</p>
+                       <p class="result-text">
+                           Des recherches récentes montrent que votre microbiote peut être 
+                           <strong>rééquilibré naturellement en 21 jours</strong>…
+                       </p>
+                       <p class="result-text">
+                           🔬 À condition d'utiliser une approche holistique et personnalisée.
+                       </p>
+                   </div>
+               </div>
+
+               <div class="result-card">
+                   <h3 class="result-title">📹 Découvrez la solution</h3>
+                   <p class="result-text">
+                       Regardez cette courte vidéo de 12 minutes où Anne-Sophie Cortasse, naturopathe 
+                       et ancienne souffrante chronique, vous révèle :
+                   </p>
+                   <p class="result-text">
+                       ✨ Pourquoi vos efforts n'ont pas fonctionné<br>
+                       ✨ Le « rééquilibrage naturel du microbiote » en 21 jours<br>
+                       ✨ Comment des centaines de femmes ont retrouvé une vie normale
+                   </p>
+               </div>
+
+               <button class="cta-button" onclick="window.location.href='#vsl'">
                    Voir la vidéo maintenant →
                </button>
            </section>
@@ -746,32 +1089,60 @@
            }
        }
 
-       // Gestion des cartes d'âge
-       const ageCards = document.querySelectorAll('#q1 .option-card-age');
-       ageCards.forEach(card => {
-           card.addEventListener('click', () => {
-               ageCards.forEach(c => c.classList.remove('selected'));
-               card.classList.add('selected');
-               answers.age = card.dataset.value;
-               
-               // Passer à la question suivante après sélection
-               setTimeout(() => {
-                   goToStep(2);
-               }, 300);
-           });
-       });
+       // Gestion des options à choix unique
+       document.querySelectorAll('.question-section').forEach((section, index) => {
+           const questionId = `q${index + 1}`;
+           const options = section.querySelectorAll('.option-card');
+           const continueBtn = section.querySelector('.continue-button');
+           const hasCheckboxes = section.querySelector('input[type="checkbox"]') !== null;
 
-       // Gestion des autres options
-       document.querySelectorAll('#q2 .option-card').forEach(option => {
-           option.addEventListener('click', () => {
-               document.querySelectorAll('#q2 .option-card').forEach(opt => opt.classList.remove('selected'));
-               option.classList.add('selected');
-               answers.q2 = option.dataset.value;
-               
-               setTimeout(() => {
-                   showEmailQuestion();
-               }, 300);
-           });
+           if (!hasCheckboxes) {
+               options.forEach(option => {
+                   option.addEventListener('click', () => {
+                       options.forEach(opt => opt.classList.remove('selected'));
+                       option.classList.add('selected');
+                       answers[questionId] = option.dataset.value;
+                       if (continueBtn) continueBtn.disabled = false;
+
+                       if (!continueBtn && options.length > 0) {
+                           if (index + 1 < totalSteps) {
+                               goToStep(index + 2);
+                           } else {
+                               showEmailQuestion();
+                           }
+                       }
+                   });
+               });
+           } else {
+               // Gestion des cases à cocher
+               options.forEach(option => {
+                   const checkbox = option.querySelector('input[type="checkbox"]');
+                   if (checkbox) {
+                       option.addEventListener('click', (e) => {
+                           if (e.target !== checkbox) {
+                               checkbox.checked = !checkbox.checked;
+                           }
+                           option.classList.toggle('selected', checkbox.checked);
+                           
+                           const checkedValues = Array.from(section.querySelectorAll('input[type="checkbox"]:checked'))
+                               .map(cb => cb.parentElement.dataset.value);
+                           
+                           answers[questionId] = checkedValues;
+                           if (continueBtn) continueBtn.disabled = checkedValues.length === 0;
+                       });
+                   }
+               });
+           }
+
+           if (continueBtn) {
+               continueBtn.addEventListener('click', () => {
+                   if (index + 1 < totalSteps) {
+                       goToStep(index + 2);
+                   } else {
+                       showEmailQuestion();
+                   }
+               });
+           }
        });
 
        // Afficher la question email
@@ -810,6 +1181,22 @@
                loader.classList.remove('active');
                results.classList.add('active');
                
+               // Personnalisation basique du profil
+               const profileType = document.getElementById('profileType');
+               const mainSymptom = answers.q2;
+               
+               if (mainSymptom === 'ballonnements') {
+                   profileType.textContent = 'Intestin Hypersensible au Stress';
+               } else if (mainSymptom === 'douleurs') {
+                   profileType.textContent = 'Syndrome de l\'Intestin Irritable';
+               } else if (mainSymptom === 'transit') {
+                   profileType.textContent = 'Microbiote Déséquilibré Chronique';
+               } else if (mainSymptom === 'peur') {
+                   profileType.textContent = 'Anxiété Digestive Chronique';
+               } else {
+                   profileType.textContent = 'Dysbiose Intestinale Complexe';
+               }
+               
                // Scroll en haut
                document.querySelector('.app-content').scrollTop = 0;
            }, 2000);
@@ -817,7 +1204,6 @@
 
        // Initialisation
        updateUI();
-       backButton.style.visibility = 'hidden';
    </script>
 </body>
 </html>
