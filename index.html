@@ -1465,19 +1465,124 @@
   const q  = (s, r=document)=>r.querySelector(s);
   const qa = (s, r=document)=>Array.from(r.querySelectorAll(s));
 
+  // Candidats "submit" très larges (comporte cas SIO classiques + fallback)
   const SUBMIT_SEL = [
-    'button[type="submit"]','input[type="submit"]',
-    '.sio-subscribe-button','.sio-submit','[data-element="cta-button"]',
-    '[data-test-id="send-form-button"]','[data-testid="send-form-button"]','button[id^="button-"]'
+    'button[type="submit"]',
+    'input[type="submit"]',
+    '.sio-subscribe-button',
+    '.sio-submit',
+    '[data-element="cta-button"]',
+    '[data-test-id="send-form-button"]',
+    '[data-testid="send-form-button"]',
+    'button[id^="button-"]',
+    'button:matches(:not([type]), [type="button"])' // fallback si SIO gère submit en JS
   ].join(', ');
 
-  let alreadyMounted = false;
+  // Heuristique "email" très large
+  const EMAIL_SEL_WIDE = [
+    'input[type="email"]',
+    'input[name="email"]',
+    'input[name*="email" i]',
+    'input[id*="email" i]',
+    'input[placeholder*="mail" i]',
+    // très spécifique SIO : id field-xxxxxx
+    'input[id^="field-"]'
+  ].join(', ');
 
-  function moveIntoSlot(emailInput, submitBtn) {
+  // On ne veut pas attraper nos éléments déjà déplacés
+  function isInsideMount(el) {
+    return !!(el && el.closest && el.closest('#sioFieldsMount, #sioEmailSlot'));
+  }
+
+  // Un input visible et utile
+  function isUsableInput(el) {
+    if (!el || !(el instanceof HTMLElement)) return false;
+    const style = getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    if (el.type && el.type.toLowerCase() === 'hidden') return false;
+
+    const hint = (el.getAttribute('name')||'') + ' ' + (el.id||'') + ' ' + (el.placeholder||'');
+    const looksEmail = /mail/i.test(hint) || el.type === 'email';
+    return looksEmail;
+  }
+
+  // Trouver le "cluster" (form, sinon colonne/row, sinon section/div proche)
+  function logicalCluster(el) {
+    if (!el) return null;
+    return el.closest('form')
+        || el.closest('[id^="column-"], [id^="row-"], section')
+        || el.parentElement;
+  }
+
+  // Score de proximité bouton↔input
+  function proximityScore(input, btn) {
+    if (!input || !btn) return Infinity;
+    // 1) même form => top
+    const fA = input.closest('form');
+    const fB = btn.closest('form');
+    if (fA && fA === fB) return 0;
+
+    // 2) même cluster (colonne/row) => mieux
+    const cA = logicalCluster(input);
+    const cB = logicalCluster(btn);
+    if (cA && cA === cB) return 1;
+
+    // 3) distance DOM (fallback)
+    const pos = (n)=>n ? (n.compareDocumentPosition ? n : n) : 0;
+    // distance grossière par index de tous boutons
+    const all = qa(SUBMIT_SEL, document);
+    const iA  = all.indexOf(btn);
+    const inputs = qa(EMAIL_SEL_WIDE, document);
+    const iB  = inputs.indexOf(input);
+    if (iA >= 0 && iB >= 0) return Math.abs(iA - iB) + 10;
+
+    return 50;
+  }
+
+  // Sélectionne le meilleur couple (input, bouton)
+  function findBestPair() {
+    // Tous les champs email potentiels, filtrés
+    const inputs = qa(EMAIL_SEL_WIDE, document)
+      .filter(el => isUsableInput(el) && !isInsideMount(el));
+
+    if (!inputs.length) return null;
+
+    // Nettoyage : on évite les champs à cocher/textes du quiz
+    // (notre quiz n’a pas d’autres inputs de type "email", donc OK)
+
+    // Tous les boutons submit possibles
+    const buttons = qa(SUBMIT_SEL, document).filter(el => !isInsideMount(el));
+    if (!buttons.length) return null;
+
+    // Pour chaque input, on prend le bouton le plus proche (score min)
+    let best = null;
+    let bestScore = Infinity;
+
+    for (const inp of inputs) {
+      let candidate = null;
+      let candidateScore = Infinity;
+
+      for (const btn of buttons) {
+        const s = proximityScore(inp, btn);
+        if (s < candidateScore) { candidate = btn; candidateScore = s; }
+        if (candidateScore === 0) break; // même form, on s’arrête
+      }
+
+      if (candidate && candidateScore < bestScore) {
+        best = { input: inp, button: candidate };
+        bestScore = candidateScore;
+      }
+    }
+
+    return best;
+  }
+
+  // Déplacement dans le slot UI
+  function moveIntoSlot(input, button) {
     const slot = document.getElementById('sioEmailSlot');
     if (!slot) return;
 
-    // Crée le mount si besoin
+    // Crée un mount propre
     let mount = q('#sioFieldsMount', slot);
     if (!mount) {
       mount = document.createElement('div');
@@ -1489,112 +1594,113 @@
       slot.appendChild(mount);
     }
 
-    // Wra p input pour garder ton style
-    if (!mount.contains(emailInput)) {
-      const wrap = document.createElement('div');
+    // Wrapper d’input (garde ton style)
+    if (input && !mount.contains(input)) {
+      const wrap = document.createElement('label');
       wrap.className = 'input-field';
       wrap.style.padding = '6.7px 14px';
       wrap.style.border = '2px solid #e5e7eb';
       wrap.style.borderRadius = '10px';
 
-      emailInput.style.width = '100%';
-      emailInput.style.border = '0';
-      emailInput.style.outline = 'none';
-      emailInput.style.fontSize = '0.95rem';
-      if (!emailInput.placeholder) emailInput.placeholder = 'Votre email';
+      const sr = document.createElement('span');
+      sr.className = 'sr-only';
+      sr.textContent = 'Adresse email';
+      wrap.appendChild(sr);
 
-      wrap.appendChild(emailInput);
+      input.style.width = '100%';
+      input.style.border = '0';
+      input.style.outline = 'none';
+      input.style.fontSize = '0.95rem';
+      if (!input.placeholder) input.placeholder = 'Votre email';
+
+      wrap.appendChild(input);
       mount.appendChild(wrap);
     }
 
-    // Range le bouton SIO
-    if (submitBtn && !mount.contains(submitBtn)) {
-      const btnRow = document.createElement('div');
-      btnRow.style.display = 'flex';
-      btnRow.style.flexDirection = 'column';
-      btnRow.style.gap = '8px';
+    // Rangée bouton
+    if (button && !mount.contains(button)) {
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.flexDirection = 'column';
+      row.style.gap = '8px';
 
-      submitBtn.style.width = '100%';
-      submitBtn.style.height = '48px';
-      submitBtn.style.borderRadius = '12px';
+      // harmonise un peu
+      if (button.tagName === 'BUTTON' || button.tagName === 'INPUT') {
+        button.style.width = '100%';
+        button.style.height = '48px';
+        button.style.borderRadius = '12px';
+      }
 
-      btnRow.appendChild(submitBtn);
-      mount.appendChild(btnRow);
+      row.appendChild(button);
+      mount.appendChild(row);
     }
 
-    // Cache ton bouton "Continuer"
+    // Cache le conteneur d’origine (form/colonne)
+    [input, button].forEach(el => {
+      if (!el) return;
+      const host = logicalCluster(el);
+      if (host && host !== mount && host !== slot) host.style.display = 'none';
+    });
+
+    // Supprime loader + cache “Continuer”
+    const loading = document.getElementById('sioEmailLoading');
+    if (loading) loading.remove();
     const quizContinue = q('#emailQuestion .continue-button');
     if (quizContinue) quizContinue.style.display = 'none';
 
-    // Cache l’ancien conteneur SIO d’où viennent les éléments
-    const originForm = emailInput.closest('form');
-    if (originForm) {
-      const originContainer = originForm.closest('[id^="column-"], [id^="row-"], section, div');
-      if (originContainer) originContainer.style.display = 'none';
-    }
-
-    // Enlève le loader
-    const loading = document.getElementById('sioEmailLoading');
-    if (loading) loading.remove();
-
-    alreadyMounted = true;
+    return true;
   }
+
+  let mounted = false;
 
   function tryMount() {
-    // On cherche le PLUS RÉCENT input email injecté par SIO et son bouton submit
-    const emailInputs = qa('input[name="email"]');
-    const emailInput  = emailInputs.length ? emailInputs[emailInputs.length - 1] : null;
-    if (!emailInput) return;
+    if (mounted) return;
+    const pair = findBestPair();
+    if (!pair) return;
 
-    const form = emailInput.closest('form') || emailInput.form;
-    if (!form) return;
+    // Si le champ/bouton sont dans une iframe => on ne peut pas déplacer → abandon
+    const docEl = pair.input.ownerDocument;
+    if (docEl !== document) return;
 
-    const submitBtn = q(SUBMIT_SEL, form);
-    if (!submitBtn) return;
-
-    moveIntoSlot(emailInput, submitBtn);
+    mounted = !!moveIntoSlot(pair.input, pair.button);
   }
 
-  // 1) Quand on ouvre l’étape email, on insiste jusqu’à trouver le form
-  function whenEmailStepOpens() {
+  // Lance seulement quand l’étape email est visible
+  function emailStepActive() {
     const emailSection = document.getElementById('emailQuestion');
-    const runIfVisible = () => {
-      const visible = emailSection && (emailSection.classList.contains('active') || getComputedStyle(emailSection).display !== 'none');
-      if (visible && !alreadyMounted) {
-        // tentatives pendant ~3s
+    if (!emailSection) return false;
+    return emailSection.classList.contains('active') || getComputedStyle(emailSection).display !== 'none';
+  }
+
+  function arm() {
+    const kick = () => {
+      if (!mounted && emailStepActive()) {
+        // retries pendant ~3s (SIO injecte en React)
         let n = 0;
         const t = setInterval(() => {
           n++; tryMount();
-          if (alreadyMounted || n >= 12) clearInterval(t);
+          if (mounted || n >= 12) clearInterval(t);
         }, 250);
       }
     };
-    runIfVisible();
 
-    // Observe toutes modifs DOM : dès que SIO injecte, on monte
-    const mo = new MutationObserver(() => {
-      if (!alreadyMounted) tryMount();
-      runIfVisible();
-    });
-    mo.observe(document.documentElement, { childList: true, subtree: true, attributes: false });
+    // 1re passe
+    kick();
 
-    // Si ta fonction globale existe, on l’enveloppe (bonus)
-    if (typeof window.showEmailQuestion === 'function' && !window.showEmailQuestion.__sioWrapped) {
-      const original = window.showEmailQuestion;
-      window.showEmailQuestion = function () {
-        const r = original.apply(this, arguments);
-        runIfVisible();
-        return r;
-      };
-      window.showEmailQuestion.__sioWrapped = true;
+    // Observe tout le document : quand SIO injecte, on ré-essaie
+    const mo = new MutationObserver(kick);
+    mo.observe(document.documentElement, { childList: true, subtree: true });
+
+    // Hook sur ta fonction si elle existe
+    if (typeof window.showEmailQuestion === 'function' && !window.showEmailQuestion.__wired) {
+      const orig = window.showEmailQuestion;
+      window.showEmailQuestion = function () { const r = orig.apply(this, arguments); kick(); return r; };
+      window.showEmailQuestion.__wired = true;
     }
   }
 
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    whenEmailStepOpens();
-  } else {
-    document.addEventListener('DOMContentLoaded', whenEmailStepOpens);
-  }
+  if (document.readyState === 'complete' || document.readyState === 'interactive') arm();
+  else document.addEventListener('DOMContentLoaded', arm);
 })();
    </script>
 </body>
