@@ -558,7 +558,7 @@
 .q1 .option-card.image-option{
   height:100%;
   border-radius:12px;
-  padding:12px 10px 10px;
+  padding:12px 10px 6px;
   display:flex;
   flex-direction:column;
   overflow:visible; /* pour laisser dépasser un peu la tête */
@@ -585,8 +585,9 @@
 /* 5) Zone texte compacte et centrée */
 .q1 .option-text{
   display:flex; align-items:center; justify-content:center;
-  padding:0 34px 0 2px;
+  padding:0 28px;
   min-height:42px;        /* réserve stable pour le libellé + flèche */
+  text-align:center;
 }
 .q1 .option-label{ font-size:.98rem; font-weight:800; }
 .q1 .option-arrow{ width:28px; height:28px; right:0; top:50%; position:absolute; transform:translateY(-50%); border-radius:50%; background:rgba(15,23,42,.06); display:flex; align-items:center; justify-content:center; }
@@ -598,7 +599,7 @@
 
 /* Écrans très courts : on compresse encore un chouïa */
 @media (max-height:700px){
-  .q1 .option-card.image-option{ padding:10px 8px 8px; }
+  .q1 .option-card.image-option{ padding:10px 8px 6px; }
   .q1 .option-image-wrapper{ margin-top:-10px; }
   .q1 .option-image{ transform:translateY(-5px); }
   .q1 .option-text{ min-height:38px; }
@@ -617,7 +618,7 @@
   height:100% !important;
   display:flex !important;
   flex-direction:column !important;
-  padding:10px !important;
+  padding:10px 10px 6px !important;
   border-radius:12px !important;
   overflow:visible !important;
 }
@@ -647,7 +648,8 @@
   align-items:center !important;
   justify-content:center !important;
   min-height:44px !important;          /* hauteur stable du label */
-  padding:0 34px 0 2px !important;
+  padding:0 28px !important;
+  text-align:center !important;
 }
 
 .q1 .option-label{ font-weight:800 !important; font-size:.98rem !important; }
