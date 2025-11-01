@@ -474,6 +474,35 @@
            color: #7c3aed;
        }
 
+       .email-fallback {
+           display: none;
+           flex-direction: column;
+           gap: 10px;
+       }
+
+       .email-fallback.active {
+           display: flex;
+       }
+
+       .email-helper-text {
+           font-size: 0.85rem;
+           color: #64748b;
+           line-height: 1.4;
+       }
+
+       .email-feedback {
+           font-size: 0.85rem;
+           min-height: 1em;
+       }
+
+       .email-feedback.error {
+           color: #dc2626;
+       }
+
+       .email-feedback.success {
+           color: #16a34a;
+       }
+
        .input-field {
            width: 100%;
            padding: 14px;
@@ -488,6 +517,18 @@
            outline: none;
            border-color: #8b5cf6;
            background: rgba(139, 92, 246, 0.02);
+       }
+
+       .sr-only {
+           position: absolute;
+           width: 1px;
+           height: 1px;
+           padding: 0;
+           margin: -1px;
+           overflow: hidden;
+           clip: rect(0, 0, 0, 0);
+           white-space: nowrap;
+           border: 0;
        }
 
        .result-section {
@@ -1266,6 +1307,12 @@
                           <div id="sioEmailLoading" class="input-field" style="display:flex;align-items:center;justify-content:center;height:26.7px;">
                               Chargement du formulaire…
                           </div>
+                          <form id="emailFallbackForm" class="email-fallback" novalidate>
+                              <label class="sr-only" for="fallbackEmailInput">Adresse email</label>
+                              <input type="email" id="fallbackEmailInput" class="input-field" placeholder="Votre adresse email" autocomplete="email">
+                              <p class="email-helper-text">Nous vous enverrons vos résultats détaillés à cette adresse.</p>
+                              <p id="emailFallbackMessage" class="email-feedback" aria-live="polite"></p>
+                          </form>
                       </div>
                   </div>
               </div>
@@ -1290,7 +1337,45 @@
        const emailSection = document.getElementById('emailQuestion');
        const emailBackButton = document.getElementById('emailStepBack');
        const emailContinueButton = emailSection ? emailSection.querySelector('.continue-button') : null;
+       const emailContinueDefaultText = emailContinueButton ? emailContinueButton.textContent : '';
        const sioEmailSlot = document.getElementById('sioEmailSlot');
+       const emailFallbackForm = document.getElementById('emailFallbackForm');
+       const emailFallbackInput = document.getElementById('fallbackEmailInput');
+       const emailFallbackMessage = document.getElementById('emailFallbackMessage');
+       let emailFallbackVisible = false;
+
+       const resetFallbackMessage = () => {
+           if (emailFallbackMessage) {
+               emailFallbackMessage.textContent = '';
+               emailFallbackMessage.classList.remove('error', 'success');
+           }
+       };
+
+       const showFallbackEmailForm = () => {
+           if (emailFallbackForm && !emailFallbackVisible) {
+               emailFallbackForm.classList.add('active');
+               emailFallbackVisible = true;
+               resetFallbackMessage();
+           }
+       };
+
+       const hideFallbackEmailForm = () => {
+           if (emailFallbackForm) {
+               emailFallbackForm.classList.remove('active');
+           }
+           emailFallbackVisible = false;
+           resetFallbackMessage();
+       };
+
+       if (emailFallbackInput) {
+           emailFallbackInput.addEventListener('input', () => {
+               resetFallbackMessage();
+               if (emailContinueButton && emailContinueButton.disabled) {
+                   emailContinueButton.disabled = false;
+                   emailContinueButton.textContent = emailContinueDefaultText;
+               }
+           });
+       }
 
        if (emailBackButton) {
            emailBackButton.style.display = 'none';
@@ -1423,8 +1508,9 @@
                    '[data-element="cta-button"]'
                ].join(', ');
 
+               const externalFormSelector = 'form:not(#emailFallbackForm)';
                const submitButton = sioEmailSlot ? sioEmailSlot.querySelector(submitSelector) : null;
-               const form = submitButton ? submitButton.closest('form') : (sioEmailSlot ? sioEmailSlot.querySelector('form') : null);
+               const form = submitButton ? submitButton.closest('form') : (sioEmailSlot ? sioEmailSlot.querySelector(externalFormSelector) : null);
 
                if (form) {
                    event.preventDefault();
@@ -1435,24 +1521,75 @@
                    } else {
                        form.submit();
                    }
+               } else if (emailFallbackForm && emailFallbackForm.classList.contains('active')) {
+                   event.preventDefault();
+                   if (!emailFallbackInput) {
+                       return;
+                   }
+
+                   const emailValue = emailFallbackInput.value.trim();
+                   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                   resetFallbackMessage();
+
+                   if (!emailValue) {
+                       if (emailFallbackMessage) {
+                           emailFallbackMessage.textContent = 'Veuillez saisir votre adresse email.';
+                           emailFallbackMessage.classList.add('error');
+                       }
+                       emailFallbackInput.focus();
+                       return;
+                   }
+
+                   if (!emailPattern.test(emailValue)) {
+                       if (emailFallbackMessage) {
+                           emailFallbackMessage.textContent = 'Adresse email invalide. Merci de vérifier votre saisie.';
+                           emailFallbackMessage.classList.add('error');
+                       }
+                       emailFallbackInput.focus();
+                       emailFallbackInput.select();
+                       return;
+                   }
+
+                   answers.email = emailValue;
+
+                   if (emailFallbackMessage) {
+                       emailFallbackMessage.textContent = 'Merci ! Nous vous enverrons vos résultats très vite.';
+                       emailFallbackMessage.classList.add('success');
+                   }
+
+                   emailContinueButton.disabled = true;
+                   emailContinueButton.textContent = 'Email enregistré';
+                   emailContinueButton.blur();
                }
            });
        }
 
        if (sioEmailSlot) {
+           const hasExternalEmailForm = () => !!sioEmailSlot.querySelector('form:not(#emailFallbackForm)');
+
            const removeLoadingPlaceholder = () => {
                const loading = document.getElementById('sioEmailLoading');
-               if (loading && sioEmailSlot.querySelector('form')) {
+               if (loading && (hasExternalEmailForm() || emailFallbackVisible)) {
                    loading.remove();
                }
            };
 
            const observer = new MutationObserver(() => {
+               if (hasExternalEmailForm()) {
+                   hideFallbackEmailForm();
+               }
                removeLoadingPlaceholder();
            });
 
            observer.observe(sioEmailSlot, { childList: true, subtree: true });
            removeLoadingPlaceholder();
+           setTimeout(() => {
+               if (!hasExternalEmailForm()) {
+                   showFallbackEmailForm();
+                   removeLoadingPlaceholder();
+               }
+           }, 2500);
        }
 
        // Initialisation
