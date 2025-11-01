@@ -538,104 +538,7 @@
            color: #64748b;
            text-align: center;
        }
-
-        /* ====== Age question – layout pixel-precis ====== */
-
-        /* grille 2×2 compacte qui tient en hauteur écran mobile */
-        .age-grid{
-          grid-template-columns: repeat(2, 1fr);
-          grid-auto-rows: 1fr;                    /* mêmes hauteurs */
-          gap: 16px;                              /* espace comme la capture */
-          /* réserve juste ce qu'il faut pour tenir dans la vue sans scroller */
-          /* 100dvh - (header 48) - (progress 2) - (padding content 32) - (titre + sous-titre ~84) */
-          min-height: 0;
-        }
-
-        /* carte compacte avec image qui dépasse */
-        .age-card{
-          --card-h: 198px;                        /* hauteur carte (tient sur iPhone 12/13/14/15) */
-          height: var(--card-h);
-          padding: 28px 14px 16px;
-          border-radius: 16px;
-          border: 2px solid #e5e7eb;
-          background: #fff;
-          position: relative;
-          overflow: visible;                       /* autorise la tête à sortir */
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 14px;
-          transition: border-color .2s ease, background .2s ease, transform .1s ease;
-        }
-
-        .age-card:active{ transform: scale(.995); }
-
-        .age-card .option-image-wrapper{
-          width: 100%;
-          display: flex;
-          justify-content: center;
-          /* fait “dépasser” la tête vers le haut du cadre */
-          margin-top: -34px;                       /* règle la sortie de tête */
-        }
-
-        .age-card .option-image{
-          width: 100%;
-          max-width: 236px;                        /* évite les débords sur petits écrans */
-          aspect-ratio: 3 / 4;                     /* même proportion que la maquette */
-          object-fit: cover;
-          object-position: top center;             /* cadre sur le visage */
-          border-radius: 16px;
-          box-shadow: 0 8px 18px rgba(15,23,42,.12);
-          transform: translateY(-18px);            /* fait remonter l’image */
-        }
-
-        .age-card .option-text{
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding-right: 44px;                     /* place pour la flèche */
-          position: relative;
-        }
-
-        .age-card .option-label{
-          font-size: 1.06rem;                      /* graisse identique à la capture */
-          font-weight: 700;
-          letter-spacing: .2px;
-        }
-
-        .age-card .option-arrow{
-          position: absolute;
-          right: 0;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 36px; height: 36px;
-          border-radius: 999px;
-          background: rgba(15,23,42,.05);
-          display: grid; place-items: center;
-          font-weight: 700;
-          box-shadow: 0 2px 6px rgba(15,23,42,.12);
-        }
-
-        .age-card:hover,
-        .age-card.selected{ border-color: #8b5cf6; background: rgba(139,92,246,.05); }
-        .age-card.selected .option-arrow{ background: rgba(139,92,246,.15); color: #7c3aed; transform: translateY(-50%) scale(1.05); }
-
-        /* petits écrans (≤ 360–375px) : réduis très légèrement la carte pour éviter tout scroll */
-        @media (max-width: 380px){
-          .age-card{ --card-h: 190px; padding: 24px 12px 14px; }
-          .age-card .option-image-wrapper{ margin-top: -30px; }
-          .age-card .option-arrow{ width: 32px; height: 32px; }
-        }
-
-        /* grands écrans (≥ 600px) : un peu plus d’air sans casser le 2×2 */
-        @media (min-width: 600px){
-          .age-card{ --card-h: 220px; }
-          .age-card .option-image{ max-width: 260px; }
-        }
-
-        .age-card:focus-visible{ outline: 3px solid rgba(139,92,246,.45); outline-offset: 2px; }
-    </style>
+   </style>
 </head>
 <body>
    <div class="app-container">
@@ -663,43 +566,43 @@
                         <h2 class="question-title">What is your age range?</h2>
                         <p class="question-subtitle">We only use your age to personalize your results.</p>
                     </div>
-                    <div class="options-container options-grid options-grid-mobile-2 age-grid">
-                        <button type="button" class="option-card image-option age-card" data-value="18-29">
+                    <div class="options-container options-grid options-grid-mobile-2">
+                        <div class="option-card image-option" data-value="18-29">
                             <div class="option-image-wrapper">
-                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca78095ce_1.png" alt="18–29" class="option-image">
+                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca78095ce_1.png" alt="Femme âgée de 18 à 29 ans" class="option-image">
                             </div>
                             <div class="option-text">
                                 <div class="option-label">18-29</div>
                                 <div class="option-arrow">→</div>
                             </div>
-                        </button>
-                        <button type="button" class="option-card image-option age-card" data-value="30-39">
+                        </div>
+                        <div class="option-card image-option" data-value="30-39">
                             <div class="option-image-wrapper">
-                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca85bcd66_11.png" alt="30–39" class="option-image">
+                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca85bcd66_11.png" alt="Femme âgée de 30 à 39 ans" class="option-image">
                             </div>
                             <div class="option-text">
                                 <div class="option-label">30-39</div>
                                 <div class="option-arrow">→</div>
                             </div>
-                        </button>
-                        <button type="button" class="option-card image-option age-card" data-value="40-49">
+                        </div>
+                        <div class="option-card image-option" data-value="40-49">
                             <div class="option-image-wrapper">
-                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904cf88c27a4_14.png" alt="40–49" class="option-image">
+                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904cf88c27a4_14.png" alt="Femme âgée de 40 à 49 ans" class="option-image">
                             </div>
                             <div class="option-text">
                                 <div class="option-label">40-49</div>
                                 <div class="option-arrow">→</div>
                             </div>
-                        </button>
-                        <button type="button" class="option-card image-option age-card" data-value="50+">
+                        </div>
+                        <div class="option-card image-option" data-value="50+">
                             <div class="option-image-wrapper">
-                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca9d70e30_13.png" alt="50+" class="option-image">
+                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca9d70e30_13.png" alt="Femme de 50 ans et plus" class="option-image">
                             </div>
                             <div class="option-text">
                                 <div class="option-label">50+</div>
                                 <div class="option-arrow">→</div>
                             </div>
-                        </button>
+                        </div>
                     </div>
                 </div>
             </section>
