@@ -747,7 +747,7 @@
 .q1 .option-arrow{ width:28px !important; height:28px !important; right:0; top:50%; position:absolute; transform:translateY(-50%); border-radius:50%; background:rgba(15,23,42,.06); display:flex; align-items:center; justify-content:center; }
 
    </style>
-   <style id="sioEmailGate">
+   <style id="sioEmailButtonStyle">
      /* Style du bouton une fois déplacé */
      #sioFieldsMount .sio-submit,
      #sioFieldsMount [type="submit"] {
@@ -1312,147 +1312,146 @@
                       <p class="question-subtitle">Entrez votre email pour recevoir vos résultats détaillés et des conseils personnalisés</p>
                   </div>
                   <div class="options-scroll-container">
-                      <div id="sioEmailSlot" class="options-container">
-                        <div id="sioEmailLoading" class="input-field" style="display:flex;align-items:center;justify-content:center;height:26.7px;">
-                          Chargement du champ email…
-                        </div>
-                      </div>
+                      <!-- === SLOT EMAIL (à mettre dans l’étape #emailQuestion) === -->
+<div id="sioEmailSlot" class="options-container">
+  <div id="sioEmailLoading" class="input-field" style="display:flex;align-items:center;justify-content:center;height:26.7px;">
+    Chargement du champ email…
+  </div>
+</div>
+
+<script>
+(function () {
+  const q  = (s, r=document)=>r.querySelector(s);
+  const qa = (s, r=document)=>{ try { return Array.from(r.querySelectorAll(s)); } catch { return []; } };
+
+  // 1) Gate CSS — identique à l’exemple: masque global, n’affiche que dans notre mount
+  (function injectGateCss(){
+    if (document.getElementById('sioEmailGate')) return;
+    const css = document.createElement('style');
+    css.id = 'sioEmailGate';
+    css.textContent = `
+      input[name="email"] { display:none !important; }
+      #sioFieldsMount input[name="email"] { display:block !important; }
+    `;
+    (document.head || document.documentElement).appendChild(css);
+  })();
+
+  // 2) Sélecteurs larges (solide si IDs changent)
+  const EMAIL_SEL = [
+    'input[type="email"]',
+    'input[name="email"]',
+    'input[name*="email" i]',
+    'input[id*="email" i]',
+    'input[placeholder*="mail" i]',
+    'input[id^="field-"]'
+  ].join(', ');
+
+  const SUBMIT_SEL = [
+    'button[type="submit"]','input[type="submit"]',
+    '.sio-subscribe-button','.sio-submit','[data-element="cta-button"]',
+    '[data-test-id="send-form-button"]','[data-testid="send-form-button"]',
+    'button[id^="button-"]','button:not([type])','button[type="button"]'
+  ].join(', ');
+
+  // 3) Relocator — copie de la logique de l’exemple
+  function relocateEmail() {
+    const slot = document.getElementById('sioEmailSlot');
+    if (!slot) return;
+
+    // Mount unique
+    let mount = q('#sioFieldsMount', slot);
+    if (!mount) {
+      mount = document.createElement('div');
+      mount.id = 'sioFieldsMount';
+      mount.style.display = 'flex';
+      mount.style.flexDirection = 'column';
+      mount.style.gap = '12px';
+      slot.innerHTML = '';
+      slot.appendChild(mount);
+    }
+
+    // Champ email (on prend le plus récent si SIO en a plusieurs)
+    const inputs = qa(EMAIL_SEL).filter(Boolean);
+    const email  = inputs.length ? inputs[inputs.length - 1] : null;
+    if (!email) return;
+
+    // Son form + bouton natif
+    const form = email.closest('form') || email.form || null;
+    const nativeBtn = form ? (q(SUBMIT_SEL, form) || null) : null;
+
+    // Déplacement et style — idem exemple
+    if (!mount.contains(email)) {
+      const loading = q('#sioEmailLoading', slot); if (loading) loading.remove();
+      const wrap = document.createElement('div');
+      wrap.className = 'input-field';
+      wrap.style.padding = '6.7px 14px';
+      wrap.style.border = '2px solid #e5e7eb';
+      wrap.style.borderRadius = '10px';
+
+      email.style.width = '100%';
+      email.style.border = '0';
+      email.style.outline = 'none';
+      email.style.fontSize = '0.95rem';
+      if (!email.placeholder) email.placeholder = 'Votre email';
+
+      wrap.appendChild(email);
+      mount.appendChild(wrap);
+    }
+
+    // IMPORTANT : insérer le mount DANS le <form> (comme l’exemple)
+    if (form && mount.parentElement !== form) {
+      const anchor = nativeBtn || form.firstChild;
+      form.insertBefore(mount, anchor || null);
+    }
+
+    // Le bouton “Continuer” de l’étape déclenche la vraie soumission SIO
+    const continueBtn = q('#emailQuestion .continue-button');
+    if (continueBtn && !continueBtn.dataset.sioBound) {
+      continueBtn.dataset.sioBound = '1';
+      continueBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const btn =
+          (form && (q('button[type="submit"]', form) || q('input[type="submit"]', form))) ||
+          (form && q(SUBMIT_SEL, form)) ||
+          q(SUBMIT_SEL, document);
+        if (btn && typeof btn.click === 'function') { btn.style.display='none'; btn.click(); }
+        else if (form) { if (form.requestSubmit) form.requestSubmit(); else form.submit(); }
+      });
+    }
+  }
+
+  // 4) Déclenchement tardif — wrapper showEmailQuestion (pile comme l’exemple)
+  function armLikeExample() {
+    if (typeof window.showEmailQuestion === 'function' && !window.showEmailQuestion.__sioWrapped) {
+      const orig = window.showEmailQuestion;
+      window.showEmailQuestion = function wrappedShowEmailQuestion() {
+        const r = orig.apply(this, arguments);
+        setTimeout(() => {
+          let n=0, t=setInterval(()=>{ n++; relocateEmail(); if(n>=12) clearInterval(t); }, 250);
+        }, 0);
+        return r;
+      };
+      window.showEmailQuestion.__sioWrapped = true;
+      return;
+    }
+    // Fallback : si l’étape est affichée sans passer par showEmailQuestion
+    const target = document.getElementById('emailQuestion');
+    if (target && getComputedStyle(target).display !== 'none') { relocateEmail(); return; }
+    const mo = new MutationObserver(() => {
+      const el = document.getElementById('emailQuestion');
+      if (el && getComputedStyle(el).display !== 'none') { mo.disconnect(); relocateEmail(); }
+    });
+    mo.observe(document.documentElement, { childList:true, subtree:true, attributes:true });
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') armLikeExample();
+  else document.addEventListener('DOMContentLoaded', armLikeExample);
+})();
+</script>
                   </div>
                   <div class="email-step-actions">
                       <button class="continue-button" type="button">Continuer</button>
                   </div>
-                  <script>
-                  (function () {
-                    const q  = (s, r=document)=>r.querySelector(s);
-                    const qa = (s, r=document)=>{ try { return Array.from(r.querySelectorAll(s)); } catch { return []; } };
-                    const log = (...a)=>console.log('[sio-email-relocator]', ...a);
-
-                    // 1) Gate CSS — identique à l’exemple : masquer partout, afficher seulement dans notre mount
-                    (function injectGateCss(){
-                      if (document.getElementById('sioEmailGate')) return;
-                      const css = document.createElement('style');
-                      css.id = 'sioEmailGate';
-                      css.textContent = `
-                        input[name="email"] { display:none !important; }
-                        #sioFieldsMount input[name="email"] { display:block !important; }
-                      `;
-                      (document.head || document.documentElement).appendChild(css);
-                    })();
-
-                    // 2) Sélecteurs larges pour être “solide” sur duplication/partage
-                    const EMAIL_SEL = [
-                      'input[type="email"]',
-                      'input[name="email"]',
-                      'input[name*="email" i]',
-                      'input[id*="email" i]',
-                      'input[placeholder*="mail" i]',
-                      'input[id^="field-"]'
-                    ].join(', ');
-
-                    const SUBMIT_SEL = [
-                      'button[type="submit"]','input[type="submit"]',
-                      '.sio-subscribe-button','.sio-submit','[data-element="cta-button"]',
-                      '[data-test-id="send-form-button"]','[data-testid="send-form-button"]',
-                      'button[id^="button-"]','button:not([type])','button[type="button"]'
-                    ].join(', ');
-
-                    // 3) Relocator (copie l’esprit de ton exemple)
-                    function relocateEmail() {
-                      const slot = document.getElementById('sioEmailSlot');
-                      if (!slot) return;
-
-                      // Mount unique
-                      let mount = q('#sioFieldsMount', slot);
-                      if (!mount) {
-                        mount = document.createElement('div');
-                        mount.id = 'sioFieldsMount';
-                        mount.style.display = 'flex';
-                        mount.style.flexDirection = 'column';
-                        mount.style.gap = '12px';
-                        slot.innerHTML = '';
-                        slot.appendChild(mount);
-                      }
-
-                      // Trouver le champ email le plus “récent”
-                      const inputs = qa(EMAIL_SEL).filter(Boolean);
-                      const email  = inputs.length ? inputs[inputs.length - 1] : null;
-                      if (!email) { log('email introuvable'); return; }
-
-                      // Trouver son form & le bouton natif
-                      const form = email.closest('form') || email.form || null;
-                      const nativeBtn = form ? (q(SUBMIT_SEL, form) || null) : null;
-
-                      // Construire le wrapper & déplacer le champ (exactement comme l’exemple)
-                      if (!mount.contains(email)) {
-                        const loading = q('#sioEmailLoading', slot); if (loading) loading.remove();
-                        const wrap = document.createElement('div');
-                        wrap.className = 'input-field';
-                        wrap.style.padding = '6.7px 14px';
-                        wrap.style.border = '2px solid #e5e7eb';
-                        wrap.style.borderRadius = '10px';
-
-                        email.style.width = '100%';
-                        email.style.border = '0';
-                        email.style.outline = 'none';
-                        email.style.fontSize = '0.95rem';
-                        if (!email.placeholder) email.placeholder = 'Votre email';
-
-                        wrap.appendChild(email);
-                        mount.appendChild(wrap);
-                      }
-
-                      // Si on a le <form>, insérer NOTRE mount dedans (pour laisser React/SIO gérer la soumission)
-                      if (form && mount.parentElement !== form) {
-                        // On place juste avant le bouton natif s’il existe, sinon en tête
-                        const anchor = nativeBtn || form.firstChild;
-                        form.insertBefore(mount, anchor || null);
-                      }
-
-                      // Câbler le bouton “Continuer” de ta section pour déclencher la vraie soumission SIO
-                      const continueBtn = q('#emailQuestion .continue-button');
-                      if (continueBtn && !continueBtn.dataset.sioBound) {
-                        continueBtn.dataset.sioBound = '1';
-                        continueBtn.addEventListener('click', (e) => {
-                          e.preventDefault();
-                          const btn = (form && (q('button[type="submit"]', form) || q('input[type="submit"]', form))) ||
-                                      (form && q(SUBMIT_SEL, form)) ||
-                                      q(SUBMIT_SEL, document);
-                          if (btn && typeof btn.click === 'function') { btn.style.display='none'; btn.click(); }
-                          else if (form) { if (form.requestSubmit) form.requestSubmit(); else form.submit(); }
-                        });
-                      }
-                    }
-
-                    // 4) Déclencheur tardif — même technique que ton exemple (wrap showEmailQuestion)
-                    function runWhenEmailStepOpens() {
-                      if (typeof window.showEmailQuestion === 'function' && !window.showEmailQuestion.__sioWrapped) {
-                        const orig = window.showEmailQuestion;
-                        window.showEmailQuestion = function wrappedShowEmailQuestion() {
-                          const r = orig.apply(this, arguments);
-                          setTimeout(() => {
-                            // petites tentatives pour laisser SIO injecter
-                            let n = 0; const t = setInterval(() => { n++; relocateEmail(); if (n>=12) clearInterval(t); }, 250);
-                          }, 0);
-                          return r;
-                        };
-                        window.showEmailQuestion.__sioWrapped = true;
-                        return;
-                      }
-
-                      // Fallback : si #emailQuestion devient visible sans passer par showEmailQuestion
-                      const target = document.getElementById('emailQuestion');
-                      if (target && getComputedStyle(target).display !== 'none') { relocateEmail(); return; }
-                      const mo = new MutationObserver(() => {
-                        const el = document.getElementById('emailQuestion');
-                        if (el && getComputedStyle(el).display !== 'none') { mo.disconnect(); relocateEmail(); }
-                      });
-                      mo.observe(document.documentElement, { childList:true, subtree:true, attributes:true });
-                    }
-
-                    if (document.readyState === 'complete' || document.readyState === 'interactive') runWhenEmailStepOpens();
-                    else document.addEventListener('DOMContentLoaded', runWhenEmailStepOpens);
-                  })();
-                  </script>
               </div>
           </section>
       </main>
