@@ -1211,11 +1211,13 @@
                        <h2 class="question-title">Découvrez votre profil digestif personnalisé</h2>
                        <p class="question-subtitle">Entrez votre email pour recevoir vos résultats détaillés et des conseils personnalisés</p>
                    </div>
-                   <div class="email-step">
-                       <input type="email" class="input-field" id="emailInput" placeholder="votre.email@exemple.com" required>
+                   <div id="sioEmailSlot" class="email-step" style="flex-direction: column; gap: 12px;">
+                       <div id="sioEmailLoading" class="input-field" style="display:flex;align-items:center;justify-content:center;height:26.7px;">
+                           Chargement du champ email…
+                       </div>
                    </div>
                </div>
-               <button class="continue-button">Découvrir mon profil</button>
+               <button class="continue-button" type="button">Découvrir mon profil</button>
            </section>
 
            <!-- Loader -->
@@ -1300,6 +1302,7 @@
        const backButton = document.getElementById('backButton');
        const stepCounter = document.getElementById('stepCounter');
        const progressFill = document.getElementById('progressFill');
+       const emailSection = document.getElementById('emailQuestion');
 
        // Gestion du bouton retour
        backButton.addEventListener('click', () => {
@@ -1392,23 +1395,185 @@
                section.classList.remove('active');
            });
            document.getElementById('emailQuestion').classList.add('active');
+           if (typeof window.relocateSioEmailField === 'function') {
+               setTimeout(window.relocateSioEmailField, 0);
+           }
        }
 
-       // Gestion de l'email
-       const emailInput = document.getElementById('emailInput');
-       const emailSection = document.getElementById('emailQuestion');
-       const emailContinueBtn = emailSection.querySelector('.continue-button');
+      // -------- Intégration du champ email Systeme.io --------
+      (function setupSioEmailField() {
+          const q = (sel, root = document) => root.querySelector(sel);
+          const qa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
-       emailContinueBtn.addEventListener('click', () => {
-           const email = emailInput.value.trim();
-           if (!email || !email.includes('@')) {
-               alert('Merci de renseigner une adresse email valide.');
-               return;
-           }
-           
-           answers.email = email;
-           showResults();
-       });
+          // Masque les champs SIO en dehors de notre mount
+          (function injectGateCss() {
+              if (document.getElementById('remoteursFieldGate')) return;
+              const style = document.createElement('style');
+              style.id = 'remoteursFieldGate';
+              style.textContent = `
+          input[name="email"] { display: none !important; }
+          #sioFieldsMount input[name="email"] { display: block !important; }
+        `;
+              (document.head || document.documentElement).appendChild(style);
+          })();
+
+          const SUBMIT_SEL = [
+              'button[type="submit"]',
+              'input[type="submit"]',
+              '[data-test-id="send-form-button"]',
+              '[data-testid="send-form-button"]',
+              'button[id^="button-"]',
+              '[data-element="submit"]',
+              '.sio-subscribe-button',
+              '.sio-submit',
+              '[data-element="cta-button"]'
+          ].join(', ');
+
+          const initialContinue = q('#emailQuestion .continue-button');
+          if (initialContinue) initialContinue.disabled = true;
+
+          function relocateSioEmailField() {
+              const slot = document.getElementById('sioEmailSlot');
+              if (!slot) return;
+
+              let mount = q('#sioFieldsMount', slot);
+              if (!mount) {
+                  mount = document.createElement('div');
+                  mount.id = 'sioFieldsMount';
+                  mount.style.display = 'flex';
+                  mount.style.flexDirection = 'column';
+                  mount.style.gap = '12px';
+                  slot.innerHTML = '';
+                  slot.appendChild(mount);
+              }
+
+              const inputs = qa('input[name="email"]');
+              const input = inputs.length ? inputs[inputs.length - 1] : null;
+              if (!input) return;
+
+              if (!mount.contains(input)) {
+                  const loading = q('#sioEmailLoading', slot);
+                  if (loading) loading.remove();
+
+                  const wrapper = document.createElement('div');
+                  wrapper.className = 'input-field';
+                  wrapper.style.padding = '6.7px 14px';
+                  wrapper.style.border = '2px solid #e5e7eb';
+                  wrapper.style.borderRadius = '10px';
+
+                  input.style.width = '100%';
+                  input.style.border = '0';
+                  input.style.outline = 'none';
+                  input.style.fontSize = '0.95rem';
+                  input.placeholder = input.placeholder || 'votre.email@exemple.com';
+
+                  wrapper.appendChild(input);
+                  mount.appendChild(wrapper);
+              }
+
+              try {
+                  const saved = localStorage.getItem('quizEmail');
+                  if (saved && !input.value) input.value = saved;
+                  input.addEventListener('input', (e) => {
+                      localStorage.setItem('quizEmail', e.target.value || '');
+                  });
+              } catch (error) {
+                  console.warn('Impossible de sauvegarder l\'email en localStorage.', error);
+              }
+
+              const adoptIntoForm = () => {
+                  const email = q('#sioFieldsMount input[name="email"]');
+                  const form = email && (email.closest('form') || email.form);
+                  if (!form) return false;
+
+                  const anchor = q(SUBMIT_SEL, form);
+                  if (mount.parentElement !== form) {
+                      form.insertBefore(mount, anchor || form.firstChild);
+                  }
+
+                  const nativeBtn = q(SUBMIT_SEL, form);
+                  if (nativeBtn) nativeBtn.style.display = 'none';
+                  return true;
+              };
+
+              let ok = adoptIntoForm();
+              let tries = 0;
+              if (!ok) {
+                  const retry = () => {
+                      if (ok || tries >= 10) return;
+                      tries += 1;
+                      ok = adoptIntoForm();
+                      if (!ok) setTimeout(retry, 250);
+                  };
+                  retry();
+              }
+
+              const continueBtn = q('#emailQuestion .continue-button');
+              if (continueBtn && !continueBtn.dataset.sioBound) {
+                  continueBtn.dataset.sioBound = '1';
+                  continueBtn.addEventListener('click', (e) => {
+                      e.preventDefault();
+
+                      const emailInput = q('#sioFieldsMount input[name="email"]');
+                      const emailValue = emailInput ? emailInput.value.trim() : '';
+                      if (!emailValue || !emailValue.includes('@')) {
+                          alert('Merci de renseigner une adresse email valide.');
+                          if (emailInput && typeof emailInput.focus === 'function') emailInput.focus();
+                          return;
+                      }
+
+                      answers.email = emailValue;
+
+                      const form = emailInput && (emailInput.closest('form') || emailInput.form);
+                      const nativeBtn =
+                          (form && (q('button[type="submit"]', form) || q('input[type="submit"]', form))) ||
+                          q(SUBMIT_SEL, document);
+
+                      if (nativeBtn && typeof nativeBtn.click === 'function') {
+                          nativeBtn.style.display = 'none';
+                          nativeBtn.click();
+                      } else if (form) {
+                          if (typeof form.requestSubmit === 'function') form.requestSubmit(); else form.submit();
+                      }
+
+                      showResults();
+                  });
+              }
+
+              const boundEmailInput = q('#sioFieldsMount input[name="email"]');
+              const stateButton = q('#emailQuestion .continue-button');
+              if (boundEmailInput && stateButton && !boundEmailInput.dataset.boundForState) {
+                  boundEmailInput.dataset.boundForState = '1';
+                  const toggleButtonState = () => {
+                      stateButton.disabled = !boundEmailInput.value.trim();
+                  };
+                  toggleButtonState();
+                  boundEmailInput.addEventListener('input', toggleButtonState);
+              }
+          }
+
+          function armRelocator() {
+              relocateSioEmailField();
+          }
+
+          if (document.readyState === 'complete' || document.readyState === 'interactive') {
+              setTimeout(armRelocator, 0);
+          } else {
+              document.addEventListener('DOMContentLoaded', () => setTimeout(armRelocator, 0));
+          }
+
+          const emailQuestion = document.getElementById('emailQuestion');
+          if (emailQuestion) {
+              const observer = new MutationObserver(() => {
+                  if (emailQuestion.classList.contains('active')) {
+                      setTimeout(relocateSioEmailField, 0);
+                  }
+              });
+              observer.observe(emailQuestion, { attributes: true, attributeFilter: ['class'] });
+          }
+
+          window.relocateSioEmailField = relocateSioEmailField;
+      })();
 
        // Afficher les résultats
        function showResults() {
