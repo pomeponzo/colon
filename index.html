@@ -727,6 +727,55 @@
   .q1 .option-text{ min-height:38px; }
 }
 
+/* ====== FIX Q1 — 2×2 sans scroll, cartes adaptées aux images ====== */
+.q1 .options-grid{
+  height:100%;
+  display:grid !important;
+  grid-template-columns:repeat(2,1fr) !important;
+  grid-template-rows:repeat(2,minmax(0,1fr)) !important;
+  gap:10px !important;
+}
+
+.q1 .option-card.image-option{
+  height:100% !important;
+  display:flex !important;
+  flex-direction:column !important;
+  padding:10px !important;
+  border-radius:12px !important;
+  overflow:visible !important;
+}
+
+.q1 .option-image-wrapper{
+  flex:1 1 auto !important;           /* la zone image prend tout le restant */
+  display:block !important;
+  position:relative !important;
+  margin:0 !important;                 /* on repart propre */
+  overflow:visible !important;
+}
+
+.q1 .option-image{
+  width:100% !important;
+  height:100% !important;              /* l’image remplit la zone */
+  object-fit:cover !important;
+  object-position:50% 0% !important;   /* cadrage vers le haut */
+  border-radius:12px !important;
+  box-shadow:none !important;          /* pas d’ombre parasite */
+  transform:translateY(-8px) !important; /* tête qui dépasse légèrement */
+  aspect-ratio:auto !important;
+}
+
+.q1 .option-text{
+  position:relative !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  min-height:44px !important;          /* hauteur stable du label */
+  padding:0 34px 0 2px !important;
+}
+
+.q1 .option-label{ font-weight:800 !important; font-size:.98rem !important; }
+.q1 .option-arrow{ width:28px !important; height:28px !important; right:0; top:50%; position:absolute; transform:translateY(-50%); border-radius:50%; background:rgba(15,23,42,.06); display:flex; align-items:center; justify-content:center; }
+
    </style>
 </head>
 <body>
