@@ -667,12 +667,12 @@
            </button>
            <div class="app-logo">Profil Digestif</div>
            <div class="header-right">
-               <span class="step-counter" id="stepCounter">1/9</span>
+               <span class="step-counter" id="stepCounter">1/10</span>
            </div>
        </header>
 
        <div class="progress-bar">
-           <div class="progress-fill" id="progressFill" style="width: 11.1%"></div>
+           <div class="progress-fill" id="progressFill" style="width: 10%"></div>
        </div>
 
        <main class="app-content">
@@ -775,6 +775,48 @@
             <section class="question-section" id="q3">
                 <div class="question-content">
                     <div class="question-header">
+                        <h2 class="question-title">À quelle fréquence ressentez-vous des ballonnements après les repas&nbsp;?</h2>
+                        <p class="question-subtitle">Sélectionnez la réponse qui correspond le mieux à votre situation</p>
+                    </div>
+                    <div class="options-container">
+                        <div class="option-card" data-value="jamais">
+                            <span class="option-emoji">1</span>
+                            <div class="option-text">
+                                <div class="option-label">Jamais</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="rarement">
+                            <span class="option-emoji">2</span>
+                            <div class="option-text">
+                                <div class="option-label">Rarement</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="regulierement">
+                            <span class="option-emoji">3</span>
+                            <div class="option-text">
+                                <div class="option-label">Régulièrement</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="tres-souvent">
+                            <span class="option-emoji">4</span>
+                            <div class="option-text">
+                                <div class="option-label">Très souvent</div>
+                            </div>
+                        </div>
+                        <div class="option-card" data-value="constamment">
+                            <span class="option-emoji">5</span>
+                            <div class="option-text">
+                                <div class="option-label">Constamment</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Question 4 -->
+            <section class="question-section" id="q4">
+                <div class="question-content">
+                    <div class="question-header">
                         <h2 class="question-title">Depuis combien de temps vivez-vous avec ces troubles digestifs ?</h2>
                         <p class="question-subtitle">Cela nous aide à comprendre votre parcours</p>
                     </div>
@@ -807,8 +849,8 @@
                 </div>
             </section>
 
-           <!-- Question 4 -->
-           <section class="question-section" id="q4">
+           <!-- Question 5 -->
+           <section class="question-section" id="q5">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Comment vos problèmes digestifs affectent-ils votre quotidien ?</h2>
@@ -862,8 +904,8 @@
                <button class="continue-button" disabled>Continuer</button>
            </section>
 
-           <!-- Question 5 -->
-           <section class="question-section" id="q5">
+           <!-- Question 6 -->
+           <section class="question-section" id="q6">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Qu'avez-vous déjà essayé pour soulager vos symptômes ?</h2>
@@ -918,12 +960,12 @@
                            </div>
                        </div>
                    </div>
-                </div>
-                <button class="continue-button" disabled>Continuer</button>
-            </section>
+               </div>
+               <button class="continue-button" disabled>Continuer</button>
+           </section>
 
-           <!-- Question 6 -->
-           <section class="question-section" id="q6">
+           <!-- Question 7 -->
+           <section class="question-section" id="q7">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Quelle phrase vous correspond le plus en ce moment ?</h2>
@@ -964,8 +1006,8 @@
                </div>
            </section>
 
-           <!-- Question 7 -->
-           <section class="question-section" id="q7">
+           <!-- Question 8 -->
+           <section class="question-section" id="q8">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Si vous pouviez résoudre vos problèmes digestifs, qu'est-ce qui changerait dans votre vie ?</h2>
@@ -1006,8 +1048,8 @@
                </div>
            </section>
 
-           <!-- Question 8 -->
-           <section class="question-section" id="q8">
+           <!-- Question 9 -->
+           <section class="question-section" id="q9">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Vos symptômes s'aggravent-ils quand vous êtes stressée ou anxieuse ?</h2>
@@ -1042,8 +1084,8 @@
                </div>
            </section>
 
-           <!-- Question 9 -->
-           <section class="question-section" id="q9">
+           <!-- Question 10 -->
+           <section class="question-section" id="q10">
                <div class="question-content">
                    <div class="question-header">
                        <h2 class="question-title">Dans combien de temps aimeriez-vous voir des résultats ?</h2>
@@ -1078,7 +1120,6 @@
                    </div>
                </div>
            </section>
-
            <!-- Question Email -->
            <section class="question-section" id="emailQuestion">
                <div class="question-content">
@@ -1168,7 +1209,7 @@
    <script>
        // État de l'application
        let currentStep = 1;
-       const totalSteps = 9;
+       const totalSteps = 10;
        const answers = {};
 
        // Éléments DOM
