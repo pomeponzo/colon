@@ -408,6 +408,24 @@
            transform: none;
        }
 
+       .options-scroll-container {
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
+           max-height: 320px;
+           overflow-y: auto;
+           padding-right: 4px;
+       }
+
+       .options-scroll-container::-webkit-scrollbar {
+           width: 6px;
+       }
+
+       .options-scroll-container::-webkit-scrollbar-thumb {
+           background: rgba(124, 58, 237, 0.3);
+           border-radius: 999px;
+       }
+
        @media (max-width: 599px) {
            .options-grid {
                grid-template-columns: 1fr;
@@ -422,6 +440,38 @@
            display: flex;
            flex-direction: column;
            gap: 12px;
+       }
+
+       .email-step-actions {
+           display: flex;
+           gap: 12px;
+           margin-top: 16px;
+       }
+
+       #emailQuestion .continue-button {
+           margin-top: 0;
+           flex: 2;
+       }
+
+       .email-back-button {
+           flex: 1;
+           border: 2px solid #e5e7eb;
+           border-radius: 10px;
+           background: #ffffff;
+           color: #312e81;
+           font-size: 0.95rem;
+           font-weight: 600;
+           padding: 12px 16px;
+           cursor: pointer;
+           transition: all 0.2s ease;
+           display: none;
+           align-items: center;
+           justify-content: center;
+       }
+
+       .email-back-button:hover {
+           border-color: rgba(124, 58, 237, 0.4);
+           color: #7c3aed;
        }
 
        .input-field {
@@ -1205,89 +1255,26 @@
                </div>
            </section>
            <!-- Question Email -->
-           <section class="question-section" id="emailQuestion">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">Découvrez votre profil digestif personnalisé</h2>
-                       <p class="question-subtitle">Entrez votre email pour recevoir vos résultats détaillés et des conseils personnalisés</p>
-                   </div>
-                   <div class="email-step">
-                       <input type="email" class="input-field" id="emailInput" placeholder="votre.email@exemple.com" required>
-                   </div>
-               </div>
-               <button class="continue-button">Découvrir mon profil</button>
-           </section>
-
-           <!-- Loader -->
-           <div class="loader" id="loader">
-               <div class="spinner"></div>
-               <p class="loader-text">Analyse de votre profil digestif en cours...</p>
-           </div>
-
-           <!-- Résultats -->
-           <section class="result-section" id="results">
-               <div class="result-card">
-                   <h2 class="result-title">🎯 Votre Profil : <span id="profileType">Intestin Hypersensible</span></h2>
-                   <p class="result-text" id="resultMirror">
-                       D'après vos réponses, vous souffrez probablement de troubles digestifs depuis plusieurs années. 
-                       Vous avez déjà essayé différentes solutions sans succès durable. Vous n'êtes pas seule : 
-                       <strong>plus de 5 millions de Françaises vivent la même chose</strong>.
-                   </p>
-               </div>
-
-               <div class="result-card">
-                   <h3 class="result-title">❌ Pourquoi ça n'a pas marché jusqu'ici</h3>
-                   <p class="result-text">
-                       Le problème : les solutions classiques (médicaments, régimes FODMAP, probiotiques) 
-                       <strong>ne s'attaquent pas à la vraie cause</strong>…
-                   </p>
-                   <p class="result-text">
-                       ⚠️ Elles traitent les symptômes, pas l'origine du déséquilibre.
-                   </p>
-               </div>
-
-               <div class="result-card">
-                   <h3 class="result-title">✅ La vraie cause (mécanisme unique)</h3>
-                   <div class="result-highlight">
-                       <p class="result-highlight-title">La bonne nouvelle :</p>
-                       <p class="result-text">
-                           Des recherches récentes montrent que votre microbiote peut être 
-                           <strong>rééquilibré naturellement en 21 jours</strong>…
-                       </p>
-                       <p class="result-text">
-                           🔬 À condition d'utiliser une approche holistique et personnalisée.
-                       </p>
-                   </div>
-               </div>
-
-               <div class="result-card">
-                   <h3 class="result-title">📹 Découvrez la solution</h3>
-                   <p class="result-text">
-                       Regardez cette courte vidéo de 12 minutes où Anne-Sophie Cortasse, naturopathe 
-                       et ancienne souffrante chronique, vous révèle :
-                   </p>
-                   <p class="result-text">
-                       ✨ Pourquoi vos efforts n'ont pas fonctionné<br>
-                       ✨ Le « rééquilibrage naturel du microbiote » en 21 jours<br>
-                       ✨ Comment des centaines de femmes ont retrouvé une vie normale
-                   </p>
-               </div>
-
-               <button class="cta-button" onclick="window.location.href='#vsl'">
-                   Voir la vidéo maintenant →
-               </button>
-           </section>
-       </main>
-
-       <footer class="legal-footer">
-           <div class="legal-links">
-               <a href="#" target="_blank">CGV</a>
-               <span class="legal-separator">•</span>
-               <a href="#" target="_blank">Mentions légales</a>
-               <span class="legal-separator">•</span>
-               <a href="#" target="_blank">Politique de confidentialité</a>
-           </div>
-       </footer>
+          <section class="question-section" id="emailQuestion">
+              <div class="question-content">
+                  <div class="question-header">
+                      <h2 class="question-title">Découvrez votre profil digestif personnalisé</h2>
+                      <p class="question-subtitle">Entrez votre email pour recevoir vos résultats détaillés et des conseils personnalisés</p>
+                  </div>
+                  <div class="options-scroll-container">
+                      <div id="sioEmailSlot" class="options-container">
+                          <div id="sioEmailLoading" class="input-field" style="display:flex;align-items:center;justify-content:center;height:26.7px;">
+                              Chargement du formulaire…
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="email-step-actions">
+                  <button class="email-back-button" id="emailStepBack" type="button">Retour</button>
+                  <button class="continue-button" type="button">Continuer</button>
+              </div>
+          </section>
+      </main>
    </div>
 
    <script>
@@ -1300,6 +1287,14 @@
        const backButton = document.getElementById('backButton');
        const stepCounter = document.getElementById('stepCounter');
        const progressFill = document.getElementById('progressFill');
+       const emailSection = document.getElementById('emailQuestion');
+       const emailBackButton = document.getElementById('emailStepBack');
+       const emailContinueButton = emailSection ? emailSection.querySelector('.continue-button') : null;
+       const sioEmailSlot = document.getElementById('sioEmailSlot');
+
+       if (emailBackButton) {
+           emailBackButton.style.display = 'none';
+       }
 
        // Gestion du bouton retour
        backButton.addEventListener('click', () => {
@@ -1327,11 +1322,18 @@
                targetSection.classList.add('active');
                currentStep = step;
                updateUI();
+               if (emailBackButton) {
+                   emailBackButton.style.display = targetSection.id === 'emailQuestion' ? 'flex' : 'none';
+               }
            }
        }
 
        // Gestion des options à choix unique
        document.querySelectorAll('.question-section').forEach((section, index) => {
+           if (section.id === 'emailQuestion') {
+               return;
+           }
+
            const questionId = `q${index + 1}`;
            const options = section.querySelectorAll('.option-card');
            const continueBtn = section.querySelector('.continue-button');
@@ -1391,56 +1393,66 @@
            document.querySelectorAll('.question-section').forEach(section => {
                section.classList.remove('active');
            });
-           document.getElementById('emailQuestion').classList.add('active');
+           if (emailSection) {
+               emailSection.classList.add('active');
+           }
+           if (emailBackButton) {
+               emailBackButton.style.display = 'flex';
+           }
+           currentStep = totalSteps;
+           updateUI();
+           const appContent = document.querySelector('.app-content');
+           if (appContent) {
+               appContent.scrollTop = 0;
+           }
        }
 
-       // Gestion de l'email
-       const emailInput = document.getElementById('emailInput');
-       const emailSection = document.getElementById('emailQuestion');
-       const emailContinueBtn = emailSection.querySelector('.continue-button');
+       if (emailBackButton) {
+           emailBackButton.addEventListener('click', () => {
+               goToStep(totalSteps);
+           });
+       }
 
-       emailContinueBtn.addEventListener('click', () => {
-           const email = emailInput.value.trim();
-           if (!email || !email.includes('@')) {
-               alert('Merci de renseigner une adresse email valide.');
-               return;
-           }
-           
-           answers.email = email;
-           showResults();
-       });
+       if (emailContinueButton) {
+           emailContinueButton.addEventListener('click', (event) => {
+               const submitSelector = [
+                   'button[type="submit"]',
+                   'input[type="submit"]',
+                   '.sio-subscribe-button',
+                   '.sio-submit',
+                   '[data-element="cta-button"]'
+               ].join(', ');
 
-       // Afficher les résultats
-       function showResults() {
-           const loader = document.getElementById('loader');
-           const results = document.getElementById('results');
-           
-           emailSection.classList.remove('active');
-           loader.classList.add('active');
-           
-           setTimeout(() => {
-               loader.classList.remove('active');
-               results.classList.add('active');
-               
-               // Personnalisation basique du profil
-               const profileType = document.getElementById('profileType');
-               const mainSymptom = answers.q2;
-               
-               if (mainSymptom === 'ballonnements') {
-                   profileType.textContent = 'Intestin Hypersensible au Stress';
-               } else if (mainSymptom === 'douleurs') {
-                   profileType.textContent = 'Syndrome de l\'Intestin Irritable';
-               } else if (mainSymptom === 'transit') {
-                   profileType.textContent = 'Microbiote Déséquilibré Chronique';
-               } else if (mainSymptom === 'peur') {
-                   profileType.textContent = 'Anxiété Digestive Chronique';
-               } else {
-                   profileType.textContent = 'Dysbiose Intestinale Complexe';
+               const submitButton = sioEmailSlot ? sioEmailSlot.querySelector(submitSelector) : null;
+               const form = submitButton ? submitButton.closest('form') : (sioEmailSlot ? sioEmailSlot.querySelector('form') : null);
+
+               if (form) {
+                   event.preventDefault();
+                   if (submitButton && typeof submitButton.click === 'function') {
+                       submitButton.click();
+                   } else if (typeof form.requestSubmit === 'function') {
+                       form.requestSubmit();
+                   } else {
+                       form.submit();
+                   }
                }
-               
-               // Scroll en haut
-               document.querySelector('.app-content').scrollTop = 0;
-           }, 2000);
+           });
+       }
+
+       if (sioEmailSlot) {
+           const removeLoadingPlaceholder = () => {
+               const loading = document.getElementById('sioEmailLoading');
+               if (loading && sioEmailSlot.querySelector('form')) {
+                   loading.remove();
+               }
+           };
+
+           const observer = new MutationObserver(() => {
+               removeLoadingPlaceholder();
+           });
+
+           observer.observe(sioEmailSlot, { childList: true, subtree: true });
+           removeLoadingPlaceholder();
        }
 
        // Initialisation
