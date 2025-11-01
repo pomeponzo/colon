@@ -418,6 +418,91 @@
            }
        }
 
+        /* ==== Q1 : grille 2×2 pile visible + visuel qui dépasse ==== */
+        .q1 .question-header{
+            margin-bottom: 14px;                  /* compacter l’entête */
+        }
+        .q1 .question-title{
+            font-size: 1.35rem;
+            margin-bottom: 6px;
+        }
+        .q1 .question-subtitle{
+            font-size: .92rem;
+        }
+
+        /* faire en sorte que la grille prenne tout l’espace dispo
+           → 2 lignes identiques qui tiennent sans scroll */
+        .q1 .question-content{
+            display:flex;
+            flex-direction:column;
+            min-height:0;
+        }
+        .q1 .options-container{
+            flex:1;
+            min-height:0;
+        }
+        .q1 .options-grid{
+            height:100%;
+            display:grid;
+            grid-template-columns:repeat(2,minmax(0,1fr));
+            grid-auto-rows:1fr;                   /* 2 lignes de même hauteur */
+            gap:12px;
+        }
+
+        /* carte compacte mais confortable */
+        .q1 .option-card.image-option{
+            overflow:visible;                      /* laisse dépasser la tête */
+            padding:28px 14px 16px;
+            border-radius:14px;
+        }
+
+        /* image cadrée 3:4, tête vers le haut et qui sort légèrement */
+        .q1 .option-image-wrapper{
+            margin-top:-28px;                      /* fait remonter le visuel */
+        }
+        .q1 .option-image{
+            width:100%;
+            aspect-ratio:3/4;                      /* 3:4 = le rendu de la maquette */
+            object-fit:cover;
+            object-position:50% 0%;                /* centre horizontal, top vertical */
+            border-radius:16px;
+            transform:translateY(-14px);           /* la tête dépasse du cadre interne */
+            box-shadow:0 8px 18px rgba(15,23,42,.12);
+        }
+
+        /* ligne du label + flèche */
+        .q1 .option-text{
+            padding:0 40px 0 2px;
+        }
+        .q1 .option-label{
+            font-size:1.02rem;
+            font-weight:800;
+            text-align:center;
+        }
+        .q1 .option-arrow{
+            position:absolute; right:0; top:50%;
+            transform:translateY(-50%);
+            width:32px; height:32px; border-radius:50%;
+            background:rgba(15,23,42,.05);
+            display:flex; align-items:center; justify-content:center;
+            font-weight:700;
+            box-shadow:0 2px 6px rgba(15,23,42,.12);
+        }
+
+        /* petits écrans : garantir le “tout visible” sans scroll */
+        @media (max-width:599px){
+            /* réduis un chouïa les paddings pour caler pile 2×2 */
+            .q1 .option-card.image-option{ padding:24px 12px 14px; }
+            .q1 .option-image-wrapper{ margin-top:-24px; }
+            .q1 .option-image{ transform:translateY(-12px); }
+            .q1 .option-arrow{ width:30px; height:30px; }
+        }
+
+        /* écrans ≥600px : on garde 2×2 mais un peu plus d’air */
+        @media (min-width:600px){
+            .q1 .options-grid{ gap:14px; }
+        }
+
        .email-step {
            display: flex;
            flex-direction: column;
@@ -560,7 +645,7 @@
 
        <main class="app-content">
             <!-- Question 1 -->
-            <section class="question-section active" id="q1">
+           <section class="question-section active q1" id="q1">
                 <div class="question-content">
                     <div class="question-header">
                         <h2 class="question-title">What is your age range?</h2>
