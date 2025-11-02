@@ -1962,5 +1962,93 @@
   }
 })();
   </script>
+<script>
+/* === PATCH: afficher le loader AVANT l’étape e-mail, jamais au début === */
+(function () {
+  const loader       = document.getElementById('sioEmailLoading');
+  const emailSection = document.getElementById('emailQuestion');
+  if (!loader || !emailSection) return;
+
+  const origShow   = window.showEmailQuestion;                 // version actuelle (déjà "wrappée" par tes scripts)
+  const _toggleOri = window.toggleEmailLoading || function(){}; // garde l’API d’origine
+
+  let firstTime = true;           // on ne veut le loader qu’une fois, juste avant l’email
+  let forceHideOnNextToggle = false;
+
+  // Intercepte toggleEmailLoading pour forcer le masquage au prochain appel (empêche le "double affichage")
+  window.toggleEmailLoading = function (visible) {
+    if (forceHideOnNextToggle) {
+      forceHideOnNextToggle = false;
+      return _toggleOri(false);   // on masque coûte que coûte
+    }
+    return _toggleOri(visible);
+  };
+
+  // Monkey-patch de showEmailQuestion
+  window.showEmailQuestion = function () {
+    // 1er passage → on montre d’abord le loader, puis on ouvre l’étape e-mail
+    if (firstTime) {
+      firstTime = false;
+
+      // Masquer toutes les sections de questions
+      document.querySelectorAll('.question-section').forEach(s => s.classList.remove('active'));
+
+      // Afficher UNIQUEMENT le loader
+      loader.hidden = false;
+
+      // Optionnel: montrer "12/12" et 100% pendant le chargement
+      try {
+        if (typeof updateUI === 'function' && typeof totalSteps !== 'undefined') {
+          const prev = typeof currentStep !== 'undefined' ? currentStep : null;
+          currentStep = totalSteps;
+          updateUI();
+          if (prev !== null) currentStep = prev;
+        } else {
+          const sc = document.getElementById('stepCounter');
+          const pf = document.getElementById('progressFill');
+          if (sc && typeof totalSteps !== 'undefined') sc.textContent = `${totalSteps}/${totalSteps}`;
+          if (pf) pf.style.width = '100%';
+        }
+      } catch(_) {}
+
+      const appContent = document.querySelector('.app-content');
+      if (appContent) appContent.scrollTop = 0;
+
+      // Durée du faux traitement (modifiable via data-timeout sur #sioEmailLoading)
+      const attr = loader.getAttribute('data-timeout');
+      let ms = attr ? parseInt(attr, 10) : 2200; // 2.2s par défaut
+      if (!(ms > 0)) {
+        // Petit heuristique: ~25% de --loading-duration si définie (ex: "8s" -> 2000ms)
+        const raw = getComputedStyle(document.documentElement).getPropertyValue('--loading-duration').trim();
+        const n = parseFloat(raw);
+        ms = n ? Math.max(1200, Math.round(n * 250)) : 2200;
+      }
+
+      // Après le délai: on masque le loader et on ouvre l’étape e-mail SANS le ré-afficher
+      setTimeout(() => {
+        forceHideOnNextToggle = true;  // neutralise l’appel interne à toggleEmailLoading(true)
+        loader.hidden = true;
+        if (typeof origShow === 'function') {
+          // Appelle la logique existante (wrappers et instrumentation inclus)
+          return origShow.call(window);
+        }
+        // Fallback si origShow manquant
+        emailSection.classList.add('active');
+        if (typeof updateUI === 'function' && typeof totalSteps !== 'undefined') {
+          currentStep = totalSteps;
+          updateUI();
+        }
+      }, ms);
+
+      return; // On s’arrête ici au 1er passage
+    }
+
+    // Passages suivants → on s’assure juste que le loader reste caché
+    forceHideOnNextToggle = true;
+    loader.hidden = true;
+    if (typeof origShow === 'function') return origShow.apply(this, arguments);
+  };
+})();
+</script>
 </body>
 </html>
