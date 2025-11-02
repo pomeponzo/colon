@@ -1632,6 +1632,220 @@
        }, { capture: true });
      }
    })();
-   </script>
+  </script>
+  <script>
+/* ===== DEBUG SIO — instrumentation console pour l'étape email ===== */
+(function () {
+  const style = "color:#059669;font-weight:700";
+  const log   = (...a)=>console.log("%c[SIO][DBG]", style, ...a);
+  const warn  = (...a)=>console.warn("%c[SIO][WARN]", style, ...a);
+  const error = (...a)=>console.error("%c[SIO][ERR]", style, ...a);
+
+  const q  = (s, r=document)=>r.querySelector(s);
+  const qa = (s, r=document)=>Array.from(r.querySelectorAll(s));
+
+  // Expose un mini tableau de bord pour debug manuel
+  window.sioDbg = {
+    step: null,
+    emailInput: null,
+    form: null,
+    nativeBtn: null,
+    lastClickTs: null,
+    dump(){
+      log("dump", {
+        step: this.step,
+        emailInput: !!this.emailInput,
+        form: !!this.form,
+        nativeBtn: !!this.nativeBtn,
+        lastClickTs: this.lastClickTs
+      });
+      if (this.nativeBtn) {
+        const cs = getComputedStyle(this.nativeBtn);
+        log("nativeBtn visible?", cs.display !== "none", "disabled?", this.nativeBtn.disabled);
+      }
+    }
+  };
+
+  // Helpers pour afficher un chemin court dans les logs
+  function shortSel(el){
+    if (!el) return "∅";
+    const id = el.id ? "#"+el.id : "";
+    const cls = (el.className && typeof el.className === "string") ? "."+el.className.trim().split(/\s+/).slice(0,2).join(".") : "";
+    return `<${el.tagName.toLowerCase()}${id}${cls}>`;
+  }
+
+  // 1) Instrumenter l’ouverture de l’étape email
+  if (typeof window.showEmailQuestion === "function" && !window.showEmailQuestion.__dbgWrapped) {
+    const orig = window.showEmailQuestion;
+    window.showEmailQuestion = function(){
+      log("showEmailQuestion() appelé → on ouvre l'étape email");
+      const r = orig.apply(this, arguments);
+      setTimeout(() => {
+        log("post-open: on tente d’identifier les éléments SIO (form, bouton, input)");
+        instrumentEmailStage();
+      }, 0);
+      return r;
+    };
+    window.showEmailQuestion.__dbgWrapped = true;
+    log("showEmailQuestion WRAPPED (debug)");
+  } else {
+    // Fallback: observer l’apparition de #emailQuestion
+    const mo = new MutationObserver(() => {
+      const el = q("#emailQuestion");
+      if (el && getComputedStyle(el).display !== "none") {
+        mo.disconnect();
+        log("Observer: #emailQuestion visible → instrumentation");
+        setTimeout(instrumentEmailStage, 0);
+      }
+    });
+    mo.observe(document.documentElement, { childList:true, subtree:true, attributes:true });
+    log("Observer armé (en attente d’#emailQuestion)");
+  }
+
+  // 2) Instrumenter les éléments clés de l’étape email
+  function instrumentEmailStage(){
+    const slot = q("#sioEmailSlot");
+    const emailQuestion = q("#emailQuestion");
+    if (!emailQuestion) { warn("#emailQuestion introuvable"); return; }
+    log("instrumentEmailStage: emailQuestion display =", getComputedStyle(emailQuestion).display);
+
+    const EMAIL_SEL = [
+      'input[name="email"]',
+      'input[type="email"]',
+      'input[name*="email" i]',
+      'input[id*="email" i]',
+      'input[placeholder*="mail" i]',
+      'input[id^="field-"]'
+    ].join(", ");
+
+    // Rechercher l’input email et son form
+    const inputs = qa(EMAIL_SEL, document);
+    const emailInput = inputs.length ? inputs[inputs.length-1] : null;
+    window.sioDbg.emailInput = emailInput;
+    log("email input trouvé ?", !!emailInput, emailInput ? shortSel(emailInput) : "");
+
+    const form = emailInput && (emailInput.closest("form") || emailInput.form);
+    window.sioDbg.form = form;
+    log("form trouvé ?", !!form, form ? shortSel(form) : "");
+
+    // Essayer d’attraper le vrai bouton submit natif de Systeme.io
+    const SUBMIT_SEL = [
+      'button[type="submit"]','input[type="submit"]',
+      '[data-test-id="send-form-button"]','[data-testid="send-form-button"]',
+      '.sio-subscribe-button','.sio-submit','[data-element="cta-button"]',
+      'button[id^="button-"]'
+    ].join(", ");
+
+    let nativeBtn = form ? q(SUBMIT_SEL, form) : null;
+    if (!nativeBtn) nativeBtn = q(SUBMIT_SEL, document);
+    window.sioDbg.nativeBtn = nativeBtn;
+    log("bouton SIO natif ?", !!nativeBtn, nativeBtn ? shortSel(nativeBtn) : "");
+
+    if (nativeBtn && !nativeBtn.__dbgBound) {
+      nativeBtn.__dbgBound = true;
+      nativeBtn.addEventListener("click", (ev)=>{
+        log("→ CLICK sur bouton SIO natif", "(isTrusted:", ev.isTrusted, ")", shortSel(ev.currentTarget));
+      });
+      const cs = getComputedStyle(nativeBtn);
+      log("style bouton SIO:", { display: cs.display, visibility: cs.visibility, disabled: !!nativeBtn.disabled });
+    }
+
+    // 3) Instrumenter le bouton “Continuer” de l’étape email (celui du quiz)
+    const continueBtn = q('#emailQuestion .continue-button');
+    const backBtn = q('#emailStepBack');
+    if (!continueBtn) { warn("continue-button (quiz) introuvable dans #emailQuestion"); }
+    if (backBtn && !backBtn.__dbgBound) {
+      backBtn.__dbgBound = true;
+      backBtn.addEventListener("click", () => log('Clique sur "Retour" (étape email)'));
+    }
+
+    // Afficher l’état de la sous-étape (identity vs email) à chaque refresh
+    const oldUpdate = window.updateEmailStepDisplay;
+    if (typeof oldUpdate === "function" && !oldUpdate.__dbgWrapped) {
+      window.updateEmailStepDisplay = function(){
+        const out = oldUpdate.apply(this, arguments);
+        const btn = q('#emailQuestion .continue-button');
+        const identityVisible = !!q('#sioIdentitySection') && q('#sioIdentitySection').classList.contains('active');
+        const emailVisible    = !!q('#sioEmailSection') && q('#sioEmailSection').classList.contains('active');
+        window.sioDbg.step = btn ? btn.dataset.step : null;
+        log("updateEmailStepDisplay → step:", window.sioDbg.step, "| identity:", identityVisible, "| email:", emailVisible);
+        return out;
+      };
+      window.updateEmailStepDisplay.__dbgWrapped = true;
+      log("updateEmailStepDisplay WRAPPED (debug)");
+    }
+
+    // 4) Re-binder le click “Continuer” pour tracer ce qui se passe
+    if (continueBtn && !continueBtn.__dbgBound) {
+      continueBtn.__dbgBound = true;
+      continueBtn.addEventListener("click", (e) => {
+        window.sioDbg.lastClickTs = Date.now();
+        const step = continueBtn.dataset.step;
+        log('Clique sur "Continuer" (quiz) — step =', step);
+
+        // Étape identité → juste switcher en “email”
+        if (step !== "email") {
+          const fn = q('#sioIdentityMount input[name="first_name"]');
+          const ln = q('#sioIdentityMount input[name="surname"]');
+          const ok = !!(fn && fn.value.trim() && ln && ln.value.trim());
+          log("Validation identité:", { haveFirstName: !!(fn && fn.value.trim()), haveLastName: !!(ln && ln.value.trim()) });
+          if (!ok) {
+            warn("Identité incomplète → le script existant affiche un alert et focus l’input manquant");
+          } else {
+            log("OK identité → on doit passer à l’étape 'email'");
+          }
+          return; // le handler original gère la suite
+        }
+
+        // Étape email → on doit cliquer le vrai bouton SIO
+        const email = window.sioDbg.emailInput || q('input[name="email"]');
+        const f = (window.sioDbg.form) || (email && (email.closest('form') || email.form));
+        let btn = window.sioDbg.nativeBtn;
+        if (!btn && f) btn = q(SUBMIT_SEL, f);
+        if (!btn) btn = q(SUBMIT_SEL, document);
+
+        log("Soumission:", {
+          haveEmail: !!email, haveForm: !!f, haveNativeBtn: !!btn,
+          btnSel: btn ? shortSel(btn) : '∅'
+        });
+
+        if (btn && typeof btn.click === "function") {
+          log("→ CLICK programmatique sur le bouton SIO natif");
+          try { btn.click(); } catch (e) { error("échec click()", e); }
+        } else if (f) {
+          log("→ Pas de bouton trouvé, fallback sur form.requestSubmit()/submit()");
+          try { f.requestSubmit ? f.requestSubmit() : f.submit(); } catch (e) { error("échec submit()", e); }
+        } else {
+          error("Aucun form ni bouton SIO détecté — rien à soumettre");
+        }
+      }, true); // useCapture pour tracer avant la logique existante
+      log('Listener debug ajouté sur le bouton "Continuer" (quiz)');
+    }
+
+    // 5) Observer les re-renders (SIO réinserte parfois son bouton)
+    if (form && !form.__dbgMo) {
+      const mo = new MutationObserver((ml)=>{
+        const btnAgain = q('button[type="submit"], input[type="submit"], .sio-subscribe-button, .sio-submit, [data-element="cta-button"]', form);
+        if (btnAgain && btnAgain !== window.sioDbg.nativeBtn) {
+          window.sioDbg.nativeBtn = btnAgain;
+          log("Mutation: nouveau bouton SIO repéré dans le <form> → mis en cache", shortSel(btnAgain));
+          if (!btnAgain.__dbgBound) {
+            btnAgain.__dbgBound = true;
+            btnAgain.addEventListener("click", (ev)=>{
+              log("→ CLICK sur bouton SIO natif (nouveau)", "(isTrusted:", ev.isTrusted, ")");
+            });
+          }
+        }
+      });
+      mo.observe(form, { childList:true, subtree:true });
+      form.__dbgMo = mo;
+      log("MutationObserver posé sur le <form> SIO");
+    }
+
+    // Petits rappels
+    log("Tips: appelle window.sioDbg.dump() dans la console pour voir l’état courant");
+  }
+})();
+  </script>
 </body>
 </html>
