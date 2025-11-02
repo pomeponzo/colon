@@ -448,6 +448,105 @@
            gap: 12px;
        }
 
+       .email-loading-card {
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           text-align: center;
+           gap: 16px;
+           padding: 24px 20px;
+           border-radius: 16px;
+           background: linear-gradient(180deg, rgba(124, 58, 237, 0.12) 0%, rgba(124, 58, 237, 0.03) 100%);
+           border: 1px solid rgba(124, 58, 237, 0.18);
+           box-shadow: 0 16px 40px rgba(124, 58, 237, 0.16);
+       }
+
+       .email-loading-avatar {
+           position: relative;
+           width: 76px;
+           height: 76px;
+           border-radius: 50%;
+           background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           color: white;
+           font-weight: 700;
+           font-size: 1.5rem;
+           letter-spacing: 0.04em;
+           box-shadow: 0 12px 32px rgba(124, 58, 237, 0.35);
+           overflow: hidden;
+       }
+
+       .email-loading-avatar::after {
+           content: '';
+           position: absolute;
+           inset: -8px;
+           border-radius: 50%;
+           background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(139, 92, 246, 0) 70%);
+           opacity: 0.8;
+           animation: emailAvatarPulse 2.4s ease-in-out infinite;
+           z-index: -1;
+       }
+
+       .email-loading-avatar span {
+           position: relative;
+           z-index: 1;
+       }
+
+       .email-loading-text {
+           display: flex;
+           flex-direction: column;
+           gap: 6px;
+       }
+
+       .email-loading-title {
+           font-size: 1.05rem;
+           font-weight: 700;
+           color: #312e81;
+           line-height: 1.35;
+       }
+
+       .email-loading-subtitle {
+           font-size: 0.92rem;
+           color: #4c1d95;
+           line-height: 1.45;
+       }
+
+       .email-loading-dots::after {
+           content: '...';
+           display: inline-block;
+           width: 1.5ch;
+           text-align: left;
+           animation: emailLoadingDots 1.4s steps(4, end) infinite;
+       }
+
+       .email-loading-spinner {
+           width: 42px;
+           height: 42px;
+           border-radius: 50%;
+           border: 3px solid rgba(124, 58, 237, 0.15);
+           border-top-color: #7c3aed;
+           animation: emailLoadingSpinner 1s linear infinite;
+       }
+
+       @keyframes emailLoadingSpinner {
+           to { transform: rotate(360deg); }
+       }
+
+       @keyframes emailLoadingDots {
+           0% { content: ''; }
+           25% { content: '.'; }
+           50% { content: '..'; }
+           75% { content: '...'; }
+           100% { content: ''; }
+       }
+
+       @keyframes emailAvatarPulse {
+           0%, 100% { opacity: 0.65; transform: scale(0.95); }
+           50% { opacity: 1; transform: scale(1.05); }
+       }
+
        .email-step-actions {
            display: flex;
            gap: 12px;
@@ -1320,8 +1419,15 @@
                   <div class="options-scroll-container">
                       <!-- === SLOT EMAIL (à mettre dans l’étape #emailQuestion) === -->
 <div id="sioEmailSlot" class="options-container">
-  <div id="sioEmailLoading" class="input-field" style="display:flex;align-items:center;justify-content:center;height:26.7px;">
-    Chargement du champ email…
+  <div id="sioEmailLoading" class="email-loading-card" role="status" aria-live="polite">
+    <div class="email-loading-avatar" aria-hidden="true">
+      <span>PD</span>
+    </div>
+    <div class="email-loading-text">
+      <p class="email-loading-title">Nous préparons votre analyse personnalisée</p>
+      <p class="email-loading-subtitle">Un instant, nous installons le champ sécurisé pour votre email<span class="email-loading-dots" aria-hidden="true"></span></p>
+    </div>
+    <div class="email-loading-spinner" aria-hidden="true"></div>
   </div>
 </div>
 
@@ -1377,6 +1483,7 @@
     // 1) Mount unique à l’intérieur du slot
     let mount = slot.querySelector('#sioFieldsMount');
     if (!mount) {
+      const placeholder = slot.querySelector('#sioEmailLoading');
       mount = document.createElement('div');
       mount.id = 'sioFieldsMount';
       mount.style.display = 'flex';
@@ -1384,6 +1491,9 @@
       mount.style.gap = '12px';
       slot.innerHTML = '';
       slot.appendChild(mount);
+      if (placeholder) {
+        mount.appendChild(placeholder);
+      }
       log('mount créé');
     }
 
