@@ -1355,24 +1355,10 @@
 
   // 3) Relocator — copie de la logique de l’exemple
   function relocateEmail() {
-    const q  = (s, r=document)=>r.querySelector(s);
-    const qa = (s, r=document)=>{ try { return Array.from(r.querySelectorAll(s)); } catch { return []; } };
-
-    const EMAIL_SEL = [
-      'input[type="email"]','input[name="email"]','input[name*="email" i]',
-      'input[id*="email" i]','input[placeholder*="mail" i]','input[id^="field-"]'
-    ].join(', ');
-
-    const SUBMIT_SEL = [
-      'button[type="submit"]','input[type="submit"]','.sio-subscribe-button','.sio-submit',
-      '[data-element="cta-button"]','[data-test-id="send-form-button"]','[data-testid="send-form-button"]',
-      'button[id^="button-"]','button:not([type])','button[type="button"]'
-    ].join(', ');
-
     const slot = document.getElementById('sioEmailSlot');
-    if (!slot) { console.log('[email] slot introuvable'); return; }
+    if (!slot) return;
 
-    // Mount unique dans le slot
+    // Mount unique
     let mount = q('#sioFieldsMount', slot);
     if (!mount) {
       mount = document.createElement('div');
@@ -1382,25 +1368,20 @@
       mount.style.gap = '12px';
       slot.innerHTML = '';
       slot.appendChild(mount);
-      console.log('[email] mount créé');
     }
 
-    // 1) CHAMP EMAIL
-    const inputs = qa(EMAIL_SEL);
+    // Champ email (on prend le plus récent si SIO en a plusieurs)
+    const inputs = qa(EMAIL_SEL).filter(Boolean);
     const email  = inputs.length ? inputs[inputs.length - 1] : null;
-    console.log('[email] inputs trouvés=', inputs.length, '->', email);
     if (!email) return;
 
-    // 2) <form> et BOUTON SIO
+    // Son form + bouton natif
     const form = email.closest('form') || email.form || null;
-    let nativeBtn = form ? q(SUBMIT_SEL, form) : null;
-    if (!nativeBtn) nativeBtn = q(SUBMIT_SEL); // fallback
-    console.log('[email] form=', !!form, 'nativeBtn=', nativeBtn);
+    const nativeBtn = form ? (q(SUBMIT_SEL, form) || null) : null;
 
-    // 3) déplacer le champ dans le mount
+    // Déplacement et style — idem exemple
     if (!mount.contains(email)) {
       const loading = q('#sioEmailLoading', slot); if (loading) loading.remove();
-
       const wrap = document.createElement('div');
       wrap.className = 'input-field';
       wrap.style.padding = '6.7px 14px';
@@ -1415,70 +1396,27 @@
 
       wrap.appendChild(email);
       mount.appendChild(wrap);
-      console.log('[email] champ déplacé dans mount');
     }
 
-    // 4) insérer le mount DANS le <form> (comme l’exemple), avant le vrai bouton si possible
+    // IMPORTANT : insérer le mount DANS le <form> (comme l’exemple)
     if (form && mount.parentElement !== form) {
       const anchor = nativeBtn || form.firstChild;
       form.insertBefore(mount, anchor || null);
-      console.log('[email] mount inséré dans <form> (avant le bouton)');
     }
 
-    // 5) déplacer le VRAI bouton SIO sous l’email (dans le mount)
-    if (nativeBtn && !mount.contains(nativeBtn)) {
-      const btnRow = document.createElement('div');
-      btnRow.style.display = 'flex';
-      btnRow.style.flexDirection = 'column';
-      btnRow.style.gap = '8px';
-
-      // harmonisation visuelle
-      if (!nativeBtn.dataset._sioStyled) {
-        nativeBtn.style.width = '100%';
-        nativeBtn.style.height = '48px';
-        nativeBtn.style.borderRadius = '12px';
-        nativeBtn.dataset._sioStyled = '1';
-      }
-
-      btnRow.appendChild(nativeBtn);
-      mount.appendChild(btnRow);
-      console.log('[email] bouton SIO déplacé sous le champ');
-    }
-
-    // 6) CACHER le bouton “Continuer” du quiz (on n’utilise QUE le bouton SIO)
+    // Le bouton “Continuer” de l’étape déclenche la vraie soumission SIO
     const continueBtn = q('#emailQuestion .continue-button');
-    if (continueBtn && continueBtn.style.display !== 'none') {
-      continueBtn.style.display = 'none';
-      console.log('[email] bouton "Continuer" caché');
-    }
-
-    // 7) WATCHER: si React/SIO re-crée le bouton dans le form, on le re-déplace
-    if (!window.__sioBtnWatcher) {
-      const target = form || document.body;
-      const mo = new MutationObserver(() => {
-        const btnAgain = form ? q(SUBMIT_SEL, form) : q(SUBMIT_SEL);
-        const emailAgain = q('input[name="email"]', form || document);
-        if (btnAgain && emailAgain && !mount.contains(btnAgain)) {
-          console.log('[email] re-render détecté -> on re-déplace le bouton');
-          // re-déplace le bouton dans le mount
-          const holder = document.createElement('div');
-          holder.style.display = 'flex';
-          holder.style.flexDirection = 'column';
-          holder.style.gap = '8px';
-          btnAgain.style.width = '100%';
-          btnAgain.style.height = '48px';
-          btnAgain.style.borderRadius = '12px';
-          holder.appendChild(btnAgain);
-          mount.appendChild(holder);
-          // s’assurer que le mount reste dans le form
-          if (form && mount.parentElement !== form) {
-            form.insertBefore(mount, form.firstChild);
-          }
-        }
+    if (continueBtn && !continueBtn.dataset.sioBound) {
+      continueBtn.dataset.sioBound = '1';
+      continueBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const btn =
+          (form && (q('button[type="submit"]', form) || q('input[type="submit"]', form))) ||
+          (form && q(SUBMIT_SEL, form)) ||
+          q(SUBMIT_SEL, document);
+        if (btn && typeof btn.click === 'function') { btn.style.display='none'; btn.click(); }
+        else if (form) { if (form.requestSubmit) form.requestSubmit(); else form.submit(); }
       });
-      mo.observe(target, { childList: true, subtree: true });
-      window.__sioBtnWatcher = mo;
-      console.log('[email] MutationObserver armé');
     }
   }
 
@@ -1489,20 +1427,19 @@
       window.showEmailQuestion = function wrappedShowEmailQuestion() {
         const r = orig.apply(this, arguments);
         setTimeout(() => {
-          let n=0, t=setInterval(()=>{ n++; console.log('[email] tick', n); relocateEmail(); if(n>=12) clearInterval(t); }, 250);
+          let n=0, t=setInterval(()=>{ n++; relocateEmail(); if(n>=12) clearInterval(t); }, 250);
         }, 0);
         return r;
       };
       window.showEmailQuestion.__sioWrapped = true;
-      console.log('[email] showEmailQuestion WRAPPED');
       return;
     }
     // Fallback : si l’étape est affichée sans passer par showEmailQuestion
     const target = document.getElementById('emailQuestion');
-    if (target && getComputedStyle(target).display !== 'none') { console.log('[email] fallback visible'); relocateEmail(); return; }
+    if (target && getComputedStyle(target).display !== 'none') { relocateEmail(); return; }
     const mo = new MutationObserver(() => {
       const el = document.getElementById('emailQuestion');
-      if (el && getComputedStyle(el).display !== 'none') { mo.disconnect(); console.log('[email] observer fallback'); relocateEmail(); }
+      if (el && getComputedStyle(el).display !== 'none') { mo.disconnect(); relocateEmail(); }
     });
     mo.observe(document.documentElement, { childList:true, subtree:true, attributes:true });
   }
@@ -1656,6 +1593,79 @@
 
        // Initialisation
        updateUI();
+   </script>
+   <script>
+   (function () {
+     const q  = (s, r=document)=>r.querySelector(s);
+     const qa = (s, r=document)=>{ try { return Array.from(r.querySelectorAll(s)); } catch { return []; } };
+
+     // mêmes sélecteurs que ton script
+     const SUBMIT_SEL = [
+       'button[type="submit"]','input[type="submit"]',
+       '.sio-subscribe-button','.sio-submit',
+       '[data-element="cta-button"]',
+       '[data-test-id="send-form-button"]','[data-testid="send-form-button"]',
+       'button[id^="button-"]','button:not([type])','button[type="button"]'
+     ].join(', ');
+
+     function ensureProxyButton() {
+       const mount = q('#sioFieldsMount');               // là où ton champ email est déjà déplacé
+       if (!mount) return;
+
+       // trouve le VRAI bouton SIO, de préférence dans le même form que l'email
+       let nativeBtn = null;
+       const email = mount.querySelector('input[name="email"]');
+       const form  = email ? (email.closest('form') || email.form) : null;
+       if (form) nativeBtn = q(SUBMIT_SEL, form);
+       if (!nativeBtn) nativeBtn = q(SUBMIT_SEL, document);
+       if (!nativeBtn) return;
+
+       // cache le vrai bouton SIO
+       if (nativeBtn.style.display !== 'none') nativeBtn.style.display = 'none';
+
+       // si le proxy existe déjà, on s'arrête
+       if (q('#sioProxyBtn', mount)) return;
+
+       // crée un bouton proxy sous le champ
+       const proxy = document.createElement('button');
+       proxy.id = 'sioProxyBtn';
+       proxy.type = 'button';
+       proxy.className = 'cta-button';
+       proxy.style.width = '100%';
+       proxy.style.height = '48px';
+       proxy.style.borderRadius = '12px';
+       proxy.textContent = (nativeBtn.textContent || nativeBtn.value || 'Continuer').trim() || 'Continuer';
+       mount.appendChild(proxy);
+
+       // clique le vrai bouton SIO au clic proxy
+       proxy.addEventListener('click', (e) => {
+         e.preventDefault();
+         // tente le click(), sinon submit du form
+         try {
+           if (typeof nativeBtn.click === 'function') {
+             nativeBtn.click();
+           } else {
+             const f = nativeBtn.closest('form');
+             if (f) (f.requestSubmit ? f.requestSubmit() : f.submit());
+           }
+         } catch (_) {
+           const f = nativeBtn.closest('form');
+           if (f) (f.requestSubmit ? f.requestSubmit() : f.submit());
+         }
+       });
+
+       // masque ton bouton "Continuer" du quiz (on n’utilise que le proxy)
+       const continueBtn = q('#emailQuestion .continue-button');
+       if (continueBtn) continueBtn.style.display = 'none';
+     }
+
+     // lance tout de suite (si l’étape est déjà ouverte)
+     ensureProxyButton();
+
+     // relance après ton relocateEmail() (si tu wraps showEmailQuestion, c’est parfait)
+     const mo = new MutationObserver(() => ensureProxyButton());
+     mo.observe(document.documentElement, { childList: true, subtree: true });
+   })();
    </script>
 </body>
 </html>
