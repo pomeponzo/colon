@@ -448,6 +448,161 @@
            gap: 12px;
        }
 
+       .email-loading {
+           align-items: center;
+           justify-content: center;
+           padding: 32px 16px;
+       }
+
+       .email-loading-card {
+           width: 100%;
+           max-width: 360px;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           gap: 18px;
+           text-align: center;
+           background: linear-gradient(180deg, rgba(124, 58, 237, 0.14) 0%, rgba(124, 58, 237, 0.04) 100%);
+           border: 1px solid rgba(124, 58, 237, 0.18);
+           border-radius: 20px;
+           padding: 32px 28px;
+           box-shadow: 0 20px 45px rgba(124, 58, 237, 0.18);
+       }
+
+       .email-loading-avatar {
+           width: 76px;
+           height: 76px;
+           border-radius: 50%;
+           background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-size: 1.5rem;
+           font-weight: 700;
+           color: #ffffff;
+           box-shadow: 0 14px 30px rgba(124, 58, 237, 0.35);
+       }
+
+       .email-loading-title {
+           font-size: 1.25rem;
+           font-weight: 700;
+           color: #1e1b4b;
+           line-height: 1.35;
+       }
+
+       .email-loading-subtitle {
+           font-size: 0.95rem;
+           color: #4338ca;
+           line-height: 1.5;
+       }
+
+       .loading-dots {
+           display: inline-flex;
+           gap: 4px;
+           margin-left: 6px;
+       }
+
+       .loading-dots span {
+           width: 7px;
+           height: 7px;
+           border-radius: 50%;
+           background: #7c3aed;
+           animation: loadingBounce 1.2s infinite ease-in-out;
+           opacity: 0.5;
+       }
+
+       .loading-dots span:nth-child(2) {
+           animation-delay: 0.15s;
+       }
+
+       .loading-dots span:nth-child(3) {
+           animation-delay: 0.3s;
+       }
+
+       @keyframes loadingBounce {
+           0%, 80%, 100% {
+               transform: scale(0.6);
+               opacity: 0.35;
+           }
+           40% {
+               transform: scale(1);
+               opacity: 1;
+           }
+       }
+
+       .email-loading-progress {
+           width: 100%;
+           display: flex;
+           flex-direction: column;
+           gap: 14px;
+           margin-top: 8px;
+       }
+
+       .email-loading-progress-bar {
+           width: 100%;
+           height: 8px;
+           border-radius: 999px;
+           background: rgba(124, 58, 237, 0.18);
+           overflow: hidden;
+       }
+
+       .email-loading-progress-fill {
+           height: 100%;
+           width: 0%;
+           border-radius: inherit;
+           background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+           transition: width 0.2s ease-out;
+       }
+
+       .email-loading-steps {
+           list-style: none;
+           padding: 0;
+           margin: 0;
+           display: flex;
+           flex-direction: column;
+           gap: 10px;
+           text-align: left;
+       }
+
+       .email-loading-step {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+           font-size: 0.92rem;
+           color: #5b21b6;
+           opacity: 0.45;
+           transition: all 0.3s ease;
+       }
+
+       .email-loading-step .step-icon {
+           width: 30px;
+           height: 30px;
+           border-radius: 50%;
+           background: rgba(124, 58, 237, 0.14);
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           font-weight: 700;
+           color: #7c3aed;
+           font-size: 0.9rem;
+           transition: all 0.3s ease;
+       }
+
+       .email-loading-step.active {
+           opacity: 0.9;
+       }
+
+       .email-loading-step.completed {
+           opacity: 1;
+           color: #312e81;
+       }
+
+       .email-loading-step.completed .step-icon {
+           background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+           color: #ffffff;
+           box-shadow: 0 8px 16px rgba(124, 58, 237, 0.35);
+       }
+
        .email-step-actions {
            display: flex;
            gap: 12px;
@@ -1311,6 +1466,34 @@
                </div>
            </section>
            <!-- Question Email -->
+          <section class="question-section email-loading" id="emailLoadingScreen" data-skip="true" aria-hidden="true">
+              <div class="email-loading-card" role="status" aria-live="polite">
+                  <div class="email-loading-avatar" aria-hidden="true">PD</div>
+                  <h2 class="email-loading-title">Nous préparons votre profil digestif personnalisé
+                      <span class="loading-dots" aria-hidden="true"><span></span><span></span><span></span></span>
+                  </h2>
+                  <p class="email-loading-subtitle">Nous analysons vos réponses, priorisons les causes possibles et sélectionnons les recommandations qui correspondent à votre profil.</p>
+                  <div class="email-loading-progress">
+                      <div class="email-loading-progress-bar">
+                          <div class="email-loading-progress-fill" id="emailLoadingProgressFill"></div>
+                      </div>
+                      <ul class="email-loading-steps">
+                          <li class="email-loading-step active" data-threshold="25">
+                              <span class="step-icon">1</span>
+                              <span>Analyse de vos symptômes clés</span>
+                          </li>
+                          <li class="email-loading-step" data-threshold="60">
+                              <span class="step-icon">2</span>
+                              <span>Matching des recommandations adaptées</span>
+                          </li>
+                          <li class="email-loading-step" data-threshold="100">
+                              <span class="step-icon">3</span>
+                              <span>Préparation du plan personnalisé</span>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+          </section>
           <section class="question-section" id="emailQuestion">
               <div class="question-content">
                   <div class="question-header">
@@ -1584,6 +1767,12 @@
        const progressFill = document.getElementById('progressFill');
        const emailSection = document.getElementById('emailQuestion');
        const sioEmailSlot = document.getElementById('sioEmailSlot');
+       const emailLoadingScreen = document.getElementById('emailLoadingScreen');
+       const emailLoadingProgressFill = document.getElementById('emailLoadingProgressFill');
+       const emailLoadingSteps = emailLoadingScreen ? Array.from(emailLoadingScreen.querySelectorAll('.email-loading-step')) : [];
+       let emailLoaderPlayed = false;
+       let emailLoaderInterval = null;
+       let emailLoaderRunning = false;
 
        // Gestion du bouton retour
        backButton.addEventListener('click', () => {
@@ -1602,10 +1791,26 @@
 
        // Navigation entre les questions
        function goToStep(step) {
+           if (emailLoadingScreen && (emailLoaderRunning || emailLoadingScreen.classList.contains('active'))) {
+               if (emailLoaderInterval) {
+                   clearInterval(emailLoaderInterval);
+                   emailLoaderInterval = null;
+               }
+               emailLoaderRunning = false;
+               emailLoadingScreen.classList.remove('active');
+               emailLoadingScreen.setAttribute('aria-hidden', 'true');
+               if (emailLoadingProgressFill) {
+                   emailLoadingProgressFill.style.width = '0%';
+               }
+               emailLoadingSteps.forEach(stepEl => {
+                   stepEl.classList.remove('active', 'completed');
+               });
+           }
+
            document.querySelectorAll('.question-section').forEach(section => {
                section.classList.remove('active');
            });
-           
+
            const targetSection = document.getElementById(`q${step}`) || document.getElementById('emailQuestion');
            if (targetSection) {
                targetSection.classList.add('active');
@@ -1614,9 +1819,86 @@
            }
        }
 
+       function startEmailLoadingSequence(callback) {
+           if (!emailLoadingScreen) {
+               if (typeof callback === 'function') {
+                   callback();
+               }
+               return;
+           }
+
+           if (emailLoaderInterval) {
+               clearInterval(emailLoaderInterval);
+               emailLoaderInterval = null;
+           }
+
+           emailLoaderRunning = true;
+           emailLoadingScreen.setAttribute('aria-hidden', 'false');
+
+           if (emailLoadingProgressFill) {
+               emailLoadingProgressFill.style.width = '0%';
+           }
+
+           const steps = emailLoadingSteps;
+           const thresholds = steps.map((step, index) => {
+               const value = parseInt(step.getAttribute('data-threshold'), 10);
+               return Number.isNaN(value) ? Math.round(((index + 1) / steps.length) * 100) : value;
+           });
+
+           steps.forEach((step, index) => {
+               step.classList.remove('completed');
+               if (index === 0) {
+                   step.classList.add('active');
+               } else {
+                   step.classList.remove('active');
+               }
+           });
+
+           emailLoadingScreen.classList.add('active');
+
+           let progress = 0;
+           const totalDuration = 2200;
+           const interval = 80;
+           const increment = 100 / Math.ceil(totalDuration / interval);
+
+           emailLoaderInterval = setInterval(() => {
+               progress = Math.min(progress + increment, 100);
+               if (emailLoadingProgressFill) {
+                   emailLoadingProgressFill.style.width = `${progress}%`;
+               }
+
+               steps.forEach((step, index) => {
+                   const threshold = thresholds[index];
+                   if (typeof threshold === 'number') {
+                       if (progress >= threshold) {
+                           step.classList.add('active');
+                           step.classList.add('completed');
+                       } else if (progress >= Math.max(0, threshold - 30)) {
+                           step.classList.add('active');
+                           step.classList.remove('completed');
+                       } else {
+                           step.classList.remove('active');
+                           step.classList.remove('completed');
+                       }
+                   }
+               });
+
+               if (progress >= 100) {
+                   clearInterval(emailLoaderInterval);
+                   emailLoaderInterval = null;
+                   setTimeout(() => {
+                       emailLoaderRunning = false;
+                       if (typeof callback === 'function') {
+                           callback();
+                       }
+                   }, 350);
+               }
+           }, interval);
+       }
+
        // Gestion des options à choix unique
        document.querySelectorAll('.question-section').forEach((section, index) => {
-           if (section.id === 'emailQuestion') {
+           if (section.id === 'emailQuestion' || section.dataset.skip === 'true') {
                return;
            }
 
@@ -1679,14 +1961,31 @@
            document.querySelectorAll('.question-section').forEach(section => {
                section.classList.remove('active');
            });
-           if (emailSection) {
-               emailSection.classList.add('active');
-           }
+
            currentStep = totalSteps;
            updateUI();
+
            const appContent = document.querySelector('.app-content');
            if (appContent) {
                appContent.scrollTop = 0;
+           }
+
+           if (emailLoadingScreen && !emailLoaderPlayed) {
+               if (!emailLoaderRunning) {
+                   startEmailLoadingSequence(() => {
+                       emailLoaderPlayed = true;
+                       emailLoadingScreen.classList.remove('active');
+                       emailLoadingScreen.setAttribute('aria-hidden', 'true');
+                       if (emailSection) {
+                           emailSection.classList.add('active');
+                       }
+                   });
+               }
+               return;
+           }
+
+           if (emailSection) {
+               emailSection.classList.add('active');
            }
        }
 
