@@ -160,6 +160,12 @@
            transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
        }
 
+       /* Masquer le bouton "Continuer" du quiz sur l'étape email :
+          on ne veut garder que le bouton Système.io */
+       #emailQuestion .continue-button {
+           display: none !important;
+       }
+
        .app-content {
            flex: 1;
            display: flex;
