@@ -519,6 +519,29 @@
            background: rgba(139, 92, 246, 0.02);
        }
 
+       /* Cache les boutons SIO ailleurs dans la page (évite les doublons) */
+       [data-test-id="send-form-button"],
+       [data-testid="send-form-button"],
+       .sio-subscribe-button,
+       .sio-submit,
+       [data-element="cta-button"],
+       button[id^="button-"] { display: none !important; }
+
+       /* Montre et skine le bouton quand il est dans l’étape email */
+       #emailQuestion [data-test-id="send-form-button"],
+       #emailQuestion [data-testid="send-form-button"],
+       #emailQuestion .sio-subscribe-button,
+       #emailQuestion .sio-submit,
+       #emailQuestion [data-element="cta-button"],
+       #emailQuestion button[id^="button-"]{
+         display:block !important;
+         width:100% !important;
+         background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%) !important;
+         color:#fff !important; border:none !important; border-radius:12px !important;
+         padding:16px !important; font-size:1rem !important; font-weight:700 !important;
+         box-shadow:0 2px 8px rgba(139,92,246,.2) !important;
+       }
+
        .sr-only {
            position: absolute;
            width: 1px;
@@ -1704,14 +1727,145 @@
        updateUI();
    </script>
    <script>
+function getSioSubmitButton() {
+  const sel = [
+    'button[type="submit"]',
+    'input[type="submit"]',
+    '.sio-subscribe-button',
+    '.sio-submit',
+    '[data-element="cta-button"]',
+    '[data-test-id="send-form-button"]',
+    '[data-testid="send-form-button"]',
+    'button[id^="button-"]'
+  ].join(', ');
+
+  // Cherche d'abord dans l’étape email entière, à défaut dans tout le doc
+  const root = document.getElementById('emailQuestion') || document;
+  return root.querySelector(sel);
+}
+
+function relocateSioIntoSlot() {
+  const slot = document.getElementById('sioEmailSlot');
+  if (!slot) { console.warn('[SIO][DBG] slot email introuvable'); return; }
+
+  const EMAIL_SEL = [
+    'input[name="email"]',
+    'input[type="email"]',
+    'input[name*="email" i]',
+    'input[id*="email" i]',
+    'input[placeholder*="mail" i]',
+    'input[id^="field-"]'
+  ].join(', ');
+
+  const SUBMIT_SEL = [
+    'button[type="submit"]','input[type="submit"]',
+    '.sio-subscribe-button','.sio-submit','[data-element="cta-button"]',
+    '[data-test-id="send-form-button"]','[data-testid="send-form-button"]',
+    'button[id^="button-"]'
+  ].join(', ');
+
+  let email = document.querySelector(EMAIL_SEL);
+  if (!email) {
+    console.log('%c[SIO][DBG]','color:#059669;font-weight:700','email input non trouvé (encore) -> attente DOM');
+    let tries = 0;
+    const poll = setInterval(() => {
+      email = document.querySelector(EMAIL_SEL);
+      if (email) { clearInterval(poll); relocateSioIntoSlot(); }
+      else if (++tries > 40) { clearInterval(poll); console.warn('[SIO][DBG] champ email introuvable après attente'); }
+    }, 250);
+    return;
+  }
+
+  // Trouver le bouton natif même s’il n’est pas dans un <form>
+  let btn = document.querySelector(SUBMIT_SEL);
+
+  // Choisir un "bloc" à déplacer : un ancêtre commun email+btn, sinon form, sinon un gros conteneur
+  let mount = commonAncestor(email, btn) ||
+              email.closest('form') ||
+              email.closest('[id^="column-"], [id^="row-"], section, .sc-gFtjaa, .sc-fIvmdO, .sc-ipgTxl, div');
+
+  if (mount && !slot.contains(mount)) {
+    slot.innerHTML = '';
+    slot.appendChild(mount);
+    console.log('%c[SIO][DBG]','color:#059669;font-weight:700','bloc SIO déplacé dans #sioEmailSlot');
+  }
+
+  // (Re)récupère le bouton une fois le bloc déplacé
+  btn = getSioSubmitButton();
+  if (!btn) {
+    // SIO peut hydrater le bouton avec un léger retard : on repoll
+    let tries = 0;
+    const pollBtn = setInterval(() => {
+      btn = getSioSubmitButton();
+      if (btn) { clearInterval(pollBtn); afterBtnFound(btn); }
+      else if (++tries > 40) { clearInterval(pollBtn); console.warn('[SIO][DBG] bouton SIO introuvable'); }
+    }, 250);
+  } else {
+    afterBtnFound(btn);
+  }
+
+  function afterBtnFound(b) {
+    b.disabled = false;
+    b.style.visibility = 'visible';
+    b.style.display = 'block';
+    console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Bouton SIO natif :', true);
+  }
+}
+
+function commonAncestor(a, b) {
+  if (!a || !b) return null;
+  const seen = new Set();
+  for (let el = a; el; el = el.parentElement) seen.add(el);
+  for (let el = b; el; el = el.parentElement) if (seen.has(el)) return el;
+  return null;
+}
+
+(function armSioRelocator(){
+  const run = () => relocateSioIntoSlot();
+
+  if (typeof window.showEmailQuestion === 'function' && !window.showEmailQuestion.__sioRelocateWrapped) {
+    const original = window.showEmailQuestion;
+    const wrapped = function () {
+      const result = original.apply(this, arguments);
+      setTimeout(run, 0);
+      return result;
+    };
+    Object.assign(wrapped, original);
+    wrapped.__sioRelocateWrapped = true;
+    if (original.__sioWrapped) wrapped.__sioWrapped = original.__sioWrapped;
+    window.showEmailQuestion = wrapped;
+  }
+
+  const triggerIfVisible = () => {
+    const target = document.getElementById('emailQuestion');
+    if (target && getComputedStyle(target).display !== 'none') {
+      run();
+      return true;
+    }
+    return false;
+  };
+
+  if (!triggerIfVisible()) {
+    const mo = new MutationObserver(() => {
+      if (triggerIfVisible()) mo.disconnect();
+    });
+    mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+  }
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    run();
+  } else {
+    document.addEventListener('DOMContentLoaded', run);
+  }
+})();
+   </script>
+   <script>
    (function () {
      function clickSio() {
+       const btn = getSioSubmitButton();
+       if (btn && typeof btn.click === 'function') { btn.click(); return true; }
        const email = document.querySelector('#emailQuestion input[name="email"]');
        const form  = email && (email.closest('form') || email.form);
-       const btn   = form && form.querySelector(
-         'button[type="submit"],input[type="submit"],.sio-subscribe-button,.sio-submit,[data-element="cta-button"],[data-test-id="send-form-button"],[data-testid="send-form-button"],button[id^="button-"]'
-       );
-       if (btn && typeof btn.click === 'function') { btn.click(); return true; }
        if (form) { if (form.requestSubmit) form.requestSubmit(); else form.submit(); return true; }
        return false;
      }
