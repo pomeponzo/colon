@@ -120,14 +120,14 @@
     .progress-percentage{ font-size:2.2rem; font-weight:800; background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
     .progress-subtitle{ color:#64748b; font-size:.9rem; }
     .progress-bar-container{ height:6px; background:#e5e7eb; border-radius:100px; overflow:hidden; margin-bottom:24px; position:relative; }
-    .progress-bar-fill{ height:100%; background:linear-gradient(90deg,#10b981 0%,#059669 100%); border-radius:100px; width:0%; transition:width .5s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
+    .progress-bar-fill{ height:100%; background:linear-gradient(90deg,#8b5cf6 0%,#7c3aed 100%); border-radius:100px; width:0%; transition:width .5s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
     .progress-bar-fill::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent); animation:shimmer 2s infinite; }
     @keyframes shimmer{ 0%{ transform:translateX(-100%);} 100%{ transform:translateX(100%);} }
     .checklist{ display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
     .checklist-item{ display:flex; align-items:center; gap:10px; opacity:.5; transition:opacity .3s ease; }
     .checklist-item.active{ opacity:1; }
     .checklist-icon{ width:20px; height:20px; border:2px solid #e5e7eb; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all .3s ease; flex-shrink:0; }
-    .checklist-item.completed .checklist-icon{ background:linear-gradient(135deg,#10b981 0%,#059669 100%); border-color:transparent; }
+    .checklist-item.completed .checklist-icon{ background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); border-color:transparent; }
     .checklist-icon svg{ width:12px; height:12px; stroke:#fff; stroke-width:3; fill:none; opacity:0; transform:scale(0); transition:all .3s ease; }
     .checklist-item.completed .checklist-icon svg{ opacity:1; transform:scale(1); }
     .checklist-text{ color:#334155; font-size:.85rem; font-weight:600; line-height:1.2; }
