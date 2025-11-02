@@ -1,1960 +1,788 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-   <title>Quel est votre profil digestif ? - Quiz personnalisé</title>
-   <style>
-       * {
-           margin: 0;
-           padding: 0;
-           box-sizing: border-box;
-           -webkit-tap-highlight-color: transparent;
-       }
-
-        html, body {
-            height: 100vh;
-            height: 100dvh;
-            width: 100%;
-            overflow: hidden;
-        }
-
-       body {
-           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, 'Helvetica Neue', Arial, sans-serif;
-           background: #ffffff;
-           margin: 0;
-           padding: 0;
-       }
-
-       .app-container {
-           background: #ffffff;
-           width: 100%;
-           height: 100vh;
-           height: 100dvh;
-           display: flex;
-           flex-direction: column;
-           overflow: hidden;
-       }
-
-       @media (min-width: 600px) {
-           .app-container {
-               max-width: 500px;
-               margin: 0 auto;
-           }
-       }
-
-       .app-header {
-           display: flex;
-           align-items: center;
-           justify-content: space-between;
-           padding: 12px 16px;
-           background: white;
-           border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-           flex-shrink: 0;
-           z-index: 10;
-           height: 48px;
-           position: relative;
-       }
-
-       .back-button {
-           background: none;
-           border: none;
-           color: #64748b;
-           cursor: pointer;
-           padding: 6px;
-           border-radius: 8px;
-           transition: all 0.2s ease;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           width: 32px;
-           height: 32px;
-       }
-
-       .back-button:hover {
-           background: rgba(139, 92, 246, 0.1);
-           color: #7c3aed;
-       }
-
-       .back-button svg {
-           width: 18px;
-           height: 18px;
-       }
-
-       .app-logo {
-           font-size: 1rem;
-           font-weight: 600;
-           background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-           -webkit-background-clip: text;
-           -webkit-text-fill-color: transparent;
-           background-clip: text;
-           position: absolute;
-           left: 50%;
-           transform: translateX(-50%);
-       }
-
-       .header-right {
-           display: flex;
-           align-items: center;
-           gap: 10px;
-       }
-
-       .step-counter {
-           font-size: 0.8rem;
-           color: #64748b;
-           font-weight: 500;
-           min-width: 44px;
-           text-align: right;
-       }
-
-       .legal-links {
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           gap: 8px;
-           flex-wrap: wrap;
-           font-size: 0.8rem;
-           color: #64748b;
-           text-align: center;
-       }
-
-       .legal-links a {
-           color: inherit;
-           text-decoration: none;
-           font-weight: 500;
-       }
-
-       .legal-links a:hover {
-           color: #7c3aed;
-           text-decoration: underline;
-       }
-
-       .legal-separator {
-           color: rgba(100, 116, 139, 0.6);
-       }
-
-       .legal-footer {
-           padding: 12px 16px;
-           background: white;
-           border-top: 1px solid rgba(0, 0, 0, 0.05);
-           flex-shrink: 0;
-       }
-
-       @media (max-width: 599px) {
-           .legal-links {
-               justify-content: center;
-           }
-       }
-
-       .progress-bar {
-           height: 2px;
-           background: rgba(0, 0, 0, 0.05);
-           position: relative;
-           overflow: hidden;
-           flex-shrink: 0;
-       }
-
-       .progress-fill {
-           height: 100%;
-           background: linear-gradient(90deg, #8b5cf6 0%, #7c3aed 100%);
-           transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
-       }
-
-       .app-content {
-           flex: 1;
-           display: flex;
-           flex-direction: column;
-           overflow: hidden;
-           padding: 16px;
-           min-height: 0;
-       }
-
-       .question-section {
-           display: none;
-           flex: 1;
-           flex-direction: column;
-           animation: slideIn 0.3s ease;
-           overflow: hidden;
-       }
-
-       .question-section.active {
-           display: flex;
-       }
-
-       @keyframes slideIn {
-           from {
-               opacity: 0;
-               transform: translateY(10px);
-           }
-           to {
-               opacity: 1;
-               transform: translateY(0);
-           }
-       }
-
-       .question-content {
-           flex: 1;
-           display: flex;
-           flex-direction: column;
-           overflow-y: auto;
-           overflow-x: hidden;
-           -webkit-overflow-scrolling: touch;
-           padding: 4px;
-           margin: -4px;
-       }
-
-       .question-header {
-           margin-bottom: 20px;
-           flex-shrink: 0;
-       }
-
-       .question-title {
-           font-size: 1.4rem;
-           font-weight: 700;
-           color: #1e293b;
-           margin-bottom: 8px;
-           line-height: 1.3;
-       }
-
-       .question-subtitle {
-           font-size: 0.95rem;
-           color: #64748b;
-           line-height: 1.5;
-       }
-
-       .options-container {
-           display: flex;
-           flex-direction: column;
-           gap: 8px;
-           flex: 1;
-           min-height: 0;
-       }
-
-       .options-grid {
-           display: grid;
-           grid-template-columns: repeat(2, minmax(0, 1fr));
-           gap: 14px;
-       }
-
-       .options-grid-mobile-2 {
-           grid-template-columns: repeat(2, minmax(0, 1fr));
-       }
-
-       .option-card {
-           background: white;
-           border: 2px solid #e5e7eb;
-           border-radius: 10px;
-           padding: 12px;
-           cursor: pointer;
-           transition: all 0.2s ease;
-           display: flex;
-           align-items: center;
-           gap: 10px;
-           flex-shrink: 0;
-       }
-
-       .option-card.image-option {
-           flex-direction: column;
-           align-items: center;
-           gap: 16px;
-           padding: 32px 18px 20px;
-           overflow: visible;
-           position: relative;
-       }
-
-       .option-card.image-option .option-image-wrapper {
-           width: 100%;
-           display: flex;
-           justify-content: center;
-           position: relative;
-           margin-top: -36px;
-       }
-
-       .option-card.image-option .option-image {
-           width: 100%;
-           display: block;
-           aspect-ratio: 3 / 4;
-           object-fit: cover;
-           object-position: top center;
-           border-radius: 16px;
-           box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
-           transform: translateY(-18px);
-       }
-
-       .option-card.image-option .option-text {
-           width: 100%;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           padding: 0 44px 0 4px;
-           position: relative;
-       }
-
-       .option-card.image-option .option-label {
-           font-size: 1.05rem;
-           text-align: center;
-       }
-
-       .option-card.image-option .option-arrow {
-           position: absolute;
-           right: 0;
-           top: 50%;
-           transform: translateY(-50%);
-           width: 36px;
-           height: 36px;
-           border-radius: 50%;
-           background: rgba(15, 23, 42, 0.05);
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           color: #1e293b;
-           font-weight: 600;
-           font-size: 1rem;
-           box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
-           transition: all 0.2s ease;
-       }
-
-       .option-card.image-option.selected .option-arrow {
-           background: rgba(139, 92, 246, 0.15);
-           color: #7c3aed;
-           transform: translateY(-50%) scale(1.05);
-       }
-
-       @media (max-width: 599px) {
-           .option-card.image-option {
-               padding: 28px 16px 18px;
-               gap: 14px;
-           }
-
-           .option-card.image-option .option-image-wrapper {
-               margin-top: -32px;
-           }
-
-           .option-card.image-option .option-arrow {
-               width: 32px;
-               height: 32px;
-               right: 2px;
-           }
-       }
-
-       .option-card:hover {
-           border-color: #8b5cf6;
-           background: rgba(139, 92, 246, 0.02);
-       }
-
-       .option-card.selected {
-           border-color: #8b5cf6;
-           background: rgba(139, 92, 246, 0.05);
-       }
-
-       .option-emoji {
-           font-size: 1.6rem;
-           flex-shrink: 0;
-       }
-
-       .option-text {
-           flex: 1;
-       }
-
-       .option-label {
-           font-size: 0.95rem;
-           font-weight: 600;
-           color: #1e293b;
-           margin-bottom: 1px;
-       }
-
-       .option-description {
-           font-size: 0.8rem;
-           color: #64748b;
-           line-height: 1.35;
-       }
-
-       .option-card input[type="checkbox"] {
-           width: 18px;
-           height: 18px;
-           cursor: pointer;
-           flex-shrink: 0;
-           accent-color: #8b5cf6;
-       }
-
-       .continue-button {
-           width: 100%;
-           background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-           color: white;
-           border: none;
-           border-radius: 12px;
-           padding: 16px;
-           font-size: 1rem;
-           font-weight: 600;
-           cursor: pointer;
-           margin-top: 16px;
-           transition: all 0.2s ease;
-           flex-shrink: 0;
-           box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
-       }
-
-       .continue-button:hover {
-           transform: translateY(-1px);
-           box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-       }
-
-       .continue-button:active {
-           transform: translateY(0);
-       }
-
-       .continue-button:disabled {
-           opacity: 0.5;
-           cursor: not-allowed;
-           transform: none;
-       }
-
-       .options-scroll-container {
-           display: flex;
-           flex-direction: column;
-           gap: 12px;
-           max-height: 320px;
-           overflow-y: auto;
-           padding-right: 4px;
-       }
-
-       .options-scroll-container::-webkit-scrollbar {
-           width: 6px;
-       }
-
-       .options-scroll-container::-webkit-scrollbar-thumb {
-           background: rgba(124, 58, 237, 0.3);
-           border-radius: 999px;
-       }
-
-       @media (max-width: 599px) {
-           .options-grid {
-               grid-template-columns: 1fr;
-           }
-
-           .options-grid-mobile-2 {
-               grid-template-columns: repeat(2, minmax(0, 1fr));
-           }
-       }
-
-       .email-step {
-           display: flex;
-           flex-direction: column;
-           gap: 12px;
-       }
-
-       .email-step-actions {
-           display: flex;
-           gap: 12px;
-           margin-top: 16px;
-       }
-
-       #emailQuestion .continue-button {
-           margin-top: 0;
-           flex: 2;
-       }
-
-       .email-back-button {
-           flex: 1;
-           border: 2px solid #e5e7eb;
-           border-radius: 10px;
-           background: #ffffff;
-           color: #312e81;
-           font-size: 0.95rem;
-           font-weight: 600;
-           padding: 12px 16px;
-           cursor: pointer;
-           transition: all 0.2s ease;
-           display: none;
-           align-items: center;
-           justify-content: center;
-       }
-
-       .email-back-button:hover {
-           border-color: rgba(124, 58, 237, 0.4);
-           color: #7c3aed;
-       }
-
-       .email-fallback {
-           display: none;
-           flex-direction: column;
-           gap: 10px;
-       }
-
-       .email-fallback.active {
-           display: flex;
-       }
-
-       .email-helper-text {
-           font-size: 0.85rem;
-           color: #64748b;
-           line-height: 1.4;
-       }
-
-       .email-feedback {
-           font-size: 0.85rem;
-           min-height: 1em;
-       }
-
-       .email-feedback.error {
-           color: #dc2626;
-       }
-
-       .email-feedback.success {
-           color: #16a34a;
-       }
-
-       .input-field {
-           width: 100%;
-           padding: 14px;
-           border: 2px solid #e5e7eb;
-           border-radius: 10px;
-           font-size: 0.95rem;
-           transition: all 0.2s ease;
-           font-family: inherit;
-       }
-
-       .input-field:focus {
-           outline: none;
-           border-color: #8b5cf6;
-           background: rgba(139, 92, 246, 0.02);
-       }
-
-       .sr-only {
-           position: absolute;
-           width: 1px;
-           height: 1px;
-           padding: 0;
-           margin: -1px;
-           overflow: hidden;
-           clip: rect(0, 0, 0, 0);
-           white-space: nowrap;
-           border: 0;
-       }
-
-       .result-section {
-           display: none;
-           flex-direction: column;
-           gap: 20px;
-           animation: slideIn 0.3s ease;
-       }
-
-       .result-section.active {
-           display: flex;
-       }
-
-       .result-card {
-           background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
-           border: 2px solid rgba(139, 92, 246, 0.2);
-           border-radius: 16px;
-           padding: 24px;
-       }
-
-       .result-title {
-           font-size: 1.3rem;
-           font-weight: 700;
-           color: #1e293b;
-           margin-bottom: 12px;
-       }
-
-       .result-text {
-           font-size: 0.95rem;
-           color: #475569;
-           line-height: 1.6;
-           margin-bottom: 12px;
-       }
-
-       .result-highlight {
-           background: white;
-           border-left: 4px solid #8b5cf6;
-           padding: 16px;
-           border-radius: 8px;
-           margin: 16px 0;
-       }
-
-       .result-highlight-title {
-           font-size: 1rem;
-           font-weight: 600;
-           color: #7c3aed;
-           margin-bottom: 8px;
-       }
-
-       .cta-button {
-           width: 100%;
-           background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-           color: white;
-           border: none;
-           border-radius: 12px;
-           padding: 18px;
-           font-size: 1.1rem;
-           font-weight: 600;
-           cursor: pointer;
-           transition: all 0.2s ease;
-           box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-           margin-top: 8px;
-       }
-
-       .cta-button:hover {
-           transform: translateY(-2px);
-           box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
-       }
-
-       .loader {
-           display: none;
-           flex-direction: column;
-           align-items: center;
-           justify-content: center;
-           height: 100%;
-           gap: 20px;
-       }
-
-       .loader.active {
-           display: flex;
-       }
-
-       .spinner {
-           width: 50px;
-           height: 50px;
-           border: 3px solid rgba(139, 92, 246, 0.2);
-           border-top-color: #8b5cf6;
-           border-radius: 50%;
-           animation: spin 0.8s linear infinite;
-       }
-
-       @keyframes spin {
-           to { transform: rotate(360deg); }
-       }
-
-       .loader-text {
-           font-size: 1rem;
-           color: #64748b;
-           text-align: center;
-       }
-        
-/* ===== Q1 — Grille 2×2 sans scroll, cartes qui s'adaptent, images nickel ===== */
-
-/* 1) Le conteneur Q1 occupe toute la hauteur scrolable */
-.q1 .question-content{ display:flex; flex-direction:column; min-height:0; }
-.q1 .options-container{ flex:1; min-height:0; }
-
-/* 2) Grille 2×2 qui prend 100% de la hauteur disponible */
-.q1 .options-grid{
-  display:grid;
-  height:100%;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, minmax(0,1fr));   /* 2 lignes égales qui tiennent */
-  gap:10px;
-}
-
-/* 3) Chaque carte remplit sa cellule (plus de débordement) */
-.q1 .option-card.image-option{
-  height:100%;
-  border-radius:12px;
-  padding:12px 10px 6px;
-  display:flex;
-  flex-direction:column;
-  overflow:visible; /* pour laisser dépasser un peu la tête */
-}
-
-/* 4) L’image prend l’espace restant ; le label a une hauteur connue */
-.q1 .option-image-wrapper{
-  flex:1;                 /* <-- clé : la zone image occupe tout le restant */
-  display:flex;
-  align-items:stretch;
-  margin-top:-12px;       /* fait remonter la tête */
-}
-.q1 .option-image{
-  width:100%;
-  height:100%;            /* on remplit la zone, pas de hauteur “auto” */
-  object-fit:cover;
-  object-position:50% 0%; /* cadrage vers le haut */
-  border-radius:12px;
-  transform:translateY(-6px); /* légère sortie de cadre */
-  box-shadow:none;        /* pas d’ombre parasite */
-  aspect-ratio:auto;      /* on s’affranchit d’un ratio figé */
-}
-
-/* 5) Zone texte compacte et centrée */
-.q1 .option-text{
-  display:flex; align-items:center; justify-content:center;
-  padding:0 28px;
-  min-height:42px;        /* réserve stable pour le libellé + flèche */
-  text-align:center;
-}
-.q1 .option-label{ font-size:.98rem; font-weight:800; }
-.q1 .option-arrow{ width:28px; height:28px; right:0; top:50%; position:absolute; transform:translateY(-50%); border-radius:50%; background:rgba(15,23,42,.06); display:flex; align-items:center; justify-content:center; }
-
-/* 6) Entête un poil compact pour gagner quelques px */
-.q1 .question-header{ margin-bottom:8px; }
-.q1 .question-title{ font-size:1.16rem; margin-bottom:4px; }
-.q1 .question-subtitle{ font-size:.9rem; }
-
-/* Écrans très courts : on compresse encore un chouïa */
-@media (max-height:700px){
-  .q1 .option-card.image-option{ padding:10px 8px 6px; }
-  .q1 .option-image-wrapper{ margin-top:-10px; }
-  .q1 .option-image{ transform:translateY(-5px); }
-  .q1 .option-text{ min-height:38px; }
-}
-
-/* ====== FIX Q1 — 2×2 sans scroll, cartes adaptées aux images ====== */
-.q1 .options-grid{
-  height:100%;
-  display:grid !important;
-  grid-template-columns:repeat(2,1fr) !important;
-  grid-template-rows:repeat(2,minmax(0,1fr)) !important;
-  gap:10px !important;
-}
-
-.q1 .option-card.image-option{
-  height:100% !important;
-  display:flex !important;
-  flex-direction:column !important;
-  padding:10px 10px 6px !important;
-  border-radius:12px !important;
-  overflow:visible !important;
-}
-
-.q1 .option-image-wrapper{
-  flex:1 1 auto !important;           /* la zone image prend tout le restant */
-  display:block !important;
-  position:relative !important;
-  margin:0 !important;                 /* on repart propre */
-  overflow:visible !important;
-}
-
-.q1 .option-image{
-  width:100% !important;
-  height:100% !important;              /* l’image remplit la zone */
-  object-fit:cover !important;
-  object-position:50% 0% !important;   /* cadrage vers le haut */
-  border-radius:12px !important;
-  box-shadow:none !important;          /* pas d’ombre parasite */
-  transform:translateY(-8px) !important; /* tête qui dépasse légèrement */
-  aspect-ratio:auto !important;
-}
-
-.q1 .option-text{
-  position:relative !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  min-height:44px !important;          /* hauteur stable du label */
-  padding:0 28px !important;
-  text-align:center !important;
-}
-
-.q1 .option-label{ font-weight:800 !important; font-size:.98rem !important; }
-.q1 .option-arrow{ width:28px !important; height:28px !important; right:0; top:50%; position:absolute; transform:translateY(-50%); border-radius:50%; background:rgba(15,23,42,.06); display:flex; align-items:center; justify-content:center; }
-
-   </style>
-   <style id="sioEmailButtonStyle">
-     /* Style du bouton une fois déplacé */
-     #sioFieldsMount .sio-submit,
-     #sioFieldsMount [type="submit"] {
-       width: 100% !important;
-       height: 48px !important;
-       border-radius: 12px !important;
-     }
-   </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Quel est votre profil digestif ? - Quiz personnalisé</title>
+
+  <!-- icônes (facultatif) -->
+  <link rel="icon" type="image/png" href="/13114230/687b524473004_Votretextedeparagraphe1.png" />
+  <link rel="apple-touch-icon" href="/13114230/687b524473004_Votretextedeparagraphe1.png" />
+
+  <style>
+    /* Reset & base */
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html, body { height:100vh; height:100dvh; width:100%; overflow:hidden; }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',Roboto,'Helvetica Neue',Arial,sans-serif; background:#fff; }
+
+    /* App shell */
+    .app-container{ background:#fff; width:100%; height:100vh; height:100dvh; display:flex; flex-direction:column; overflow:hidden; }
+    @media (min-width:600px){ .app-container{ max-width:500px; margin:0 auto; } }
+
+    .app-header{ display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#fff; border-bottom:1px solid rgba(0,0,0,.05); height:48px; position:relative; z-index:10; flex-shrink:0; }
+    .back-button{ background:none; border:none; color:#64748b; cursor:pointer; padding:6px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; transition:.2s; }
+    .back-button:hover{ background:rgba(139,92,246,.1); color:#7c3aed; }
+    .back-button svg{ width:18px; height:18px; }
+    .app-logo{ font-size:1rem; font-weight:600; background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:absolute; left:50%; transform:translateX(-50%); }
+    .header-right{ display:flex; align-items:center; gap:10px; }
+    .step-counter{ font-size:.8rem; color:#64748b; font-weight:500; min-width:44px; text-align:right; }
+
+    .progress-bar{ height:2px; background:rgba(0,0,0,.05); position:relative; overflow:hidden; flex-shrink:0; }
+    .progress-fill{ height:100%; background:linear-gradient(90deg,#8b5cf6 0%,#7c3aed 100%); transition:width .5s cubic-bezier(.4,0,.2,1); }
+
+    .app-content{ flex:1; display:flex; flex-direction:column; overflow:hidden; padding:16px; min-height:0; }
+    .question-section{ display:none; flex:1; flex-direction:column; animation:slideIn .25s ease; overflow:hidden; }
+    .question-section.active{ display:flex; }
+
+    @keyframes slideIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+
+    .question-content{ flex:1; display:flex; flex-direction:column; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:4px; margin:-4px; }
+    .question-header{ margin-bottom:20px; flex-shrink:0; }
+    .question-title{ font-size:1.4rem; font-weight:800; color:#1e293b; margin-bottom:8px; line-height:1.3; }
+    .question-subtitle{ font-size:.95rem; color:#64748b; line-height:1.5; }
+
+    .options-container{ display:flex; flex-direction:column; gap:8px; flex:1; min-height:0; }
+    .options-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .options-grid-mobile-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+    .option-card{ background:#fff; border:2px solid #e5e7eb; border-radius:12px; padding:12px; cursor:pointer; transition:.18s; display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .option-card:hover{ border-color:#8b5cf6; background:rgba(139,92,246,.02); }
+    .option-card.selected{ border-color:#8b5cf6; background:rgba(139,92,246,.05); }
+
+    .option-emoji{ font-size:1.6rem; flex-shrink:0; }
+    .option-text{ flex:1; }
+    .option-label{ font-size:.95rem; font-weight:700; color:#1e293b; margin-bottom:1px; }
+    .option-description{ font-size:.8rem; color:#64748b; line-height:1.35; }
+    .option-card input[type="checkbox"]{ width:18px; height:18px; cursor:pointer; flex-shrink:0; accent-color:#8b5cf6; }
+
+    /* cartes image (Q1) */
+    .option-card.image-option{ flex-direction:column; align-items:center; gap:16px; padding:32px 18px 20px; overflow:visible; position:relative; }
+    .option-card.image-option .option-image-wrapper{ width:100%; display:flex; justify-content:center; position:relative; margin-top:-36px; }
+    .option-card.image-option .option-image{ width:100%; display:block; aspect-ratio:3/4; object-fit:cover; object-position:top center; border-radius:16px; box-shadow:0 8px 18px rgba(15,23,42,.12); transform:translateY(-18px); }
+    .option-card.image-option .option-text{ width:100%; display:flex; align-items:center; justify-content:center; padding:0 44px 0 4px; position:relative; }
+    .option-card.image-option .option-label{ font-size:1.05rem; text-align:center; }
+    .option-card.image-option .option-arrow{ position:absolute; right:0; top:50%; transform:translateY(-50%); width:36px; height:36px; border-radius:50%; background:rgba(15,23,42,.05); display:flex; align-items:center; justify-content:center; color:#1e293b; font-weight:700; font-size:1rem; box-shadow:0 2px 6px rgba(15,23,42,.12); transition:.18s; }
+    .option-card.image-option.selected .option-arrow{ background:rgba(139,92,246,.15); color:#7c3aed; transform:translateY(-50%) scale(1.05); }
+
+    @media (max-width:599px){
+      .option-card.image-option{ padding:28px 16px 18px; gap:14px; }
+      .option-card.image-option .option-image-wrapper{ margin-top:-32px; }
+      .option-card.image-option .option-arrow{ width:32px; height:32px; right:2px; }
+      .options-grid{ grid-template-columns:1fr; }
+      .options-grid-mobile-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+
+    /* bouton continuer générique */
+    .continue-button{ width:100%; background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); color:#fff; border:none; border-radius:12px; padding:16px; font-size:1rem; font-weight:700; cursor:pointer; margin-top:16px; transition:.18s; box-shadow:0 2px 8px rgba(139,92,246,.2); }
+    .continue-button:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(139,92,246,.3); }
+    .continue-button:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
+
+    /* Scroller pour listes de choix longues */
+    .options-scroll-container{ display:flex; flex-direction:column; gap:12px; max-height:320px; overflow-y:auto; padding-right:4px; }
+    .options-scroll-container::-webkit-scrollbar{ width:6px; }
+    .options-scroll-container::-webkit-scrollbar-thumb{ background:rgba(124,58,237,.3); border-radius:999px; }
+
+    /* ===== Q1 — grille 2×2 pleine hauteur (images bien cadrées) ===== */
+    .q1 .question-content{ display:flex; flex-direction:column; min-height:0; }
+    .q1 .options-container{ flex:1; min-height:0; }
+    .q1 .options-grid{ display:grid !important; height:100%; grid-template-columns:repeat(2,1fr)!important; grid-template-rows:repeat(2,minmax(0,1fr))!important; gap:10px!important; }
+    .q1 .option-card.image-option{ height:100%!important; display:flex!important; flex-direction:column!important; padding:10px 10px 6px!important; border-radius:12px!important; overflow:visible!important; }
+    .q1 .option-image-wrapper{ flex:1 1 auto!important; display:block!important; position:relative!important; margin:0!important; overflow:visible!important; }
+    .q1 .option-image{ width:100%!important; height:100%!important; object-fit:cover!important; object-position:50% 0%!important; border-radius:12px!important; box-shadow:none!important; transform:translateY(-8px)!important; aspect-ratio:auto!important; }
+    .q1 .option-text{ position:relative!important; display:flex!important; align-items:center!important; justify-content:center!important; min-height:44px!important; padding:0 28px!important; text-align:center!important; }
+    .q1 .option-label{ font-weight:800!important; font-size:.98rem!important; }
+    .q1 .option-arrow{ width:28px!important; height:28px!important; right:0; top:50%; position:absolute; transform:translateY(-50%); border-radius:50%; background:rgba(15,23,42,.06); display:flex; align-items:center; justify-content:center; }
+    .q1 .question-header{ margin-bottom:8px; }
+    .q1 .question-title{ font-size:1.16rem; margin-bottom:4px; }
+    .q1 .question-subtitle{ font-size:.9rem; }
+    @media (max-height:700px){
+      .q1 .option-card.image-option{ padding:10px 8px 6px; }
+      .q1 .option-image-wrapper{ margin-top:-10px; }
+      .q1 .option-image{ transform:translateY(-5px); }
+      .q1 .option-text{ min-height:38px; }
+    }
+
+    /* ===== Overlay Résultats / Loader (affiché avant l’email) ===== */
+    .result-wrapper{
+      background:#ffffff;
+      height:100vh; height:100dvh;
+      display:none;
+      flex-direction:column;
+      align-items:center; justify-content:center;
+      padding:16px; overflow:hidden;
+      position:fixed; inset:0; z-index:30;
+    }
+    .result-wrapper .container{ width:100%; max-width:480px; animation:fadeIn .5s ease; }
+    .result-wrapper .header-title{ text-align:center; color:#1e293b; font-size:1.5rem; font-weight:800; margin-bottom:24px; line-height:1.2; transition:all .4s ease; }
+    .progress-card{ background:#fff; border-radius:16px; padding:24px 20px; box-shadow:0 8px 24px rgba(0,0,0,.1); border:2px solid #e5e7eb; position:relative; transition:all .4s ease; }
+    .progress-card.hidden{ opacity:0; transform:scale(.95); pointer-events:none; }
+    .progress-header{ margin-bottom:20px; }
+    .progress-percentage{ font-size:2.2rem; font-weight:800; background:linear-gradient(135deg,#10b981 0%,#059669 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+    .progress-subtitle{ color:#64748b; font-size:.9rem; }
+    .progress-bar-container{ height:6px; background:#e5e7eb; border-radius:100px; overflow:hidden; margin-bottom:24px; position:relative; }
+    .progress-bar-fill{ height:100%; background:linear-gradient(90deg,#10b981 0%,#059669 100%); border-radius:100px; width:0%; transition:width .5s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
+    .progress-bar-fill::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent); animation:shimmer 2s infinite; }
+    @keyframes shimmer{ 0%{ transform:translateX(-100%);} 100%{ transform:translateX(100%);} }
+    .checklist{ display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
+    .checklist-item{ display:flex; align-items:center; gap:10px; opacity:.5; transition:opacity .3s ease; }
+    .checklist-item.active{ opacity:1; }
+    .checklist-icon{ width:20px; height:20px; border:2px solid #e5e7eb; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all .3s ease; flex-shrink:0; }
+    .checklist-item.completed .checklist-icon{ background:linear-gradient(135deg,#10b981 0%,#059669 100%); border-color:transparent; }
+    .checklist-icon svg{ width:12px; height:12px; stroke:#fff; stroke-width:3; fill:none; opacity:0; transform:scale(0); transition:all .3s ease; }
+    .checklist-item.completed .checklist-icon svg{ opacity:1; transform:scale(1); }
+    .checklist-text{ color:#334155; font-size:.85rem; font-weight:600; line-height:1.2; }
+
+    .success-card{ background:#f0fdf4; border:2px solid #bbf7d0; border-radius:16px; padding:20px; display:none; }
+    .success-card.visible{ display:block; }
+    .success-title{ font-size:1.1rem; font-weight:800; color:#166534; margin-bottom:8px; }
+    .success-text{ color:#065f46; font-size:.95rem; line-height:1.5; margin-bottom:14px; }
+    .success-cta{ width:100%; border:none; border-radius:12px; padding:14px; font-weight:800; font-size:1rem; cursor:pointer; background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); color:#fff; }
+
+    /* ===== Etape email : ne garder que le bouton SIO ===== */
+    #emailQuestion .email-step-actions .continue-button{ display:none !important; } /* on cache notre bouton */
+    /* style du bouton SIO une fois dans l’étape email */
+    #emailQuestion form button,
+    #emailQuestion form input[type="submit"],
+    #emailQuestion [data-test-id="send-form-button"],
+    #emailQuestion [data-testid="send-form-button"],
+    #emailQuestion .sio-subscribe-button,
+    #emailQuestion .sio-submit,
+    #emailQuestion [data-element="cta-button"],
+    #emailQuestion button[id^="button-"]{
+      display:block !important; width:100% !important;
+      background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%) !important;
+      color:#fff !important; border:none !important; border-radius:12px !important;
+      padding:16px !important; font-size:1rem !important; font-weight:800 !important;
+      box-shadow:0 2px 8px rgba(139,92,246,.2) !important;
+      visibility:visible !important;
+    }
+
+    /* Gate CSS : masque inputs SIO globaux, n’affiche que dans #sioEmailSlot */
+    input[name="first_name"], input[name="surname"], input[name="email"]{ display:none !important; }
+    #sioEmailSlot input[name="first_name"],
+    #sioEmailSlot input[name="surname"],
+    #sioEmailSlot input[name="email"]{ display:block !important; }
+  </style>
 </head>
+
 <body>
-   <div class="app-container">
-       <header class="app-header">
-           <button class="back-button" id="backButton" aria-label="Retour">
-               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-               </svg>
-           </button>
-           <div class="app-logo">Profil Digestif</div>
-           <div class="header-right">
-               <span class="step-counter" id="stepCounter">1/12</span>
-           </div>
-       </header>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <button class="back-button" id="backButton" aria-label="Retour">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="app-logo">Profil Digestif</div>
+      <div class="header-right"><span class="step-counter" id="stepCounter">1/12</span></div>
+    </header>
 
-       <div class="progress-bar">
-           <div class="progress-fill" id="progressFill" style="width: 8.33%"></div>
-       </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 8.33%"></div></div>
 
-       <main class="app-content">
-            <!-- Question 1 -->
-           <section class="question-section active q1" id="q1">
-                <div class="question-content">
-                    <div class="question-header">
-                        <h2 class="question-title">📸 Quelle est votre tranche d'âge&nbsp;?</h2>
-                        <p class="question-subtitle">Nous utilisons uniquement votre âge pour personnaliser vos résultats.</p>
-                    </div>
-                    <div class="options-container options-grid options-grid-mobile-2">
-                        <div class="option-card image-option" data-value="18-29">
-                            <div class="option-image-wrapper">
-                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca78095ce_1.png" alt="Femme âgée de 18 à 29 ans" class="option-image">
-                            </div>
-                            <div class="option-text">
-                                <div class="option-label">18-29 ans</div>
-                                <div class="option-arrow">→</div>
-                            </div>
-                        </div>
-                        <div class="option-card image-option" data-value="30-39">
-                            <div class="option-image-wrapper">
-                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca85bcd66_11.png" alt="Femme âgée de 30 à 39 ans" class="option-image">
-                            </div>
-                            <div class="option-text">
-                                <div class="option-label">30-39 ans</div>
-                                <div class="option-arrow">→</div>
-                            </div>
-                        </div>
-                        <div class="option-card image-option" data-value="40-49">
-                            <div class="option-image-wrapper">
-                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904cf88c27a4_14.png" alt="Femme âgée de 40 à 49 ans" class="option-image">
-                            </div>
-                            <div class="option-text">
-                                <div class="option-label">40-49 ans</div>
-                                <div class="option-arrow">→</div>
-                            </div>
-                        </div>
-                        <div class="option-card image-option" data-value="50+">
-                            <div class="option-image-wrapper">
-                                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca9d70e30_13.png" alt="Femme de 50 ans et plus" class="option-image">
-                            </div>
-                            <div class="option-text">
-                                <div class="option-label">50+ ans</div>
-                                <div class="option-arrow">→</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    <!-- ===== Overlay Résultats (avant email) ===== -->
+    <div id="resultsWrapper" class="result-wrapper" role="dialog" aria-modal="true" aria-hidden="true">
+      <div class="container">
+        <h3 class="header-title">Nous analysons vos réponses…</h3>
 
-            <!-- Question 2 -->
-            <section class="question-section" id="q2">
-                <div class="question-content">
-                    <div class="question-header">
-                        <h2 class="question-title">🔥 Quel symptôme digestif vous gâche le plus la vie au quotidien&nbsp;?</h2>
-                        <p class="question-subtitle">Sélectionnez celui qui vous affecte le plus</p>
-                    </div>
-                    <div class="options-container">
-                        <div class="option-card" data-value="ballonnements">
-                            <span class="option-emoji">🔥</span>
-                            <div class="option-text">
-                                <div class="option-label">Ballonnements persistants</div>
-                                <div class="option-description">Ventre gonflé comme une femme enceinte</div>
-                            </div>
-                        </div>
-                        <div class="option-card" data-value="douleurs">
-                            <span class="option-emoji">💥</span>
-                            <div class="option-text">
-                                <div class="option-label">Douleurs et crampes abdominales</div>
-                                <div class="option-description">Sensations insupportables</div>
-                            </div>
-                        </div>
-                        <div class="option-card" data-value="transit">
-                            <span class="option-emoji">🚽</span>
-                            <div class="option-text">
-                                <div class="option-label">Transit erratique</div>
-                                <div class="option-description">Constipation, diarrhée ou alternance</div>
-                            </div>
-                        </div>
-                        <div class="option-card" data-value="peur">
-                            <span class="option-emoji">😰</span>
-                            <div class="option-text">
-                                <div class="option-label">Peur constante de manger</div>
-                                <div class="option-description">Angoisse avant/après les repas</div>
-                            </div>
-                        </div>
-                        <div class="option-card" data-value="tous">
-                            <span class="option-emoji">🌪️</span>
-                            <div class="option-text">
-                                <div class="option-label">Tous ces symptômes à la fois</div>
-                                <div class="option-description">C'est un calvaire quotidien</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        <div id="searchProgressCard" class="progress-card">
+          <div class="progress-header">
+            <div id="searchProgressPercentage" class="progress-percentage">0%</div>
+            <div class="progress-subtitle">Recherche de votre profil digestif</div>
+          </div>
 
-            <!-- Question 3 -->
-            <section class="question-section" id="q3">
-                <div class="question-content">
-                    <div class="question-header">
-                        <h2 class="question-title">🎚️ À quelle fréquence ressentez-vous des ballonnements après les repas&nbsp;?</h2>
-                        <p class="question-subtitle">Sélectionnez la réponse qui correspond le mieux à votre situation</p>
-                    </div>
-                    <div class="options-container">
-                        <div class="option-card" data-value="jamais">
-                            <span class="option-emoji">1</span>
-                            <div class="option-text">
-                                <div class="option-label">1 Jamais</div>
-                            </div>
-                        </div>
-                        <div class="option-card" data-value="rarement">
-                            <span class="option-emoji">2</span>
-                            <div class="option-text">
-                                <div class="option-label">2 Rarement</div>
-                            </div>
-                        </div>
-                        <div class="option-card" data-value="regulierement">
-                            <span class="option-emoji">3</span>
-                            <div class="option-text">
-                                <div class="option-label">3 Régulièrement</div>
-                            </div>
-                        </div>
-                        <div class="option-card" data-value="tres-souvent">
-                            <span class="option-emoji">4</span>
-                            <div class="option-text">
-                                <div class="option-label">4 Très souvent</div>
-                            </div>
-                        </div>
-                        <div class="option-card" data-value="constamment">
-                            <span class="option-emoji">5</span>
-                            <div class="option-text">
-                                <div class="option-label">5 Constamment</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+          <div class="progress-bar-container"><div id="searchProgressBar" class="progress-bar-fill"></div></div>
 
-            <!-- Question 4 -->
-            <section class="question-section" id="q4">
-                <div class="question-content">
-                    <div class="question-header">
-                        <h2 class="question-title">⏰ Depuis combien de temps vivez-vous avec ces troubles digestifs&nbsp;?</h2>
-                        <p class="question-subtitle">Cela nous aide à comprendre votre parcours</p>
-                    </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="moins-6-mois">
-                           <span class="option-emoji">🕐</span>
-                           <div class="option-text">
-                               <div class="option-label">Moins de 6 mois</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="6-mois-2-ans">
-                           <span class="option-emoji">📅</span>
-                           <div class="option-text">
-                               <div class="option-label">Entre 6 mois et 2 ans</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="2-5-ans">
-                           <span class="option-emoji">⏰</span>
-                           <div class="option-text">
-                               <div class="option-label">Entre 2 et 5 ans</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="plus-5-ans">
-                           <span class="option-emoji">😔</span>
-                           <div class="option-text">
-                               <div class="option-label">Plus de 5 ans</div>
-                           </div>
-                       </div>
-                   </div>
-                </div>
-            </section>
-
-           <!-- Question 5 -->
-           <section class="question-section" id="q5">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">💔 Comment vos problèmes digestifs affectent-ils votre quotidien&nbsp;?</h2>
-                       <p class="question-subtitle">Sélectionnez toutes les réponses qui s'appliquent</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="sorties">
-                           <input type="checkbox" />
-                           <span class="option-emoji">❌</span>
-                           <div class="option-text">
-                               <div class="option-label">J'évite les sorties au restaurant ou entre amis</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="incomprise">
-                           <input type="checkbox" />
-                           <span class="option-emoji">😔</span>
-                           <div class="option-text">
-                               <div class="option-label">Je me sens incomprise par mon entourage</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="travail">
-                           <input type="checkbox" />
-                           <span class="option-emoji">💼</span>
-                           <div class="option-text">
-                               <div class="option-label">Ça impacte mon travail ou ma performance</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="fatigue">
-                           <input type="checkbox" />
-                           <span class="option-emoji">😴</span>
-                           <div class="option-text">
-                               <div class="option-label">Je suis constamment fatiguée</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="tete">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🧠</span>
-                           <div class="option-text">
-                               <div class="option-label">J'ai l'impression que c'est "dans ma tête"</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="couple">
-                           <input type="checkbox" />
-                           <span class="option-emoji">💔</span>
-                           <div class="option-text">
-                               <div class="option-label">Ma vie de couple en souffre</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <button class="continue-button" disabled>Continuer</button>
-           </section>
-
-           <!-- Question 6 -->
-           <section class="question-section" id="q6">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">🔍 Qu'avez-vous déjà essayé pour soulager vos symptômes&nbsp;?</h2>
-                       <p class="question-subtitle">Sélectionnez toutes les réponses qui s'appliquent</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="medicaments">
-                           <input type="checkbox" />
-                           <span class="option-emoji">💊</span>
-                           <div class="option-text">
-                               <div class="option-label">Médicaments</div>
-                               <div class="option-description">Anti-spasmodiques, laxatifs…</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="regimes">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🥗</span>
-                           <div class="option-text">
-                               <div class="option-label">Régimes restrictifs</div>
-                               <div class="option-description">FODMAP, sans gluten, sans lactose…</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="probiotiques">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🦠</span>
-                           <div class="option-text">
-                               <div class="option-label">Probiotiques du commerce</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="consultations">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🩺</span>
-                           <div class="option-text">
-                               <div class="option-label">Consultations médicales</div>
-                               <div class="option-description">Sans solution durable</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="naturel">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🌿</span>
-                           <div class="option-text">
-                               <div class="option-label">Remèdes naturels</div>
-                               <div class="option-description">Tisanes, huiles essentielles…</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="rien">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🙅‍♀️</span>
-                           <div class="option-text">
-                               <div class="option-label">Rien de tout ça</div>
-                               <div class="option-description">Je ne sais plus quoi essayer</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <button class="continue-button" disabled>Continuer</button>
-           </section>
-
-           <!-- Question 7 -->
-           <section class="question-section" id="q7">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">💭 Quelle phrase vous correspond le plus en ce moment&nbsp;?</h2>
-                       <p class="question-subtitle">Soyez honnête avec vous-même</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="marre">
-                           <span class="option-emoji">😤</span>
-                           <div class="option-text">
-                               <div class="option-label">"J'en ai marre, je veux une solution MAINTENANT"</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="espoir">
-                           <span class="option-emoji">😞</span>
-                           <div class="option-text">
-                               <div class="option-label">"Je commence à perdre espoir…"</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="sceptique">
-                           <span class="option-emoji">🤔</span>
-                           <div class="option-text">
-                               <div class="option-label">"Je suis sceptique mais prête à essayer encore"</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="determinee">
-                           <span class="option-emoji">💪</span>
-                           <div class="option-text">
-                               <div class="option-label">"Je suis déterminée à régler ça, quoi qu'il en coûte"</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="perdue">
-                           <span class="option-emoji">🆘</span>
-                           <div class="option-text">
-                               <div class="option-label">"Je me sens perdue, je ne sais plus quoi faire"</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </section>
-
-           <!-- Question 8 -->
-           <section class="question-section" id="q8">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">✨ Si vous pouviez résoudre vos problèmes digestifs, qu'est-ce qui changerait dans votre vie&nbsp;?</h2>
-                       <p class="question-subtitle">Imaginez votre vie sans ces troubles</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="sorties-plaisir">
-                           <span class="option-emoji">🎉</span>
-                           <div class="option-text">
-                               <div class="option-label">Je pourrais enfin profiter des sorties sans stress</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="manger-plaisir">
-                           <span class="option-emoji">🍽️</span>
-                           <div class="option-text">
-                               <div class="option-label">Je mangerais à nouveau avec plaisir et sans peur</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="energie">
-                           <span class="option-emoji">⚡</span>
-                           <div class="option-text">
-                               <div class="option-label">J'aurais plus d'énergie et de joie de vivre</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="bien-etre">
-                           <span class="option-emoji">🧘‍♀️</span>
-                           <div class="option-text">
-                               <div class="option-label">Je me sentirais enfin bien dans mon corps</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="tout">
-                           <span class="option-emoji">🌟</span>
-                           <div class="option-text">
-                               <div class="option-label">Toutes ces réponses !</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </section>
-
-           <!-- Question 9 -->
-           <section class="question-section" id="q9">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">😰 À quelle fréquence ressentez-vous du stress ou vous sentez-vous submergée&nbsp;?</h2>
-                       <p class="question-subtitle">Sélectionnez la réponse qui correspond le mieux</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="toujours">
-                           <span class="option-emoji">🥵</span>
-                           <div class="option-text">
-                               <div class="option-label">Toujours</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="parfois">
-                           <span class="option-emoji">😟</span>
-                           <div class="option-text">
-                               <div class="option-label">Parfois</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="rarement">
-                           <span class="option-emoji">🙂</span>
-                           <div class="option-text">
-                               <div class="option-label">Rarement</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="jamais">
-                           <span class="option-emoji">😌</span>
-                           <div class="option-text">
-                               <div class="option-label">Jamais</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </section>
-
-           <!-- Question 10 -->
-           <section class="question-section" id="q10">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">⏱️ Dans combien de temps aimeriez-vous voir des résultats&nbsp;?</h2>
-                       <p class="question-subtitle">Chaque parcours est unique</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="urgent">
-                           <span class="option-emoji">⚡</span>
-                           <div class="option-text">
-                               <div class="option-label">Le plus vite possible</div>
-                               <div class="option-description">J'ai un événement important</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="3-4-semaines">
-                           <span class="option-emoji">📅</span>
-                           <div class="option-text">
-                               <div class="option-label">Dans les 3-4 semaines</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="peu-importe">
-                           <span class="option-emoji">🎯</span>
-                           <div class="option-text">
-                               <div class="option-label">Peu importe, tant que ça marche</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="progressif">
-                           <span class="option-emoji">🌱</span>
-                           <div class="option-text">
-                               <div class="option-label">Je préfère une solution progressive mais durable</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </section>
-           <!-- Question 11 -->
-           <section class="question-section" id="q11">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">🕐 Quand ressentez-vous habituellement un inconfort digestif&nbsp;?</h2>
-                       <p class="question-subtitle">Sélectionnez toutes les réponses qui s'appliquent</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="apres-repas">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🍽️</span>
-                           <div class="option-text">
-                               <div class="option-label">Juste après un repas</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="matin">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🌅</span>
-                           <div class="option-text">
-                               <div class="option-label">Dès le réveil le matin</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="apres-boisson">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🥤</span>
-                           <div class="option-text">
-                               <div class="option-label">Après avoir bu</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="coucher">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🌙</span>
-                           <div class="option-text">
-                               <div class="option-label">Au moment du coucher</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="irregulier">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🔄</span>
-                           <div class="option-text">
-                               <div class="option-label">De manière irrégulière</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="aucun">
-                           <input type="checkbox" />
-                           <span class="option-emoji">🚫</span>
-                           <div class="option-text">
-                               <div class="option-label">Aucune de ces réponses</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-               <button class="continue-button" disabled>Continuer</button>
-           </section>
-
-           <!-- Question 12 -->
-           <section class="question-section" id="q12">
-               <div class="question-content">
-                   <div class="question-header">
-                       <h2 class="question-title">📊 À quelle fréquence ressentez-vous des troubles digestifs&nbsp;?</h2>
-                       <p class="question-subtitle">Choisissez une seule réponse</p>
-                   </div>
-                   <div class="options-container">
-                       <div class="option-card" data-value="souvent">
-                           <span class="option-emoji">🥺</span>
-                           <div class="option-text">
-                               <div class="option-label">Souvent</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="parfois">
-                           <span class="option-emoji">😕</span>
-                           <div class="option-text">
-                               <div class="option-label">Parfois</div>
-                           </div>
-                       </div>
-                       <div class="option-card" data-value="rarement">
-                           <span class="option-emoji">🙂</span>
-                           <div class="option-text">
-                               <div class="option-label">Rarement</div>
-                           </div>
-                       </div>
-                   </div>
-               </div>
-           </section>
-           <!-- Question Email -->
-          <section class="question-section" id="emailQuestion">
-              <div class="question-content">
-                  <div class="question-header">
-                      <h2 class="question-title">Découvrez votre profil digestif personnalisé</h2>
-                      <p class="question-subtitle">Entrez votre email pour recevoir vos résultats détaillés et des conseils personnalisés</p>
-                  </div>
-                  <div class="options-scroll-container">
-                      <!-- === SLOT EMAIL (à mettre dans l’étape #emailQuestion) === -->
-<div id="sioEmailSlot" class="options-container">
-  <div id="sioEmailLoading" class="input-field" style="display:flex;align-items:center;justify-content:center;height:26.7px;">
-    Chargement du champ email…
-  </div>
-</div>
-
-<script>
-/**
- * Instrumentation email SIO (debug) pour l’étape #emailQuestion :
- * - garde « Continuer » (quiz) visible
- * - le branche pour cliquer le bouton SIO natif (proxy)
- * - ajoute des logs [SIO][DBG] + window.sioDbg.dump()
- */
-(function () {
-  const log  = (...a) => console.log('%c[SIO][DBG]', 'color:#0ea5e9;font-weight:700', ...a);
-  const warn = (...a) => console.warn('%c[SIO][WRN]', 'color:#f59e0b;font-weight:700', ...a);
-  const err  = (...a) => console.error('%c[SIO][ERR]', 'color:#ef4444;font-weight:700', ...a);
-
-  // Gate CSS : masquer l’input email SIO partout sauf dans notre mount
-  (function injectGateCss(){
-    if (document.getElementById('sioEmailGate')) return;
-    const css = document.createElement('style');
-    css.id = 'sioEmailGate';
-    css.textContent = `
-      input[name="email"] { display:none !important; }
-      #sioFieldsMount input[name="email"] { display:block !important; }
-    `;
-    (document.head || document.documentElement).appendChild(css);
-  })();
-
-  const EMAIL_SEL = [
-    'input[type="email"]',
-    'input[name="email"]',
-    'input[name*="email" i]',
-    'input[id*="email" i]',
-    'input[placeholder*="mail" i]',
-    'input[id^="field-"]'
-  ].join(', ');
-
-  // On cible des submit-button SIO "classiques" (on évite le bouton "Continuer" du quiz)
-  const SUBMIT_SEL = [
-    'button[type="submit"]',
-    'input[type="submit"]',
-    '[data-test-id="send-form-button"]',
-    '[data-testid="send-form-button"]',
-    '.sio-subscribe-button',
-    '.sio-submit',
-    '[data-element="cta-button"]',
-    'button[id^="button-"]'
-  ].join(', ');
-
-  function instrumentEmailStage() {
-    const slot = document.getElementById('sioEmailSlot');
-    if (!slot) { warn('slot #sioEmailSlot introuvable'); return false; }
-
-    // 1) Mount unique à l’intérieur du slot
-    let mount = slot.querySelector('#sioFieldsMount');
-    if (!mount) {
-      mount = document.createElement('div');
-      mount.id = 'sioFieldsMount';
-      mount.style.display = 'flex';
-      mount.style.flexDirection = 'column';
-      mount.style.gap = '12px';
-      slot.innerHTML = '';
-      slot.appendChild(mount);
-      log('mount créé');
-    }
-
-    // 2) Email SIO
-    const emailInputs = Array.from(document.querySelectorAll(EMAIL_SEL));
-    const email = emailInputs.length ? emailInputs[emailInputs.length - 1] : null;
-    log('email input trouvé ?', !!email, email);
-
-    // 3) Form + bouton SIO natif
-    const form  = email && (email.closest('form') || email.form) || null;
-    let nativeBtn = form ? form.querySelector(SUBMIT_SEL) : null;
-    if (!nativeBtn) {
-      // fallback large si SIO n’utilise pas <form>
-      nativeBtn = (email && (email.closest('#emailQuestion') || document)).querySelector(SUBMIT_SEL) || null;
-    }
-    log('form trouvé ?', !!form);
-    log('bouton SIO natif ?', !!nativeBtn, nativeBtn);
-    if (nativeBtn) {
-      const cs = getComputedStyle(nativeBtn);
-      log('style bouton SIO :', {
-        disabled: nativeBtn.disabled,
-        display: cs.display,
-        visibility: cs.visibility
-      });
-    }
-
-    // 4) Déplacer l’input dans le mount
-    if (email && !mount.contains(email)) {
-      const loading = document.getElementById('sioEmailLoading');
-      if (loading) loading.remove();
-
-      const wrap = document.createElement('div');
-      wrap.className = 'input-field';
-      wrap.style.padding = '6.7px 14px';
-      wrap.style.border = '2px solid #e5e7eb';
-      wrap.style.borderRadius = '10px';
-
-      email.style.width = '100%';
-      email.style.border = '0';
-      email.style.outline = 'none';
-      email.style.fontSize = '0.95rem';
-      if (!email.placeholder) email.placeholder = 'Votre email';
-
-      wrap.appendChild(email);
-      mount.appendChild(wrap);
-      log('champ email déplacé dans le mount');
-    }
-
-    // 5) Insérer le mount DANS le <form> si possible (et avant le bouton SIO)
-    if (form && mount.parentElement !== form) {
-      const anchor = form.querySelector(SUBMIT_SEL) || form.firstChild;
-      form.insertBefore(mount, anchor || null);
-      log('mount inséré dans <form>');
-    }
-
-    // 6) Déplacer/styliser le bouton SIO sous l’email
-    if (nativeBtn && !mount.contains(nativeBtn)) {
-      const row = document.createElement('div');
-      row.style.display = 'flex';
-      row.style.flexDirection = 'column';
-      row.style.gap = '8px';
-
-      if (!nativeBtn.dataset._sioStyled) {
-        nativeBtn.style.width = '100%';
-        nativeBtn.style.height = '48px';
-        nativeBtn.style.borderRadius = '12px';
-        nativeBtn.dataset._sioStyled = '1';
-      }
-
-      row.appendChild(nativeBtn);
-      mount.appendChild(row);
-      log('bouton SIO déplacé sous le champ email');
-    }
-
-    // 7) Brancher le « Continuer » du quiz pour CLIQUER le bouton SIO
-    const quizContinue = document.querySelector('#emailQuestion .continue-button');
-    if (quizContinue && !quizContinue.dataset.sioBound) {
-      quizContinue.dataset.sioBound = '1';
-      // on s’assure qu’il est visible/actif
-      quizContinue.style.display = '';
-      quizContinue.disabled = false;
-      quizContinue.classList.remove('disabled');
-
-      quizContinue.addEventListener('click', (e) => {
-        log('CLICK sur "Continuer" (quiz) → proxy sur bouton SIO');
-        e.preventDefault();
-        e.stopPropagation(); // empêche toute navigation parasite
-
-        const btn = (form && form.querySelector(SUBMIT_SEL)) || nativeBtn || document.querySelector(SUBMIT_SEL);
-        if (btn && typeof btn.click === 'function') {
-          btn.click();                     // déclenche les validations SIO
-          log('→ nativeBtn.click() exécuté');
-        } else if (form) {
-          if (form.requestSubmit) form.requestSubmit(); else form.submit();
-          log('→ form.submit() exécuté (fallback)');
-        } else {
-          err('Aucun bouton SIO detecté — rien envoyé.');
-        }
-      }, true);
-
-      log('Listener debug ajouté sur le bouton "Continuer" (quiz)');
-      log('Tips: appelle window.sioDbg.dump() dans la console pour voir l’état courant');
-    }
-
-    // 8) Miroir d’état disabled/visibility du bouton SIO → sur le bouton quiz
-    if (nativeBtn && quizContinue) {
-      const apply = () => {
-        const cs = getComputedStyle(nativeBtn);
-        const shouldDisable = !!nativeBtn.disabled || cs.display === 'none' || cs.visibility === 'hidden';
-        quizContinue.disabled = shouldDisable;
-        quizContinue.classList.toggle('disabled', shouldDisable);
-      };
-      apply();
-      const mo = new MutationObserver(apply);
-      mo.observe(nativeBtn, { attributes: true, attributeFilter: ['disabled', 'style', 'class'] });
-      window.__sioBtnMirror = mo;
-    }
-
-    // 9) Helper debug
-    window.sioDbg = {
-      dump() {
-        const state = {
-          emailFound: !!email,
-          formFound: !!form,
-          nativeBtnFound: !!nativeBtn,
-          continueFound: !!document.querySelector('#emailQuestion .continue-button'),
-          emailInput: email,
-          nativeBtn,
-          form,
-          mount
-        };
-        console.log('%c[SIO][DBG] dump →', 'color:#0ea5e9;font-weight:700');
-        console.log(state);
-        return state;
-      }
-    };
-
-    return !!email;
-  }
-
-  function onEmailStageOpen() {
-    log('showEmailQuestion WRAPPED (debug)');
-    let n = 0;
-    const tick = setInterval(() => {
-      n++;
-      log('post-open: on tente d’identifier les éléments SIO (form, bouton, input)');
-      const ok = instrumentEmailStage();
-      if (ok || n >= 12) clearInterval(tick);
-    }, 250);
-  }
-
-  // Armer le wrapper ou l’observer de visibilité
-  if (typeof window.showEmailQuestion === 'function' && !window.showEmailQuestion.__sioWrapped) {
-    const orig = window.showEmailQuestion;
-    window.showEmailQuestion = function wrappedShowEmailQuestion() {
-      const r = orig.apply(this, arguments);
-      onEmailStageOpen();
-      return r;
-    };
-    window.showEmailQuestion.__sioWrapped = true;
-    log('showEmailQuestion() appelé → on ouvre l’étape email');
-  } else {
-    const target = document.getElementById('emailQuestion');
-    const visible = () => target && getComputedStyle(target).display !== 'none';
-    if (visible()) {
-      onEmailStageOpen();
-    } else {
-      const mo = new MutationObserver(() => {
-        if (visible()) {
-          mo.disconnect();
-          onEmailStageOpen();
-        }
-      });
-      mo.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
-      log('observer armé (fallback visibilité)');
-    }
-  }
-})();
-</script>
-                  </div>
-                  <div class="email-step-actions">
-                      <button class="continue-button" type="button">Continuer</button>
-                  </div>
+          <div class="checklist">
+            <div class="checklist-item" data-step="1">
+              <div class="checklist-icon">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
               </div>
-          </section>
-      </main>
-   </div>
+              <span class="checklist-text">Analyse des symptômes & de la fréquence</span>
+            </div>
+            <div class="checklist-item" data-step="2">
+              <div class="checklist-icon">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <span class="checklist-text">Prise en compte de l’historique</span>
+            </div>
+            <div class="checklist-item" data-step="3">
+              <div class="checklist-icon">
+                <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+              <span class="checklist-text">Construction de votre profil</span>
+            </div>
+          </div>
+        </div>
 
-   <script>
-       // État de l'application
-       let currentStep = 1;
-       const totalSteps = 12;
-       const answers = {};
+        <div id="searchSuccessCard" class="success-card">
+          <div class="success-title">C’est prêt ✅</div>
+          <div class="success-text">Nous avons préparé votre profil personnalisé. Entrez votre email pour recevoir vos résultats détaillés.</div>
+          <button id="goToEmailFromSuccess" class="success-cta" type="button">Voir mes résultats</button>
+        </div>
+      </div>
+    </div>
+    <!-- ===== Fin overlay ===== -->
 
-       // Éléments DOM
-       const backButton = document.getElementById('backButton');
-       const stepCounter = document.getElementById('stepCounter');
-       const progressFill = document.getElementById('progressFill');
-       const emailSection = document.getElementById('emailQuestion');
-       const sioEmailSlot = document.getElementById('sioEmailSlot');
+    <!-- ===== Contenu Quiz ===== -->
+    <main class="app-content">
 
-       // Gestion du bouton retour
-       backButton.addEventListener('click', () => {
-           if (currentStep > 1) {
-               goToStep(currentStep - 1);
-           }
-       });
+      <!-- Q1 -->
+      <section class="question-section active q1" id="q1">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">📸 Quelle est votre tranche d'âge&nbsp;?</h2>
+            <p class="question-subtitle">Nous utilisons uniquement votre âge pour personnaliser vos résultats.</p>
+          </div>
+          <div class="options-container options-grid options-grid-mobile-2">
+            <div class="option-card image-option" data-value="18-29">
+              <div class="option-image-wrapper">
+                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca78095ce_1.png" alt="18-29 ans" class="option-image">
+              </div>
+              <div class="option-text"><div class="option-label">18-29 ans</div><div class="option-arrow">→</div></div>
+            </div>
+            <div class="option-card image-option" data-value="30-39">
+              <div class="option-image-wrapper">
+                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca85bcd66_11.png" alt="30-39 ans" class="option-image">
+              </div>
+              <div class="option-text"><div class="option-label">30-39 ans</div><div class="option-arrow">→</div></div>
+            </div>
+            <div class="option-card image-option" data-value="40-49">
+              <div class="option-image-wrapper">
+                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904cf88c27a4_14.png" alt="40-49 ans" class="option-image">
+              </div>
+              <div class="option-text"><div class="option-label">40-49 ans</div><div class="option-arrow">→</div></div>
+            </div>
+            <div class="option-card image-option" data-value="50+">
+              <div class="option-image-wrapper">
+                <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904ca9d70e30_13.png" alt="50+ ans" class="option-image">
+              </div>
+              <div class="option-text"><div class="option-label">50+ ans</div><div class="option-arrow">→</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-       // Mise à jour de l'interface
-       function updateUI() {
-           stepCounter.textContent = `${currentStep}/${totalSteps}`;
-           const progress = (currentStep / totalSteps) * 100;
-           progressFill.style.width = `${progress}%`;
-           backButton.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
-       }
+      <!-- Q2 -->
+      <section class="question-section" id="q2">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">🔥 Quel symptôme digestif vous gêne le plus au quotidien&nbsp;?</h2>
+            <p class="question-subtitle">Sélectionnez celui qui vous affecte le plus</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="ballonnements"><span class="option-emoji">🔥</span><div class="option-text"><div class="option-label">Ballonnements persistants</div><div class="option-description">Ventre gonflé</div></div></div>
+            <div class="option-card" data-value="douleurs"><span class="option-emoji">💥</span><div class="option-text"><div class="option-label">Douleurs & crampes</div><div class="option-description">Sensations insupportables</div></div></div>
+            <div class="option-card" data-value="transit"><span class="option-emoji">🚽</span><div class="option-text"><div class="option-label">Transit erratique</div><div class="option-description">Constipation, diarrhée, alternance</div></div></div>
+            <div class="option-card" data-value="peur"><span class="option-emoji">😰</span><div class="option-text"><div class="option-label">Peur de manger</div><div class="option-description">Angoisse avant/après repas</div></div></div>
+            <div class="option-card" data-value="tous"><span class="option-emoji">🌪️</span><div class="option-text"><div class="option-label">Tous ces symptômes</div><div class="option-description">C’est un calvaire</div></div></div>
+          </div>
+        </div>
+      </section>
 
-       // Navigation entre les questions
-       function goToStep(step) {
-           document.querySelectorAll('.question-section').forEach(section => {
-               section.classList.remove('active');
-           });
-           
-           const targetSection = document.getElementById(`q${step}`) || document.getElementById('emailQuestion');
-           if (targetSection) {
-               targetSection.classList.add('active');
-               currentStep = step;
-               updateUI();
-           }
-       }
+      <!-- Q3 -->
+      <section class="question-section" id="q3">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">🎚️ À quelle fréquence avez-vous des ballonnements après les repas&nbsp;?</h2>
+            <p class="question-subtitle">Choisissez la réponse la plus juste</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="jamais"><span class="option-emoji">1</span><div class="option-text"><div class="option-label">1 Jamais</div></div></div>
+            <div class="option-card" data-value="rarement"><span class="option-emoji">2</span><div class="option-text"><div class="option-label">2 Rarement</div></div></div>
+            <div class="option-card" data-value="regulierement"><span class="option-emoji">3</span><div class="option-text"><div class="option-label">3 Régulièrement</div></div></div>
+            <div class="option-card" data-value="tres-souvent"><span class="option-emoji">4</span><div class="option-text"><div class="option-label">4 Très souvent</div></div></div>
+            <div class="option-card" data-value="constamment"><span class="option-emoji">5</span><div class="option-text"><div class="option-label">5 Constamment</div></div></div>
+          </div>
+        </div>
+      </section>
 
-       // Gestion des options à choix unique
-       document.querySelectorAll('.question-section').forEach((section, index) => {
-           if (section.id === 'emailQuestion') {
-               return;
-           }
+      <!-- Q4 -->
+      <section class="question-section" id="q4">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">⏰ Depuis combien de temps vivez-vous avec ces troubles&nbsp;?</h2>
+            <p class="question-subtitle">Cela nous aide à comprendre votre parcours</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="moins-6-mois"><span class="option-emoji">🕐</span><div class="option-text"><div class="option-label">Moins de 6 mois</div></div></div>
+            <div class="option-card" data-value="6-mois-2-ans"><span class="option-emoji">📅</span><div class="option-text"><div class="option-label">6 mois – 2 ans</div></div></div>
+            <div class="option-card" data-value="2-5-ans"><span class="option-emoji">⏰</span><div class="option-text"><div class="option-label">2 – 5 ans</div></div></div>
+            <div class="option-card" data-value="plus-5-ans"><span class="option-emoji">😔</span><div class="option-text"><div class="option-label">Plus de 5 ans</div></div></div>
+          </div>
+        </div>
+      </section>
 
-           const questionId = `q${index + 1}`;
-           const options = section.querySelectorAll('.option-card');
-           const continueBtn = section.querySelector('.continue-button');
-           const hasCheckboxes = section.querySelector('input[type="checkbox"]') !== null;
+      <!-- Q5 -->
+      <section class="question-section" id="q5">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">💔 Quel est l’impact sur votre quotidien&nbsp;?</h2>
+            <p class="question-subtitle">Sélectionnez toutes les réponses qui s'appliquent</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="sorties"><input type="checkbox" /><span class="option-emoji">❌</span><div class="option-text"><div class="option-label">J'évite les sorties</div></div></div>
+            <div class="option-card" data-value="incomprise"><input type="checkbox" /><span class="option-emoji">😔</span><div class="option-text"><div class="option-label">Je me sens incomprise</div></div></div>
+            <div class="option-card" data-value="travail"><input type="checkbox" /><span class="option-emoji">💼</span><div class="option-text"><div class="option-label">Impact sur le travail</div></div></div>
+            <div class="option-card" data-value="fatigue"><input type="checkbox" /><span class="option-emoji">😴</span><div class="option-text"><div class="option-label">Fatigue constante</div></div></div>
+            <div class="option-card" data-value="tete"><input type="checkbox" /><span class="option-emoji">🧠</span><div class="option-text"><div class="option-label">« C’est dans ma tête »</div></div></div>
+            <div class="option-card" data-value="couple"><input type="checkbox" /><span class="option-emoji">💔</span><div class="option-text"><div class="option-label">Vie de couple</div></div></div>
+          </div>
+        </div>
+        <button class="continue-button" disabled>Continuer</button>
+      </section>
 
-           if (!hasCheckboxes) {
-               options.forEach(option => {
-                   option.addEventListener('click', () => {
-                       options.forEach(opt => opt.classList.remove('selected'));
-                       option.classList.add('selected');
-                       answers[questionId] = option.dataset.value;
-                       if (continueBtn) continueBtn.disabled = false;
+      <!-- Q6 -->
+      <section class="question-section" id="q6">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">🔍 Qu'avez-vous déjà essayé&nbsp;?</h2>
+            <p class="question-subtitle">Sélectionnez toutes les réponses qui s'appliquent</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="medicaments"><input type="checkbox" /><span class="option-emoji">💊</span><div class="option-text"><div class="option-label">Médicaments</div><div class="option-description">Anti-spasmodiques, laxatifs…</div></div></div>
+            <div class="option-card" data-value="regimes"><input type="checkbox" /><span class="option-emoji">🥗</span><div class="option-text"><div class="option-label">Régimes restrictifs</div><div class="option-description">FODMAP, sans gluten, etc.</div></div></div>
+            <div class="option-card" data-value="probiotiques"><input type="checkbox" /><span class="option-emoji">🦠</span><div class="option-text"><div class="option-label">Probiotiques</div></div></div>
+            <div class="option-card" data-value="consultations"><input type="checkbox" /><span class="option-emoji">🩺</span><div class="option-text"><div class="option-label">Consultations</div><div class="option-description">Sans solution durable</div></div></div>
+            <div class="option-card" data-value="naturel"><input type="checkbox" /><span class="option-emoji">🌿</span><div class="option-text"><div class="option-label">Remèdes naturels</div></div></div>
+            <div class="option-card" data-value="rien"><input type="checkbox" /><span class="option-emoji">🙅‍♀️</span><div class="option-text"><div class="option-label">Rien de tout ça</div></div></div>
+          </div>
+        </div>
+        <button class="continue-button" disabled>Continuer</button>
+      </section>
 
-                       if (!continueBtn && options.length > 0) {
-                           if (index + 1 < totalSteps) {
-                               goToStep(index + 2);
-                           } else {
-                               showEmailQuestion();
-                           }
-                       }
-                   });
-               });
-           } else {
-               // Gestion des cases à cocher
-               options.forEach(option => {
-                   const checkbox = option.querySelector('input[type="checkbox"]');
-                   if (checkbox) {
-                       option.addEventListener('click', (e) => {
-                           if (e.target !== checkbox) {
-                               checkbox.checked = !checkbox.checked;
-                           }
-                           option.classList.toggle('selected', checkbox.checked);
-                           
-                           const checkedValues = Array.from(section.querySelectorAll('input[type="checkbox"]:checked'))
-                               .map(cb => cb.parentElement.dataset.value);
-                           
-                           answers[questionId] = checkedValues;
-                           if (continueBtn) continueBtn.disabled = checkedValues.length === 0;
-                       });
-                   }
-               });
-           }
+      <!-- Q7 -->
+      <section class="question-section" id="q7">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">💭 Quelle phrase vous correspond le plus&nbsp;?</h2>
+            <p class="question-subtitle">Soyez honnête</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="marre"><span class="option-emoji">😤</span><div class="option-text"><div class="option-label">Je veux une solution MAINTENANT</div></div></div>
+            <div class="option-card" data-value="espoir"><span class="option-emoji">😞</span><div class="option-text"><div class="option-label">Je perds espoir</div></div></div>
+            <div class="option-card" data-value="sceptique"><span class="option-emoji">🤔</span><div class="option-text"><div class="option-label">Je suis sceptique mais partante</div></div></div>
+            <div class="option-card" data-value="determinee"><span class="option-emoji">💪</span><div class="option-text"><div class="option-label">Déterminée quoi qu’il en coûte</div></div></div>
+            <div class="option-card" data-value="perdue"><span class="option-emoji">🆘</span><div class="option-text"><div class="option-label">Je suis perdue</div></div></div>
+          </div>
+        </div>
+      </section>
 
-           if (continueBtn) {
-               continueBtn.addEventListener('click', () => {
-                   if (index + 1 < totalSteps) {
-                       goToStep(index + 2);
-                   } else {
-                       showEmailQuestion();
-                   }
-               });
-           }
-       });
+      <!-- Q8 -->
+      <section class="question-section" id="q8">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">✨ Si c’était réglé, qu’est-ce qui changerait&nbsp;?</h2>
+            <p class="question-subtitle">Projetez-vous sans ces troubles</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="sorties-plaisir"><span class="option-emoji">🎉</span><div class="option-text"><div class="option-label">Sorties sans stress</div></div></div>
+            <div class="option-card" data-value="manger-plaisir"><span class="option-emoji">🍽️</span><div class="option-text"><div class="option-label">Manger avec plaisir</div></div></div>
+            <div class="option-card" data-value="energie"><span class="option-emoji">⚡</span><div class="option-text"><div class="option-label">Plus d’énergie</div></div></div>
+            <div class="option-card" data-value="bien-etre"><span class="option-emoji">🧘‍♀️</span><div class="option-text"><div class="option-label">Bien dans mon corps</div></div></div>
+            <div class="option-card" data-value="tout"><span class="option-emoji">🌟</span><div class="option-text"><div class="option-label">Toutes ces réponses</div></div></div>
+          </div>
+        </div>
+      </section>
 
-       // Afficher la question email
-       function showEmailQuestion() {
-           document.querySelectorAll('.question-section').forEach(section => {
-               section.classList.remove('active');
-           });
-           if (emailSection) {
-               emailSection.classList.add('active');
-           }
-           currentStep = totalSteps;
-           updateUI();
-           const appContent = document.querySelector('.app-content');
-           if (appContent) {
-               appContent.scrollTop = 0;
-           }
-       }
+      <!-- Q9 -->
+      <section class="question-section" id="q9">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">😰 À quelle fréquence êtes‑vous stressée&nbsp;?</h2>
+            <p class="question-subtitle">Choisissez la réponse qui convient</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="toujours"><span class="option-emoji">🥵</span><div class="option-text"><div class="option-label">Toujours</div></div></div>
+            <div class="option-card" data-value="parfois"><span class="option-emoji">😟</span><div class="option-text"><div class="option-label">Parfois</div></div></div>
+            <div class="option-card" data-value="rarement"><span class="option-emoji">🙂</span><div class="option-text"><div class="option-label">Rarement</div></div></div>
+            <div class="option-card" data-value="jamais"><span class="option-emoji">😌</span><div class="option-text"><div class="option-label">Jamais</div></div></div>
+          </div>
+        </div>
+      </section>
 
-       if (sioEmailSlot) {
-           const removeLoadingPlaceholder = () => {
-               const loading = document.getElementById('sioEmailLoading');
-               if (loading && sioEmailSlot.querySelector('form')) {
-                   loading.remove();
-               }
-           };
+      <!-- Q10 -->
+      <section class="question-section" id="q10">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">⏱️ Quand voulez‑vous voir des résultats&nbsp;?</h2>
+            <p class="question-subtitle">Chaque parcours est unique</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="urgent"><span class="option-emoji">⚡</span><div class="option-text"><div class="option-label">Le plus vite possible</div><div class="option-description">Échéance proche</div></div></div>
+            <div class="option-card" data-value="3-4-semaines"><span class="option-emoji">📅</span><div class="option-text"><div class="option-label">Dans 3–4 semaines</div></div></div>
+            <div class="option-card" data-value="peu-importe"><span class="option-emoji">🎯</span><div class="option-text"><div class="option-label">Peu importe si ça marche</div></div></div>
+            <div class="option-card" data-value="progressif"><span class="option-emoji">🌱</span><div class="option-text"><div class="option-label">Progressif mais durable</div></div></div>
+          </div>
+        </div>
+      </section>
 
-           const observer = new MutationObserver(() => {
-               removeLoadingPlaceholder();
-           });
+      <!-- Q11 -->
+      <section class="question-section" id="q11">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">🕐 Quand ressentez‑vous l’inconfort&nbsp;?</h2>
+            <p class="question-subtitle">Sélectionnez toutes les réponses qui s'appliquent</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="apres-repas"><input type="checkbox" /><span class="option-emoji">🍽️</span><div class="option-text"><div class="option-label">Après un repas</div></div></div>
+            <div class="option-card" data-value="matin"><input type="checkbox" /><span class="option-emoji">🌅</span><div class="option-text"><div class="option-label">Au réveil</div></div></div>
+            <div class="option-card" data-value="apres-boisson"><input type="checkbox" /><span class="option-emoji">🥤</span><div class="option-text"><div class="option-label">Après avoir bu</div></div></div>
+            <div class="option-card" data-value="coucher"><input type="checkbox" /><span class="option-emoji">🌙</span><div class="option-text"><div class="option-label">Au coucher</div></div></div>
+            <div class="option-card" data-value="irregulier"><input type="checkbox" /><span class="option-emoji">🔄</span><div class="option-text"><div class="option-label">Irrégulier</div></div></div>
+            <div class="option-card" data-value="aucun"><input type="checkbox" /><span class="option-emoji">🚫</span><div class="option-text"><div class="option-label">Aucun</div></div></div>
+          </div>
+        </div>
+        <button class="continue-button" disabled>Continuer</button>
+      </section>
 
-           observer.observe(sioEmailSlot, { childList: true, subtree: true });
-           removeLoadingPlaceholder();
-       }
+      <!-- Q12 -->
+      <section class="question-section" id="q12">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">📊 À quelle fréquence avez‑vous des troubles&nbsp;?</h2>
+            <p class="question-subtitle">Choisissez une seule réponse</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="souvent"><span class="option-emoji">🥺</span><div class="option-text"><div class="option-label">Souvent</div></div></div>
+            <div class="option-card" data-value="parfois"><span class="option-emoji">😕</span><div class="option-text"><div class="option-label">Parfois</div></div></div>
+            <div class="option-card" data-value="rarement"><span class="option-emoji">🙂</span><div class="option-text"><div class="option-label">Rarement</div></div></div>
+          </div>
+        </div>
+      </section>
 
-       // Initialisation
-       updateUI();
-   </script>
-   <script>
-   (function () {
-     function clickSio() {
-       const email = document.querySelector('#emailQuestion input[name="email"]');
-       const form  = email && (email.closest('form') || email.form);
-       const btn   = form && form.querySelector(
-         'button[type="submit"],input[type="submit"],.sio-subscribe-button,.sio-submit,[data-element="cta-button"],[data-test-id="send-form-button"],[data-testid="send-form-button"],button[id^="button-"]'
-       );
-       if (btn && typeof btn.click === 'function') { btn.click(); return true; }
-       if (form) { if (form.requestSubmit) form.requestSubmit(); else form.submit(); return true; }
-       return false;
-     }
+      <!-- EMAIL -->
+      <section class="question-section" id="emailQuestion">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">Découvrez votre profil digestif personnalisé</h2>
+            <p class="question-subtitle">Entrez votre email pour recevoir vos résultats détaillés et des conseils personnalisés</p>
+          </div>
 
-     const original = document.querySelector('#emailQuestion .continue-button');
-     if (!original) return;
+          <div class="options-scroll-container">
+            <div id="sioEmailSlot" class="options-container">
+              <!-- placeholder pendant l’injection SIO -->
+              <div id="sioEmailLoading" class="input-field" style="display:flex;align-items:center;justify-content:center;height:26.7px;">
+                Chargement du formulaire…
+              </div>
+            </div>
+          </div>
+        </div>
 
-     // On supprime tous les anciens listeners et on empêche toute propagation
-     const btn = original.cloneNode(true);
-     original.parentNode.replaceChild(btn, original);
-     btn.addEventListener('click', function (e) {
-       e.preventDefault();
-       e.stopPropagation();
-       e.stopImmediatePropagation();
-       clickSio();
-       return false;
-     }, { capture: true });
+        <div class="email-step-actions">
+          <!-- notre bouton “continuer” est masqué par CSS à l’étape email -->
+          <button class="continue-button" type="button">Continuer</button>
+        </div>
+      </section>
 
-     // Enter => submit SIO uniquement
-     const emailStep = document.getElementById('emailQuestion');
-     if (emailStep) {
-       emailStep.addEventListener('keydown', (e) => {
-         if (e.key === 'Enter') {
-           e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
-           clickSio();
-         }
-       }, { capture: true });
-     }
-   })();
-  </script>
+    </main>
+    <!-- ===== Fin Contenu Quiz ===== -->
+  </div>
+
   <script>
-/* ===== DEBUG SIO — instrumentation console pour l'étape email ===== */
-(function () {
-  const style = "color:#059669;font-weight:700";
-  const log   = (...a)=>console.log("%c[SIO][DBG]", style, ...a);
-  const warn  = (...a)=>console.warn("%c[SIO][WARN]", style, ...a);
-  const error = (...a)=>console.error("%c[SIO][ERR]", style, ...a);
+    /* =========================
+       Etat & éléments
+       ========================= */
+    let currentStep = 1;
+    const totalSteps = 12;
+    const answers = {};
 
-  const q  = (s, r=document)=>r.querySelector(s);
-  const qa = (s, r=document)=>Array.from(r.querySelectorAll(s));
+    const backButton   = document.getElementById('backButton');
+    const stepCounter  = document.getElementById('stepCounter');
+    const progressFill = document.getElementById('progressFill');
 
-  // Expose un mini tableau de bord pour debug manuel
-  window.sioDbg = {
-    step: null,
-    emailInput: null,
-    form: null,
-    nativeBtn: null,
-    lastClickTs: null,
-    dump(){
-      log("dump", {
-        step: this.step,
-        emailInput: !!this.emailInput,
-        form: !!this.form,
-        nativeBtn: !!this.nativeBtn,
-        lastClickTs: this.lastClickTs
-      });
-      if (this.nativeBtn) {
-        const cs = getComputedStyle(this.nativeBtn);
-        log("nativeBtn visible?", cs.display !== "none", "disabled?", this.nativeBtn.disabled);
+    const emailSection = document.getElementById('emailQuestion');
+    const sioEmailSlot = document.getElementById('sioEmailSlot');
+
+    backButton.addEventListener('click', () => { if (currentStep > 1) goToStep(currentStep - 1); });
+
+    function updateUI(){
+      stepCounter.textContent = `${currentStep}/${totalSteps}`;
+      const progress = (currentStep / totalSteps) * 100;
+      progressFill.style.width = `${progress}%`;
+      backButton.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+    }
+
+    function goToStep(step){
+      document.querySelectorAll('.question-section').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(`q${step}`) || document.getElementById('emailQuestion');
+      if (target){
+        target.classList.add('active');
+        currentStep = step;
+        updateUI();
       }
     }
-  };
 
-  // Helpers pour afficher un chemin court dans les logs
-  function shortSel(el){
-    if (!el) return "∅";
-    const id = el.id ? "#"+el.id : "";
-    const cls = (el.className && typeof el.className === "string") ? "."+el.className.trim().split(/\s+/).slice(0,2).join(".") : "";
-    return `<${el.tagName.toLowerCase()}${id}${cls}>`;
-  }
+    /* ==========
+       Wiring Q*
+       ========== */
+    document.querySelectorAll('.question-section').forEach((section, index) => {
+      if (section.id === 'emailQuestion') return;
 
-  // 1) Instrumenter l’ouverture de l’étape email
-  if (typeof window.showEmailQuestion === "function" && !window.showEmailQuestion.__dbgWrapped) {
-    const orig = window.showEmailQuestion;
-    window.showEmailQuestion = function(){
-      log("showEmailQuestion() appelé → on ouvre l'étape email");
-      const r = orig.apply(this, arguments);
-      setTimeout(() => {
-        log("post-open: on tente d’identifier les éléments SIO (form, bouton, input)");
-        instrumentEmailStage();
-      }, 0);
-      return r;
-    };
-    window.showEmailQuestion.__dbgWrapped = true;
-    log("showEmailQuestion WRAPPED (debug)");
-  } else {
-    // Fallback: observer l’apparition de #emailQuestion
-    const mo = new MutationObserver(() => {
-      const el = q("#emailQuestion");
-      if (el && getComputedStyle(el).display !== "none") {
-        mo.disconnect();
-        log("Observer: #emailQuestion visible → instrumentation");
-        setTimeout(instrumentEmailStage, 0);
+      const questionId    = `q${index + 1}`;
+      const options       = section.querySelectorAll('.option-card');
+      const continueBtn   = section.querySelector('.continue-button');
+      const hasCheckboxes = section.querySelector('input[type="checkbox"]') !== null;
+
+      if (!hasCheckboxes){
+        options.forEach(option => {
+          option.addEventListener('click', () => {
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            answers[questionId] = option.dataset.value;
+            if (continueBtn) continueBtn.disabled = false;
+
+            if (!continueBtn){
+              if (index + 1 < totalSteps) goToStep(index + 2);
+              else showResultsOverlay(); // après Q12 -> overlay
+            }
+          });
+        });
+      } else {
+        options.forEach(option => {
+          const checkbox = option.querySelector('input[type="checkbox"]');
+          if (!checkbox) return;
+          option.addEventListener('click', (e) => {
+            if (e.target !== checkbox) checkbox.checked = !checkbox.checked;
+            option.classList.toggle('selected', checkbox.checked);
+            const checkedValues = Array.from(section.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.parentElement.dataset.value);
+            answers[questionId] = checkedValues;
+            if (continueBtn) continueBtn.disabled = checkedValues.length === 0;
+          });
+        });
+      }
+
+      if (continueBtn){
+        continueBtn.addEventListener('click', () => {
+          if (index + 1 < totalSteps) goToStep(index + 2);
+          else showResultsOverlay(); // après Q12 -> overlay
+        });
       }
     });
-    mo.observe(document.documentElement, { childList:true, subtree:true, attributes:true });
-    log("Observer armé (en attente d’#emailQuestion)");
-  }
 
-  // 2) Instrumenter les éléments clés de l’étape email
-  function instrumentEmailStage(){
-    const slot = q("#sioEmailSlot");
-    const emailQuestion = q("#emailQuestion");
-    if (!emailQuestion) { warn("#emailQuestion introuvable"); return; }
-    log("instrumentEmailStage: emailQuestion display =", getComputedStyle(emailQuestion).display);
+    /* =========================
+       Overlay de chargement
+       ========================= */
+    const totalSearchSteps = 3;
+    let searchProgress = 0;
+    let currentSearchStep = 0;
 
-    const EMAIL_SEL = [
-      'input[name="email"]',
-      'input[type="email"]',
-      'input[name*="email" i]',
-      'input[id*="email" i]',
-      'input[placeholder*="mail" i]',
-      'input[id^="field-"]'
-    ].join(", ");
+    function showResultsOverlay(){
+      const wrapper = document.getElementById('resultsWrapper');
+      const progressCard = document.getElementById('searchProgressCard');
+      const successCard  = document.getElementById('searchSuccessCard');
 
-    // Rechercher l’input email et son form
-    const inputs = qa(EMAIL_SEL, document);
-    const emailInput = inputs.length ? inputs[inputs.length-1] : null;
-    window.sioDbg.emailInput = emailInput;
-    log("email input trouvé ?", !!emailInput, emailInput ? shortSel(emailInput) : "");
+      wrapper.style.display = 'flex';
+      wrapper.setAttribute('aria-hidden', 'false');
+      progressCard.style.display = '';
+      successCard.classList.remove('visible');
+      successCard.style.display = 'none';
 
-    const form = emailInput && (emailInput.closest("form") || emailInput.form);
-    window.sioDbg.form = form;
-    log("form trouvé ?", !!form, form ? shortSel(form) : "");
+      document.querySelectorAll('.question-section').forEach(s => s.classList.remove('active'));
+      currentStep = totalSteps;
+      updateUI();
 
-    // Essayer d’attraper le vrai bouton submit natif de Systeme.io
-    const SUBMIT_SEL = [
-      'button[type="submit"]','input[type="submit"]',
-      '[data-test-id="send-form-button"]','[data-testid="send-form-button"]',
-      '.sio-subscribe-button','.sio-submit','[data-element="cta-button"]',
-      'button[id^="button-"]'
-    ].join(", ");
-
-    let nativeBtn = form ? q(SUBMIT_SEL, form) : null;
-    if (!nativeBtn) nativeBtn = q(SUBMIT_SEL, document);
-    window.sioDbg.nativeBtn = nativeBtn;
-    log("bouton SIO natif ?", !!nativeBtn, nativeBtn ? shortSel(nativeBtn) : "");
-
-    if (nativeBtn && !nativeBtn.__dbgBound) {
-      nativeBtn.__dbgBound = true;
-      nativeBtn.addEventListener("click", (ev)=>{
-        log("→ CLICK sur bouton SIO natif", "(isTrusted:", ev.isTrusted, ")", shortSel(ev.currentTarget));
-      });
-      const cs = getComputedStyle(nativeBtn);
-      log("style bouton SIO:", { display: cs.display, visibility: cs.visibility, disabled: !!nativeBtn.disabled });
+      startSearchProgress();
+      console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Overlay loader affiché');
     }
 
-    // 3) Instrumenter le bouton “Continuer” de l’étape email (celui du quiz)
-    const continueBtn = q('#emailQuestion .continue-button');
-    const backBtn = q('#emailStepBack');
-    if (!continueBtn) { warn("continue-button (quiz) introuvable dans #emailQuestion"); }
-    if (backBtn && !backBtn.__dbgBound) {
-      backBtn.__dbgBound = true;
-      backBtn.addEventListener("click", () => log('Clique sur "Retour" (étape email)'));
+    function startSearchProgress(){
+      searchProgress = 0; currentSearchStep = 0;
+      const wrapper = document.getElementById('resultsWrapper');
+      const bar = wrapper.querySelector('#searchProgressBar');
+      const percentage = wrapper.querySelector('#searchProgressPercentage');
+      const items = wrapper.querySelectorAll('.checklist-item');
+
+      bar.style.width = '0%';
+      percentage.textContent = '0%';
+      items.forEach(i => i.classList.remove('active','completed'));
+
+      setTimeout(updateSearchProgress, 400);
     }
 
-    // Afficher l’état de la sous-étape (identity vs email) à chaque refresh
-    const oldUpdate = window.updateEmailStepDisplay;
-    if (typeof oldUpdate === "function" && !oldUpdate.__dbgWrapped) {
-      window.updateEmailStepDisplay = function(){
-        const out = oldUpdate.apply(this, arguments);
-        const btn = q('#emailQuestion .continue-button');
-        const identityVisible = !!q('#sioIdentitySection') && q('#sioIdentitySection').classList.contains('active');
-        const emailVisible    = !!q('#sioEmailSection') && q('#sioEmailSection').classList.contains('active');
-        window.sioDbg.step = btn ? btn.dataset.step : null;
-        log("updateEmailStepDisplay → step:", window.sioDbg.step, "| identity:", identityVisible, "| email:", emailVisible);
-        return out;
-      };
-      window.updateEmailStepDisplay.__dbgWrapped = true;
-      log("updateEmailStepDisplay WRAPPED (debug)");
+    function updateSearchProgress(){
+      const wrapper = document.getElementById('resultsWrapper');
+      const bar = wrapper.querySelector('#searchProgressBar');
+      const percentage = wrapper.querySelector('#searchProgressPercentage');
+      const items = wrapper.querySelectorAll('.checklist-item');
+
+      searchProgress += 2; if (searchProgress > 100) searchProgress = 100;
+      bar.style.width = searchProgress + '%';
+      percentage.textContent = Math.floor(searchProgress) + '%';
+
+      const stepProgress = Math.floor((searchProgress / 100) * totalSearchSteps);
+      if (stepProgress > currentSearchStep){
+        for (let i = currentSearchStep; i < stepProgress && i < totalSearchSteps; i++){
+          setTimeout(() => {
+            items[i].classList.add('active');
+            setTimeout(() => { items[i].classList.add('completed'); }, 150);
+          }, i * 100);
+        }
+        currentSearchStep = stepProgress;
+      }
+
+      if (searchProgress < 100){
+        setTimeout(updateSearchProgress, 100);
+      } else {
+        items.forEach((item, idx) => { setTimeout(() => { item.classList.add('active','completed'); }, idx * 50); });
+        setTimeout(showSearchSuccess, 900);
+      }
     }
 
-    // 4) Re-binder le click “Continuer” pour tracer ce qui se passe
-    if (continueBtn && !continueBtn.__dbgBound) {
-      continueBtn.__dbgBound = true;
-      continueBtn.addEventListener("click", (e) => {
-        window.sioDbg.lastClickTs = Date.now();
-        const step = continueBtn.dataset.step;
-        log('Clique sur "Continuer" (quiz) — step =', step);
+    function showSearchSuccess(){
+      const progressCard = document.getElementById('searchProgressCard');
+      const successCard  = document.getElementById('searchSuccessCard');
+      const headerTitle  = document.querySelector('#resultsWrapper .header-title');
 
-        // Étape identité → juste switcher en “email”
-        if (step !== "email") {
-          const fn = q('#sioIdentityMount input[name="first_name"]');
-          const ln = q('#sioIdentityMount input[name="surname"]');
-          const ok = !!(fn && fn.value.trim() && ln && ln.value.trim());
-          log("Validation identité:", { haveFirstName: !!(fn && fn.value.trim()), haveLastName: !!(ln && ln.value.trim()) });
-          if (!ok) {
-            warn("Identité incomplète → le script existant affiche un alert et focus l’input manquant");
-          } else {
-            log("OK identité → on doit passer à l’étape 'email'");
+      progressCard.classList.add('hidden');
+      headerTitle.style.opacity = '0';
+      headerTitle.style.transform = 'translateY(-20px)';
+
+      setTimeout(() => {
+        progressCard.style.display = 'none';
+        headerTitle.style.display = 'none';
+        successCard.classList.add('visible');
+        successCard.style.display = 'block';
+        console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Overlay loader terminé → carte succès visible');
+      }, 350);
+    }
+
+    document.getElementById('goToEmailFromSuccess').addEventListener('click', () => {
+      hideResultsOverlay();
+      showEmailQuestion();
+    });
+
+    function hideResultsOverlay(){
+      const wrapper = document.getElementById('resultsWrapper');
+      wrapper.style.display = 'none';
+      wrapper.setAttribute('aria-hidden', 'true');
+    }
+
+    /* =========================
+       Etape email (SIO)
+       ========================= */
+    function showEmailQuestion(){
+      document.querySelectorAll('.question-section').forEach(s => s.classList.remove('active'));
+      if (emailSection) emailSection.classList.add('active');
+      currentStep = totalSteps;
+      updateUI();
+      const appContent = document.querySelector('.app-content'); if (appContent) appContent.scrollTop = 0;
+
+      setTimeout(() => {
+        // premier passage
+        relocateSioIntoSlot();
+        // observe les mutations 10s pour attraper les éléments SIO qui apparaissent plus tard
+        const mo = new MutationObserver(() => relocateSioIntoSlot());
+        mo.observe(document.body, { childList:true, subtree:true });
+        setTimeout(() => mo.disconnect(), 10000);
+      }, 0);
+
+      console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'showEmailQuestion() → étape email affichée');
+    }
+
+    function getSioSubmitButton(){
+      const sel = [
+        'button[type="submit"]',
+        'input[type="submit"]',
+        '.sio-subscribe-button',
+        '.sio-submit',
+        '[data-element="cta-button"]',
+        '[data-test-id="send-form-button"]',
+        '[data-testid="send-form-button"]',
+        'button[id^="button-"]'
+      ].join(', ');
+      const slot = document.getElementById('sioEmailSlot');
+      // d’abord dans le slot…
+      let btn = slot ? slot.querySelector(sel) : null;
+      // …sinon global
+      if (!btn) btn = document.querySelector(sel);
+      return btn || null;
+    }
+
+    function clickSioSubmit(){
+      const slot = document.getElementById('sioEmailSlot');
+      const formInSlot = slot ? slot.querySelector('form') : null;
+      const btn  = getSioSubmitButton();
+
+      if (btn && typeof btn.click === 'function'){ btn.click(); console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Click bouton SIO'); return; }
+      if (formInSlot){ if (formInSlot.requestSubmit) formInSlot.requestSubmit(); else formInSlot.submit(); console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Form.submit() SIO'); }
+    }
+
+    function relocateSioIntoSlot(){
+      const slot = document.getElementById('sioEmailSlot');
+      if (!slot){ console.warn('[SIO][DBG] slot email introuvable'); return; }
+
+      // Gate CSS (au cas où)
+      if (!document.getElementById('sioEmailGate')){
+        const css = document.createElement('style');
+        css.id = 'sioEmailGate';
+        css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"]{display:none!important;} #sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"]{display:block!important;}';
+        (document.head || document.documentElement).appendChild(css);
+      }
+
+      // Localise le champ email SIO n’importe où
+      const EMAIL_SEL = [
+        'input[type="email"]',
+        'input[name="email"]',
+        'input[name*="email" i]',
+        'input[id*="email" i]',
+        'input[placeholder*="mail" i]',
+        'input[id^="field-"]'
+      ].join(', ');
+      const email = document.querySelector(EMAIL_SEL);
+
+      // Déplace le formulaire si possible
+      if (email){
+        const form = email.closest('form') || email.form;
+        if (form && !slot.contains(form)){
+          slot.innerHTML = '';
+          slot.appendChild(form);
+          console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Formulaire SIO déplacé → #sioEmailSlot');
+        }else if(!form && !slot.contains(email)){
+          slot.innerHTML = '';
+          slot.appendChild(email);
+          console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Input email SIO déplacé → #sioEmailSlot (pas de <form>)');
+        }
+      }
+
+      // Trouve le bouton SIO ; s’il n’est pas dans le slot, on le déplace
+      let btn = getSioSubmitButton();
+      if (btn && !slot.contains(btn)){
+        const ref = slot.querySelector('form') || slot;
+        try{
+          ref.appendChild(btn);
+          console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Bouton SIO déplacé → #sioEmailSlot');
+        }catch(_){}
+      }
+
+      // Style & accessibilité
+      btn = getSioSubmitButton();
+      if (btn){
+        btn.disabled = false;
+        btn.style.display = 'block';
+        btn.style.visibility = 'visible';
+        btn.style.width = '100%';
+      }
+      console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Bouton SIO natif trouvé :', !!btn);
+
+      // Entrée => submit
+      const emailStep = document.getElementById('emailQuestion');
+      if (emailStep && !emailStep.dataset.enterBound){
+        emailStep.dataset.enterBound = '1';
+        emailStep.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter'){
+            e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+            clickSioSubmit();
           }
-          return; // le handler original gère la suite
-        }
+        }, { capture:true });
+        console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Listener Enter→submit SIO ajouté');
+      }
 
-        // Étape email → on doit cliquer le vrai bouton SIO
-        const email = window.sioDbg.emailInput || q('input[name="email"]');
-        const f = (window.sioDbg.form) || (email && (email.closest('form') || email.form));
-        let btn = window.sioDbg.nativeBtn;
-        if (!btn && f) btn = q(SUBMIT_SEL, f);
-        if (!btn) btn = q(SUBMIT_SEL, document);
-
-        log("Soumission:", {
-          haveEmail: !!email, haveForm: !!f, haveNativeBtn: !!btn,
-          btnSel: btn ? shortSel(btn) : '∅'
-        });
-
-        if (btn && typeof btn.click === "function") {
-          log("→ CLICK programmatique sur le bouton SIO natif");
-          try { btn.click(); } catch (e) { error("échec click()", e); }
-        } else if (f) {
-          log("→ Pas de bouton trouvé, fallback sur form.requestSubmit()/submit()");
-          try { f.requestSubmit ? f.requestSubmit() : f.submit(); } catch (e) { error("échec submit()", e); }
-        } else {
-          error("Aucun form ni bouton SIO détecté — rien à soumettre");
-        }
-      }, true); // useCapture pour tracer avant la logique existante
-      log('Listener debug ajouté sur le bouton "Continuer" (quiz)');
+      // retire le placeholder si un form ou input a été trouvé
+      const loading = document.getElementById('sioEmailLoading');
+      if (loading && (slot.querySelector('form') || slot.querySelector(EMAIL_SEL))) loading.remove();
     }
 
-    // 5) Observer les re-renders (SIO réinserte parfois son bouton)
-    if (form && !form.__dbgMo) {
-      const mo = new MutationObserver((ml)=>{
-        const btnAgain = q('button[type="submit"], input[type="submit"], .sio-subscribe-button, .sio-submit, [data-element="cta-button"]', form);
-        if (btnAgain && btnAgain !== window.sioDbg.nativeBtn) {
-          window.sioDbg.nativeBtn = btnAgain;
-          log("Mutation: nouveau bouton SIO repéré dans le <form> → mis en cache", shortSel(btnAgain));
-          if (!btnAgain.__dbgBound) {
-            btnAgain.__dbgBound = true;
-            btnAgain.addEventListener("click", (ev)=>{
-              log("→ CLICK sur bouton SIO natif (nouveau)", "(isTrusted:", ev.isTrusted, ")");
-            });
-          }
-        }
-      });
-      mo.observe(form, { childList:true, subtree:true });
-      form.__dbgMo = mo;
-      log("MutationObserver posé sur le <form> SIO");
-    }
-
-    // Petits rappels
-    log("Tips: appelle window.sioDbg.dump() dans la console pour voir l’état courant");
-  }
-})();
+    // ===== Init
+    updateUI();
   </script>
 </body>
 </html>
