@@ -1594,5 +1594,44 @@
        // Initialisation
        updateUI();
    </script>
+   <script>
+   (function () {
+     function clickSio() {
+       const email = document.querySelector('#emailQuestion input[name="email"]');
+       const form  = email && (email.closest('form') || email.form);
+       const btn   = form && form.querySelector(
+         'button[type="submit"],input[type="submit"],.sio-subscribe-button,.sio-submit,[data-element="cta-button"],[data-test-id="send-form-button"],[data-testid="send-form-button"],button[id^="button-"]'
+       );
+       if (btn && typeof btn.click === 'function') { btn.click(); return true; }
+       if (form) { if (form.requestSubmit) form.requestSubmit(); else form.submit(); return true; }
+       return false;
+     }
+
+     const original = document.querySelector('#emailQuestion .continue-button');
+     if (!original) return;
+
+     // On supprime tous les anciens listeners et on empêche toute propagation
+     const btn = original.cloneNode(true);
+     original.parentNode.replaceChild(btn, original);
+     btn.addEventListener('click', function (e) {
+       e.preventDefault();
+       e.stopPropagation();
+       e.stopImmediatePropagation();
+       clickSio();
+       return false;
+     }, { capture: true });
+
+     // Enter => submit SIO uniquement
+     const emailStep = document.getElementById('emailQuestion');
+     if (emailStep) {
+       emailStep.addEventListener('keydown', (e) => {
+         if (e.key === 'Enter') {
+           e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+           clickSio();
+         }
+       }, { capture: true });
+     }
+   })();
+   </script>
 </body>
 </html>
