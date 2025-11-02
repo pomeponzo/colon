@@ -166,116 +166,6 @@
            display: none !important;
        }
 
-       .email-loading-card {
-           display: flex;
-           flex-direction: column;
-           align-items: center;
-           justify-content: center;
-           gap: 18px;
-           padding: 32px 24px;
-           text-align: center;
-           border-radius: 18px;
-           background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(59, 130, 246, 0.08) 100%);
-           border: 1px solid rgba(124, 58, 237, 0.18);
-           box-shadow: 0 18px 40px rgba(124, 58, 237, 0.16);
-           color: #312e81;
-       }
-
-       .email-loading-card.is-hidden {
-           display: none !important;
-       }
-
-       .email-loading-avatar {
-           position: relative;
-           width: 84px;
-           height: 84px;
-           border-radius: 50%;
-           background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           box-shadow: 0 12px 25px rgba(124, 58, 237, 0.28);
-       }
-
-       .email-loading-avatar::after {
-           content: '';
-           position: absolute;
-           inset: -6px;
-           border-radius: 50%;
-           background: linear-gradient(135deg, rgba(236, 233, 254, 0.65), rgba(244, 236, 255, 0.35));
-           z-index: -1;
-           filter: blur(0.5px);
-       }
-
-       .email-loading-avatar img {
-           width: 72px;
-           height: 72px;
-           border-radius: 50%;
-           display: block;
-           box-shadow: 0 6px 14px rgba(124, 58, 237, 0.18);
-       }
-
-       .email-loading-text h3 {
-           font-size: 1.08rem;
-           font-weight: 700;
-           color: #1f1c53;
-       }
-
-       .email-loading-text {
-           display: flex;
-           flex-direction: column;
-           gap: 6px;
-       }
-
-       .email-loading-text p {
-           font-size: 0.92rem;
-           color: rgba(49, 46, 129, 0.78);
-           line-height: 1.5;
-       }
-
-       .email-loading-progress {
-           display: flex;
-           flex-direction: column;
-           align-items: center;
-           gap: 10px;
-           font-size: 0.88rem;
-           color: rgba(49, 46, 129, 0.88);
-       }
-
-       .email-loading-spinner {
-           width: 40px;
-           height: 40px;
-           border-radius: 50%;
-           border: 3px solid rgba(124, 58, 237, 0.16);
-           border-top-color: #7c3aed;
-           animation: spin 1.2s linear infinite;
-       }
-
-       .email-form-container.is-hidden {
-           display: none !important;
-       }
-
-       .email-loading-placeholder {
-           width: 100%;
-           border-radius: 12px;
-           padding: 18px;
-           background: rgba(124, 58, 237, 0.06);
-           color: rgba(49, 46, 129, 0.78);
-           font-size: 0.9rem;
-           font-weight: 500;
-           text-align: center;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           min-height: 64px;
-       }
-
-       @keyframes spin {
-           to {
-               transform: rotate(360deg);
-           }
-       }
-
        .app-content {
            flex: 1;
            display: flex;
@@ -1427,24 +1317,11 @@
                       <h2 class="question-title">Découvrez votre profil digestif personnalisé</h2>
                       <p class="question-subtitle">Entrez votre email pour recevoir vos résultats détaillés et des conseils personnalisés</p>
                   </div>
-                  <div class="email-loading-card" id="emailLoadingScreen" role="status" aria-live="polite" aria-busy="true">
-                      <div class="email-loading-avatar" aria-hidden="true">
-                          <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2096%2096%27%3E%0A%20%20%3Cdefs%3E%0A%20%20%20%20%3ClinearGradient%20id%3D%27g%27%20x1%3D%270%27%20y1%3D%270%27%20x2%3D%271%27%20y2%3D%271%27%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%270%25%27%20stop-color%3D%27%238b5cf6%27%2F%3E%0A%20%20%20%20%20%20%3Cstop%20offset%3D%27100%25%27%20stop-color%3D%27%237c3aed%27%2F%3E%0A%20%20%20%20%3C%2FlinearGradient%3E%0A%20%20%3C%2Fdefs%3E%0A%20%20%3Ccircle%20cx%3D%2748%27%20cy%3D%2748%27%20r%3D%2748%27%20fill%3D%27url%28%23g%29%27%2F%3E%0A%20%20%3Ccircle%20cx%3D%2748%27%20cy%3D%2744%27%20r%3D%2722%27%20fill%3D%27%23f8fafc%27%2F%3E%0A%20%20%3Cpath%20d%3D%27M30%2068c5%2010%2033%2010%2038%200%27%20fill%3D%27%23f8fafc%27%2F%3E%0A%20%20%3Cpath%20d%3D%27M28%2038c6-10%2034-10%2040%200%27%20fill%3D%27%237c3aed%27%2F%3E%0A%20%20%3Ccircle%20cx%3D%2738%27%20cy%3D%2746%27%20r%3D%274%27%20fill%3D%27%230f172a%27%2F%3E%0A%20%20%3Ccircle%20cx%3D%2758%27%20cy%3D%2746%27%20r%3D%274%27%20fill%3D%27%230f172a%27%2F%3E%0A%20%20%3Cpath%20d%3D%27M40%2058c4%204%2012%204%2016%200%27%20stroke%3D%27%237c3aed%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27%20fill%3D%27none%27%2F%3E%0A%3C%2Fsvg%3E" alt="" />
-                      </div>
-                      <div class="email-loading-text">
-                          <h3>Élodie de Profil Digestif prépare vos résultats</h3>
-                          <p>Notre experte analyse vos réponses pour générer une synthèse personnalisée avant de l'envoyer par email.</p>
-                      </div>
-                      <div class="email-loading-progress">
-                          <div class="email-loading-spinner" aria-hidden="true"></div>
-                          <span>Préparation de vos recommandations sur-mesure…</span>
-                      </div>
-                  </div>
-                  <div class="options-scroll-container email-form-container is-hidden" id="emailFormContainer">
+                  <div class="options-scroll-container">
                       <!-- === SLOT EMAIL (à mettre dans l’étape #emailQuestion) === -->
 <div id="sioEmailSlot" class="options-container">
-  <div id="sioEmailLoading" class="email-loading-placeholder">
-    Un instant… votre espace sécurisé se charge.
+  <div id="sioEmailLoading" class="input-field" style="display:flex;align-items:center;justify-content:center;height:26.7px;">
+    Chargement du champ email…
   </div>
 </div>
 
@@ -1459,44 +1336,6 @@
   const log  = (...a) => console.log('%c[SIO][DBG]', 'color:#0ea5e9;font-weight:700', ...a);
   const warn = (...a) => console.warn('%c[SIO][WRN]', 'color:#f59e0b;font-weight:700', ...a);
   const err  = (...a) => console.error('%c[SIO][ERR]', 'color:#ef4444;font-weight:700', ...a);
-
-  let emailLoadingStartedAt = 0;
-  let emailLoadingTimer = null;
-  const applyEmailLoadingState = (isLoading) => {
-    const loadingScreen = document.getElementById('emailLoadingScreen');
-    const formContainer = document.getElementById('emailFormContainer');
-    if (loadingScreen) {
-      loadingScreen.classList.toggle('is-hidden', !isLoading);
-      loadingScreen.setAttribute('aria-busy', isLoading ? 'true' : 'false');
-    }
-    if (formContainer) formContainer.classList.toggle('is-hidden', isLoading);
-  };
-
-  const setEmailLoadingState = (isLoading) => {
-    if (isLoading) {
-      if (emailLoadingTimer) {
-        clearTimeout(emailLoadingTimer);
-        emailLoadingTimer = null;
-      }
-      emailLoadingStartedAt = Date.now();
-      applyEmailLoadingState(true);
-      return;
-    }
-
-    const elapsed = Date.now() - emailLoadingStartedAt;
-    const minDuration = 600;
-    const delay = Math.max(0, minDuration - elapsed);
-    if (delay === 0) {
-      applyEmailLoadingState(false);
-    } else {
-      emailLoadingTimer = setTimeout(() => {
-        applyEmailLoadingState(false);
-        emailLoadingTimer = null;
-      }, delay);
-    }
-  };
-
-  window.__toggleEmailLoading = setEmailLoadingState;
 
   // Gate CSS : masquer l’input email SIO partout sauf dans notre mount
   (function injectGateCss(){
@@ -1552,9 +1391,6 @@
     const emailInputs = Array.from(document.querySelectorAll(EMAIL_SEL));
     const email = emailInputs.length ? emailInputs[emailInputs.length - 1] : null;
     log('email input trouvé ?', !!email, email);
-    if (mount.querySelector('input[name="email"]')) {
-      setEmailLoadingState(false);
-    }
 
     // 3) Form + bouton SIO natif
     const form  = email && (email.closest('form') || email.form) || null;
@@ -1594,7 +1430,6 @@
       wrap.appendChild(email);
       mount.appendChild(wrap);
       log('champ email déplacé dans le mount');
-      setEmailLoadingState(false);
     }
 
     // 5) Insérer le mount DANS le <form> si possible (et avant le bouton SIO)
@@ -1847,12 +1682,6 @@
            if (emailSection) {
                emailSection.classList.add('active');
            }
-           if (typeof window.__toggleEmailLoading === 'function') {
-               window.__toggleEmailLoading(true);
-               if (sioEmailSlot && sioEmailSlot.querySelector('form')) {
-                   window.__toggleEmailLoading(false);
-               }
-           }
            currentStep = totalSteps;
            updateUI();
            const appContent = document.querySelector('.app-content');
@@ -1861,20 +1690,16 @@
            }
        }
 
-        if (sioEmailSlot) {
-            const removeLoadingPlaceholder = () => {
-                const hasForm = !!sioEmailSlot.querySelector('form');
-                const loading = document.getElementById('sioEmailLoading');
-                if (hasForm && typeof window.__toggleEmailLoading === 'function') {
-                    window.__toggleEmailLoading(false);
-                }
-                if (loading && hasForm) {
-                    loading.remove();
-                }
-            };
+       if (sioEmailSlot) {
+           const removeLoadingPlaceholder = () => {
+               const loading = document.getElementById('sioEmailLoading');
+               if (loading && sioEmailSlot.querySelector('form')) {
+                   loading.remove();
+               }
+           };
 
-            const observer = new MutationObserver(() => {
-                removeLoadingPlaceholder();
+           const observer = new MutationObserver(() => {
+               removeLoadingPlaceholder();
            });
 
            observer.observe(sioEmailSlot, { childList: true, subtree: true });
