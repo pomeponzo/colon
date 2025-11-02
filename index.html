@@ -1418,32 +1418,6 @@
                    </div>
                </div>
            </section>
-           <div id="sioEmailLoading" class="loading-placeholder" hidden>
-             <div class="loading-logo">p</div>
-             <p class="loading-title">Analyse de votre équilibre bactérien…</p>
-             <div class="loading-progress">
-               <div class="loading-progress-bar"></div>
-             </div>
-             <ul class="loading-steps">
-               <li class="loading-step" style="--step-index:0;">
-                 <span class="loading-step-icon">✔</span>
-                 <span class="loading-step-text">Évaluation de vos réponses…</span>
-               </li>
-               <li class="loading-step" style="--step-index:1;">
-                 <span class="loading-step-icon">●●●</span>
-                 <span class="loading-step-text">Analyse de vos résultats…</span>
-               </li>
-               <li class="loading-step" style="--step-index:2;">
-                 <span class="loading-step-icon">●●●</span>
-                 <span class="loading-step-text">Définition de votre type digestif…</span>
-               </li>
-               <li class="loading-step" style="--step-index:3;">
-                 <span class="loading-step-icon">●●●</span>
-                 <span class="loading-step-text">Création de votre synthèse personnalisée…</span>
-               </li>
-             </ul>
-           </div>
-
            <!-- Question Email -->
           <section class="question-section" id="emailQuestion">
               <div class="question-content">
@@ -1453,7 +1427,33 @@
                   </div>
                   <div class="options-scroll-container">
                       <!-- === SLOT EMAIL (à mettre dans l’étape #emailQuestion) === -->
-                      <div id="sioEmailSlot" class="options-container"></div>
+<div id="sioEmailSlot" class="options-container">
+  <div id="sioEmailLoading" class="loading-placeholder">
+    <div class="loading-logo">p</div>
+    <p class="loading-title">Analyse de votre équilibre bactérien…</p>
+    <div class="loading-progress">
+      <div class="loading-progress-bar"></div>
+    </div>
+    <ul class="loading-steps">
+      <li class="loading-step" style="--step-index:0;">
+        <span class="loading-step-icon">✔</span>
+        <span class="loading-step-text">Évaluation de vos réponses…</span>
+      </li>
+      <li class="loading-step" style="--step-index:1;">
+        <span class="loading-step-icon">●●●</span>
+        <span class="loading-step-text">Analyse de vos résultats…</span>
+      </li>
+      <li class="loading-step" style="--step-index:2;">
+        <span class="loading-step-icon">●●●</span>
+        <span class="loading-step-text">Définition de votre type digestif…</span>
+      </li>
+      <li class="loading-step" style="--step-index:3;">
+        <span class="loading-step-icon">●●●</span>
+        <span class="loading-step-text">Création de votre synthèse personnalisée…</span>
+      </li>
+    </ul>
+  </div>
+</div>
 
 <script>
 /**
@@ -1542,7 +1542,7 @@
 
     // 4) Déplacer l’input dans le mount
     if (email && !mount.contains(email)) {
-      const loading = slot.querySelector('#sioEmailLoading');
+      const loading = document.getElementById('sioEmailLoading');
       if (loading) loading.remove();
 
       const wrap = document.createElement('div');
@@ -1713,13 +1713,7 @@
        const stepCounter = document.getElementById('stepCounter');
        const progressFill = document.getElementById('progressFill');
        const emailSection = document.getElementById('emailQuestion');
-       const emailLoading = document.getElementById('sioEmailLoading');
        const sioEmailSlot = document.getElementById('sioEmailSlot');
-
-       function toggleEmailLoading(visible) {
-           if (!emailLoading) return;
-           emailLoading.hidden = !visible;
-       }
 
        // Gestion du bouton retour
        backButton.addEventListener('click', () => {
@@ -1741,23 +1735,13 @@
            document.querySelectorAll('.question-section').forEach(section => {
                section.classList.remove('active');
            });
-
-           let targetSection = document.getElementById(`q${step}`);
-           let effectiveStep = step;
-
-           if (!targetSection && emailSection) {
-               targetSection = emailSection;
-               effectiveStep = totalSteps;
-           }
-
-           toggleEmailLoading(targetSection === emailSection);
-
+           
+           const targetSection = document.getElementById(`q${step}`) || document.getElementById('emailQuestion');
            if (targetSection) {
                targetSection.classList.add('active');
-               currentStep = effectiveStep;
+               currentStep = step;
+               updateUI();
            }
-
-           updateUI();
        }
 
        // Gestion des options à choix unique
@@ -1828,7 +1812,6 @@
            if (emailSection) {
                emailSection.classList.add('active');
            }
-           toggleEmailLoading(!!emailSection);
            currentStep = totalSteps;
            updateUI();
            const appContent = document.querySelector('.app-content');
@@ -1839,7 +1822,7 @@
 
        if (sioEmailSlot) {
            const removeLoadingPlaceholder = () => {
-               const loading = sioEmailSlot.querySelector('#sioEmailLoading');
+               const loading = document.getElementById('sioEmailLoading');
                if (loading && sioEmailSlot.querySelector('form')) {
                    loading.remove();
                }
