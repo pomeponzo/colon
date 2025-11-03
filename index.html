@@ -392,6 +392,9 @@
       .gut-container{ max-width:340px; }
       .gut-gauge-wrapper{ max-width:300px; }
     }
+    @media (max-width:480px){
+      .gut-score-value{ font-size:clamp(1.9rem,8vw,2.3rem); }
+    }
     @media (max-width:380px){
       .gut-gauge-wrapper{ max-width:280px; }
       .gut-info-cards{ grid-template-columns:1fr; }
@@ -944,9 +947,13 @@
       ringPath.setAttribute('fill', 'rgba(125,105,255,0.12)');
       frame.appendChild(ringPath);
 
-      const N = 75;
-      for (let i = 0; i < N; i++){
-        const t = i / (N - 1);
+      let barCount = 75;
+      if (w <= 420) barCount = 65;
+      if (w <= 360) barCount = 55;
+      if (w <= 320) barCount = 48;
+
+      for (let i = 0; i < barCount; i++){
+        const t = barCount === 1 ? 0 : i / (barCount - 1);
         const ang = GUT_GEO.left + t * GUT_GEO.span;
         const x1 = cx + innerR * Math.cos(ang);
         const y1 = cy + innerR * Math.sin(ang);
