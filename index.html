@@ -283,15 +283,25 @@
     }
     .gut-gauge-label{
       position:absolute;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:8px 18px;
       font-size:clamp(.6rem,1.7vw,.78rem);
       font-weight:700;
-      letter-spacing:1.8px;
-      color:#4c1d95;
+      letter-spacing:2px;
+      color:#312e81;
       z-index:4;
       transform-origin:center;
       white-space:nowrap;
       text-transform:uppercase;
-      text-shadow:0 1px 0 rgba(255,255,255,.65);
+      background:rgba(255,255,255,.78);
+      border-radius:999px;
+      border:1px solid rgba(125,105,255,.25);
+      box-shadow:0 12px 30px rgba(79,70,229,.22);
+      backdrop-filter:blur(6px);
+      text-shadow:0 1px 0 rgba(255,255,255,.8);
+      pointer-events:none;
     }
     .gut-arrow{
       --gut-needle-color:#4338ca;
@@ -1025,17 +1035,19 @@
       const leftAng = GUT_GEO.left + gutToRad(12);
       const rightAng = GUT_GEO.right - gutToRad(12);
 
+      const toDeg = 180 / Math.PI;
+
       const lpx = cx + labelR * Math.cos(leftAng);
       const lpy = cy + labelR * Math.sin(leftAng);
       labelLeft.style.left = `${lpx}px`;
       labelLeft.style.top = `${lpy}px`;
-      labelLeft.style.transform = 'translate(-50%, -50%) rotate(-90deg)';
+      labelLeft.style.transform = `translate(-50%, -50%) rotate(${(leftAng * toDeg) + 90}deg)`;
 
       const rpx = cx + labelR * Math.cos(rightAng);
       const rpy = cy + labelR * Math.sin(rightAng);
       labelRight.style.left = `${rpx}px`;
       labelRight.style.top = `${rpy}px`;
-      labelRight.style.transform = 'translate(-50%, -50%) rotate(90deg)';
+      labelRight.style.transform = `translate(-50%, -50%) rotate(${(rightAng * toDeg) + 90}deg)`;
 
       setGutNeedle(gutGaugeCurrentScore);
     }
