@@ -397,9 +397,19 @@
       bottom:16px;
       width:100%;
       padding:16px 0 calc(16px + env(safe-area-inset-bottom));
-      background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.92) 55%,rgba(255,255,255,1) 100%);
+      background:none;
+    }
+    .gut-continue-wrapper::before{
+      content:"";
+      position:absolute;
+      inset:-48px 0 -16px;
+      background:linear-gradient(180deg,rgba(255,255,255,.97) 0%,rgba(255,255,255,1) 60%,rgba(255,255,255,1) 100%);
+      pointer-events:none;
+      z-index:0;
     }
     .gut-continue-wrapper .continue-button{
+      position:relative;
+      z-index:1;
       margin-top:0;
     }
     @supports(padding:max(0px)){
