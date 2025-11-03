@@ -30,6 +30,11 @@
     .progress-bar{ height:2px; background:rgba(0,0,0,.05); position:relative; overflow:hidden; flex-shrink:0; }
     .progress-fill{ height:100%; background:linear-gradient(90deg,#8b5cf6 0%,#7c3aed 100%); transition:width .5s cubic-bezier(.4,0,.2,1); }
 
+    body.overlay-active .app-header,
+    body.overlay-active .progress-bar{
+      display:none;
+    }
+
     .app-content{ flex:1; display:flex; flex-direction:column; overflow:hidden; padding:16px; min-height:0; }
     .question-section{ display:none; flex:1; flex-direction:column; animation:slideIn .25s ease; overflow:hidden; }
     .question-section.active{ display:flex; }
@@ -120,7 +125,7 @@
       background:linear-gradient(180deg,var(--gut-preview-top) 0%,var(--gut-preview-bottom) 100%);
       justify-content:flex-start;
       align-items:center;
-      padding:36px 18px 44px;
+      padding:32px 16px 36px;
     }
     .loader-stage{
       width:100%;
@@ -197,16 +202,16 @@
     .result-preview.active{ display:flex; opacity:1; }
     .gut-container{
       width:100%;
-      max-width:420px;
+      max-width:480px;
       margin:0 auto;
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:clamp(16px,4.5vw,24px);
+      gap:clamp(10px,3.2vw,18px);
       text-align:center;
-      padding:0 8px 12px;
+      padding:0 0 10px;
     }
-    .gut-header{ display:flex; flex-direction:column; align-items:center; gap:clamp(8px,1.8vw,12px); }
+    .gut-header{ display:flex; flex-direction:column; align-items:center; gap:clamp(4px,1.2vw,8px); }
     .gut-title{
       font-size:clamp(.75rem,2.2vw,.95rem);
       letter-spacing:2px;
@@ -223,9 +228,9 @@
     }
     .gut-description{
       font-size:clamp(.85rem,2.6vw,1rem);
-      line-height:1.55;
+      line-height:1.5;
       color:#475569;
-      max-width:340px;
+      max-width:100%;
       margin:0 auto;
     }
     .gut-description strong{ color:#1e293b; font-weight:700; }
@@ -234,7 +239,7 @@
       width:100%;
       display:flex;
       justify-content:center;
-      padding:0 10px;
+      padding:0;
     }
     .gut-gauge-wrapper{
       position:relative;
@@ -267,7 +272,7 @@
       font-weight:700;
       letter-spacing:3px;
       color:#6366f1;
-      margin-bottom:10px;
+      margin-bottom:6px;
     }
     .gut-score-value{
       font-size:clamp(2.5rem,7.4vw,3.6rem);
@@ -326,20 +331,20 @@
       width:100%;
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:clamp(10px,2.8vw,14px);
+      gap:clamp(8px,2.2vw,12px);
     }
     .gut-info-card{
       background:linear-gradient(145deg,rgba(255,255,255,.95) 0%,rgba(237,233,254,.9) 100%);
       border-radius:18px;
-      padding:clamp(16px,3.8vw,20px) clamp(14px,3.6vw,18px);
+      padding:clamp(14px,3.2vw,18px) clamp(12px,3vw,16px);
       box-shadow:0 16px 32px rgba(79,70,229,.12);
       border:1px solid rgba(99,102,241,.18);
       text-align:left;
       display:flex;
       flex-direction:column;
-      gap:clamp(6px,1.4vw,8px);
+      gap:clamp(4px,1.2vw,6px);
     }
-    .gut-info-card-header{ display:flex; align-items:center; gap:clamp(6px,1.8vw,10px); margin-bottom:6px; }
+    .gut-info-card-header{ display:flex; align-items:center; gap:clamp(4px,1.4vw,8px); margin-bottom:4px; }
     .gut-icon{ font-size:clamp(1rem,4.4vw,1.35rem); }
     .gut-info-card-title{
       font-size:clamp(.6rem,1.7vw,.78rem);
@@ -358,15 +363,15 @@
       width:100%;
       background:linear-gradient(155deg,rgba(255,255,255,.95) 0%,rgba(229,231,255,.92) 100%);
       border-radius:20px;
-      padding:clamp(20px,4.2vw,24px) clamp(18px,4.4vw,22px) clamp(20px,4.6vw,24px);
+      padding:clamp(18px,3.8vw,22px) clamp(16px,4vw,20px) clamp(18px,4.2vw,22px);
       box-shadow:0 20px 36px rgba(79,70,229,.14);
       border:1px solid rgba(99,102,241,.2);
       text-align:left;
       display:flex;
       flex-direction:column;
-      gap:clamp(6px,1.4vw,8px);
+      gap:clamp(4px,1.2vw,6px);
     }
-    .gut-overview-header{ display:flex; align-items:center; gap:clamp(8px,2.2vw,12px); margin-bottom:12px; }
+    .gut-overview-header{ display:flex; align-items:center; gap:clamp(6px,1.8vw,10px); margin-bottom:8px; }
     .gut-overview-title{
       font-size:clamp(.62rem,1.8vw,.8rem);
       font-weight:700;
@@ -374,17 +379,17 @@
       color:#6366f1;
       text-transform:uppercase;
     }
-    .gut-overview-text{ font-size:clamp(.9rem,2.7vw,1.05rem); line-height:1.55; color:#334155; }
+    .gut-overview-text{ font-size:clamp(.9rem,2.7vw,1.05rem); line-height:1.5; color:#334155; }
     .gut-overview-text strong{ font-weight:700; color:#1e293b; }
     .gut-continue-button{
       background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%);
       color:#fff;
       border:none;
       border-radius:16px;
-      padding:18px;
+      padding:16px;
       width:100%;
       max-width:420px;
-      margin:0 auto;
+      margin:4px auto 0;
       display:block;
       font-size:15px;
       font-weight:800;
@@ -395,7 +400,7 @@
     }
 
     @media (max-width:520px){
-      .gut-container{ max-width:340px; }
+      .gut-container{ max-width:100%; }
       .gut-gauge-wrapper{ max-width:300px; }
     }
     @media (max-width:480px){
@@ -797,6 +802,12 @@
       const progress = (currentStep / totalSteps) * 100;
       progressFill.style.width = `${progress}%`;
       backButton.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+
+      const resultsWrapper = document.getElementById('resultsWrapper');
+      if (resultsWrapper){
+        const overlayVisible = resultsWrapper.getAttribute('aria-hidden') === 'false';
+        document.body.classList.toggle('overlay-active', overlayVisible);
+      }
     }
 
     function goToStep(step){
@@ -1120,6 +1131,7 @@
 
       if (!wrapper || !progressCard || !loaderStage) return;
 
+      document.body.classList.add('overlay-active');
       wrapper.style.display = 'flex';
       wrapper.setAttribute('aria-hidden', 'false');
       wrapper.classList.remove('preview-mode');
