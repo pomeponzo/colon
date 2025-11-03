@@ -113,7 +113,6 @@
       padding:24px 16px;
       overflow-y:auto;
       position:fixed; inset:0; z-index:30;
-      transition:background .4s ease;
     }
     .result-wrapper.preview-mode{
       background:linear-gradient(180deg,#f5f3ff 0%,#ede9fe 100%);
@@ -288,13 +287,12 @@
       text-shadow:0 1px 0 rgba(255,255,255,.65);
     }
     .gut-arrow{
-      --gut-needle-color:#22c55e;
       position:absolute;
       width:26px;
       height:26px;
-      background:var(--gut-needle-color);
+      background:linear-gradient(135deg,#4338ca 0%,#7c3aed 100%);
       border-radius:50%;
-      box-shadow:0 12px 28px rgba(34,197,94,.28);
+      box-shadow:0 12px 28px rgba(76,29,149,.28);
       z-index:5;
       transform-origin:center;
     }
@@ -315,7 +313,7 @@
       height:0;
       border-left:7px solid transparent;
       border-right:7px solid transparent;
-      border-top:26px solid var(--gut-needle-color);
+      border-top:26px solid #4338ca;
       border-radius:0 0 6px 6px;
     }
     .gut-info-cards{
@@ -861,10 +859,9 @@
     const GUT_TAU = Math.PI * 2;
     const gutToRad = d => d * Math.PI / 180;
     const GUT_STOPS = [
-      { p:0.00, c:'#22c55e' },
-      { p:0.33, c:'#84cc16' },
-      { p:0.66, c:'#f97316' },
-      { p:1.00, c:'#ef4444' }
+      { p:0.00, c:'#34d399' }, { p:0.18, c:'#10b981' }, { p:0.36, c:'#22d3ee' },
+      { p:0.52, c:'#38bdf8' }, { p:0.68, c:'#6366f1' }, { p:0.84, c:'#a855f7' },
+      { p:1.00, c:'#f472b6' }
     ];
     const GUT_GEO = { cx:0, cy:0, innerR:0, outerR:0, frameOuterR:0, frameInnerR:0, labelR:0, arrowR:0, left:0, right:0, span:0 };
     let gutGaugeInitialized = false;
@@ -880,15 +877,6 @@
       return `rgb(${r}, ${g}, ${b})`;
     }
 
-    function gutHexToRgb(hex){
-      const clean = hex.replace('#', '');
-      const bigint = parseInt(clean, 16);
-      const r = (bigint >> 16) & 255;
-      const g = (bigint >> 8) & 255;
-      const b = bigint & 255;
-      return `rgb(${r}, ${g}, ${b})`;
-    }
-
     function gutColorAt(x){
       for (let i = 0; i < GUT_STOPS.length - 1; i++){
         const a = GUT_STOPS[i], b = GUT_STOPS[i + 1];
@@ -897,14 +885,7 @@
           return gutMix(a.c, b.c, t);
         }
       }
-      return gutHexToRgb(GUT_STOPS[GUT_STOPS.length - 1].c);
-    }
-
-    function gutColorToRgba(color, alpha = 1){
-      const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(color);
-      if (!match) return null;
-      const [, r, g, b] = match;
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      return GUT_STOPS[GUT_STOPS.length - 1].c;
     }
 
     function drawGutGauge(){
@@ -1035,17 +1016,6 @@
       needle.style.left = `${ax}px`;
       needle.style.top = `${ay}px`;
       needle.style.transform = `translate(-50%, -50%) rotate(${(ang + Math.PI / 2) * 180 / Math.PI}deg)`;
-
-      const color = gutColorAt(s);
-      const boxShadow = gutColorToRgba(color, 0.32);
-      needle.style.setProperty('--gut-needle-color', color);
-      needle.style.background = color;
-      needle.style.boxShadow = boxShadow ? `0 12px 28px ${boxShadow}` : needle.style.boxShadow;
-
-      const wrapper = document.getElementById('resultsWrapper');
-      if (wrapper && wrapper.classList.contains('preview-mode')){
-        wrapper.style.background = color;
-      }
       gutGaugeCurrentScore = score;
     }
 
@@ -1102,7 +1072,6 @@
       wrapper.style.display = 'flex';
       wrapper.setAttribute('aria-hidden', 'false');
       wrapper.classList.remove('preview-mode');
-      wrapper.style.background = '';
       wrapper.scrollTop = 0;
 
       loaderStage.style.display = 'flex';
@@ -1230,7 +1199,6 @@
       if (!wrapper || !successCard) return;
 
       wrapper.classList.remove('preview-mode');
-      wrapper.style.background = '';
       wrapper.scrollTop = 0;
 
       if (preview){
