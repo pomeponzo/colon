@@ -115,7 +115,7 @@
       position:fixed; inset:0; z-index:30;
     }
     .result-wrapper.preview-mode{
-      background:linear-gradient(180deg,#F7EFD3 0%,#F3DEBA 100%);
+      background:linear-gradient(180deg,#f5f3ff 0%,#ede9fe 100%);
       justify-content:flex-start;
       align-items:center;
       padding:36px 18px 44px;
@@ -200,33 +200,33 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:clamp(14px,4vw,20px);
+      gap:clamp(16px,4.5vw,24px);
       text-align:center;
-      padding:0 8px 8px;
+      padding:0 8px 12px;
     }
-    .gut-header{ display:flex; flex-direction:column; align-items:center; gap:clamp(6px,1.6vw,10px); }
+    .gut-header{ display:flex; flex-direction:column; align-items:center; gap:clamp(8px,1.8vw,12px); }
     .gut-title{
-      font-size:clamp(.6rem,1.8vw,.75rem);
-      letter-spacing:2.2px;
-      font-weight:700;
-      color:#a8894f;
+      font-size:clamp(.75rem,2.2vw,.95rem);
+      letter-spacing:2px;
+      font-weight:800;
+      color:#7c3aed;
       text-transform:uppercase;
     }
     .gut-status{
-      font-size:clamp(1.7rem,5.2vw,2.15rem);
+      font-size:clamp(1.9rem,5.6vw,2.35rem);
       font-weight:800;
-      color:#f0673c;
-      letter-spacing:.3px;
+      color:#1e293b;
+      letter-spacing:.4px;
       line-height:1.05;
     }
     .gut-description{
-      font-size:clamp(.78rem,2.4vw,.95rem);
-      line-height:1.45;
-      color:#4f3b1f;
-      max-width:320px;
+      font-size:clamp(.85rem,2.6vw,1rem);
+      line-height:1.55;
+      color:#475569;
+      max-width:340px;
       margin:0 auto;
     }
-    .gut-description strong{ color:#2c1f10; font-weight:700; }
+    .gut-description strong{ color:#1e293b; font-weight:700; }
     .gut-gauge-container{
       position:relative;
       width:100%;
@@ -250,10 +250,10 @@
       left:50%;
       top:50%;
       transform:translate(-50%,-50%);
-      background:linear-gradient(180deg,#faf4e5 0%,#f2e4c9 100%);
+      background:linear-gradient(180deg,#f8f7ff 0%,#eae7ff 100%);
       border-radius:50%;
-      box-shadow:0 18px 36px rgba(94,73,35,.22);
-      border:1px solid rgba(224,204,161,.8);
+      box-shadow:0 18px 40px rgba(99,102,241,.16);
+      border:1px solid rgba(125,105,255,.25);
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -261,25 +261,25 @@
       z-index:3;
     }
     .gut-score-label{
-      font-size:clamp(.55rem,1.7vw,.7rem);
+      font-size:clamp(.6rem,1.8vw,.75rem);
       font-weight:700;
       letter-spacing:3px;
-      color:#ad9259;
-      margin-bottom:8px;
+      color:#6366f1;
+      margin-bottom:10px;
     }
     .gut-score-value{
-      font-size:clamp(2.35rem,7vw,3.4rem);
+      font-size:clamp(2.5rem,7.4vw,3.6rem);
       font-weight:800;
-      color:#1d1309;
+      color:#0f172a;
       line-height:1;
       font-variant-numeric:tabular-nums;
     }
     .gut-gauge-label{
       position:absolute;
-      font-size:clamp(.55rem,1.6vw,.7rem);
+      font-size:clamp(.6rem,1.7vw,.78rem);
       font-weight:700;
       letter-spacing:1.8px;
-      color:#ab9360;
+      color:#4c1d95;
       z-index:4;
       transform-origin:center;
       white-space:nowrap;
@@ -290,9 +290,9 @@
       position:absolute;
       width:26px;
       height:26px;
-      background:#21180f;
+      background:linear-gradient(135deg,#4338ca 0%,#7c3aed 100%);
       border-radius:50%;
-      box-shadow:0 10px 20px rgba(0,0,0,.2);
+      box-shadow:0 12px 28px rgba(76,29,149,.28);
       z-index:5;
       transform-origin:center;
     }
@@ -301,7 +301,7 @@
       position:absolute;
       inset:6px;
       border-radius:50%;
-      background:linear-gradient(135deg,rgba(255,255,255,.35),rgba(255,255,255,.05));
+      background:linear-gradient(135deg,rgba(255,255,255,.4),rgba(255,255,255,.1));
     }
     .gut-arrow::after{
       content:"";
@@ -313,7 +313,7 @@
       height:0;
       border-left:7px solid transparent;
       border-right:7px solid transparent;
-      border-top:26px solid #21180f;
+      border-top:26px solid #4338ca;
       border-radius:0 0 6px 6px;
     }
     .gut-info-cards{
@@ -323,55 +323,55 @@
       gap:clamp(10px,2.8vw,14px);
     }
     .gut-info-card{
-      background:#fff;
+      background:linear-gradient(145deg,rgba(255,255,255,.95) 0%,rgba(237,233,254,.9) 100%);
       border-radius:18px;
-      padding:clamp(14px,3.6vw,18px) clamp(12px,3.4vw,16px);
-      box-shadow:0 16px 28px rgba(96,74,33,.12);
-      border:1px solid rgba(214,192,146,.6);
+      padding:clamp(16px,3.8vw,20px) clamp(14px,3.6vw,18px);
+      box-shadow:0 16px 32px rgba(79,70,229,.12);
+      border:1px solid rgba(99,102,241,.18);
       text-align:left;
       display:flex;
       flex-direction:column;
-      gap:clamp(4px,1.2vw,6px);
+      gap:clamp(6px,1.4vw,8px);
     }
     .gut-info-card-header{ display:flex; align-items:center; gap:clamp(6px,1.8vw,10px); margin-bottom:6px; }
     .gut-icon{ font-size:clamp(1rem,4.4vw,1.35rem); }
     .gut-info-card-title{
-      font-size:clamp(.55rem,1.6vw,.72rem);
-      letter-spacing:1.4px;
+      font-size:clamp(.6rem,1.7vw,.78rem);
+      letter-spacing:1.5px;
       font-weight:700;
-      color:#bfa167;
+      color:#6366f1;
     }
     .gut-info-card-value{
-      font-size:clamp(1.1rem,4.8vw,1.4rem);
+      font-size:clamp(1.15rem,4.9vw,1.45rem);
       font-weight:700;
-      color:#1d1309;
+      color:#0f172a;
       line-height:1.2;
       font-variant-numeric:tabular-nums;
     }
     .gut-overview-card{
       width:100%;
-      background:#fff;
+      background:linear-gradient(155deg,rgba(255,255,255,.95) 0%,rgba(229,231,255,.92) 100%);
       border-radius:20px;
-      padding:clamp(18px,4vw,22px) clamp(16px,4.2vw,20px) clamp(18px,4.4vw,22px);
-      box-shadow:0 18px 30px rgba(96,74,33,.12);
-      border:1px solid rgba(214,192,146,.62);
+      padding:clamp(20px,4.2vw,24px) clamp(18px,4.4vw,22px) clamp(20px,4.6vw,24px);
+      box-shadow:0 20px 36px rgba(79,70,229,.14);
+      border:1px solid rgba(99,102,241,.2);
       text-align:left;
       display:flex;
       flex-direction:column;
-      gap:clamp(4px,1.2vw,6px);
+      gap:clamp(6px,1.4vw,8px);
     }
     .gut-overview-header{ display:flex; align-items:center; gap:clamp(8px,2.2vw,12px); margin-bottom:12px; }
     .gut-overview-title{
-      font-size:clamp(.58rem,1.7vw,.75rem);
+      font-size:clamp(.62rem,1.8vw,.8rem);
       font-weight:700;
       letter-spacing:1.4px;
-      color:#bfa167;
+      color:#6366f1;
       text-transform:uppercase;
     }
-    .gut-overview-text{ font-size:clamp(.85rem,2.6vw,1rem); line-height:1.45; color:#3f3222; }
-    .gut-overview-text strong{ font-weight:700; color:#2c1f10; }
+    .gut-overview-text{ font-size:clamp(.9rem,2.7vw,1.05rem); line-height:1.55; color:#334155; }
+    .gut-overview-text strong{ font-weight:700; color:#1e293b; }
     .gut-continue-button{
-      background:#161109;
+      background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%);
       color:#fff;
       border:none;
       border-radius:16px;
@@ -385,7 +385,7 @@
       letter-spacing:2.2px;
       text-transform:uppercase;
       cursor:pointer;
-      box-shadow:0 14px 24px rgba(0,0,0,.22);
+      box-shadow:0 18px 36px rgba(124,58,237,.26);
     }
 
     @media (max-width:520px){
@@ -395,7 +395,7 @@
     @media (max-width:380px){
       .gut-gauge-wrapper{ max-width:280px; }
       .gut-info-cards{ grid-template-columns:1fr; }
-      .gut-status{ font-size:30px; }
+      .gut-status{ font-size:clamp(1.8rem,6vw,2.1rem); }
     }
 
     /* Gate CSS : masque inputs SIO globaux, n’affiche que dans #sioEmailSlot */
@@ -856,10 +856,9 @@
     const GUT_TAU = Math.PI * 2;
     const gutToRad = d => d * Math.PI / 180;
     const GUT_STOPS = [
-      { p:0.00, c:'#6FB05A' }, { p:0.15, c:'#85BA4C' }, { p:0.30, c:'#A8C845' },
-      { p:0.40, c:'#C8D542' }, { p:0.50, c:'#E8DD41' }, { p:0.60, c:'#F5C842' },
-      { p:0.70, c:'#F5A847' }, { p:0.80, c:'#F58A4A' }, { p:0.90, c:'#F2674C' },
-      { p:1.00, c:'#E86842' }
+      { p:0.00, c:'#34d399' }, { p:0.18, c:'#10b981' }, { p:0.36, c:'#22d3ee' },
+      { p:0.52, c:'#38bdf8' }, { p:0.68, c:'#6366f1' }, { p:0.84, c:'#a855f7' },
+      { p:1.00, c:'#f472b6' }
     ];
     const GUT_GEO = { cx:0, cy:0, innerR:0, outerR:0, frameOuterR:0, frameInnerR:0, labelR:0, arrowR:0, left:0, right:0, span:0 };
     let gutGaugeInitialized = false;
@@ -942,7 +941,7 @@
       const bigStart = apex - gutToRad(240) / 2;
       const bigEnd = apex + gutToRad(240) / 2;
       ringPath.setAttribute('d', gutDonutArcPath(cx, cy, frameOuterR, frameInnerR, bigStart, bigEnd, true));
-      ringPath.setAttribute('fill', '#f3e6c3');
+      ringPath.setAttribute('fill', 'rgba(125,105,255,0.12)');
       frame.appendChild(ringPath);
 
       const N = 75;
