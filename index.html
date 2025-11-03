@@ -397,7 +397,29 @@
       bottom:16px;
       width:100%;
       padding:16px 0 calc(16px + env(safe-area-inset-bottom));
+      background:#fff;
+      overflow:visible;
+      z-index:5;
+    }
+    .gut-continue-wrapper::before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      top:-36px;
       background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.92) 55%,rgba(255,255,255,1) 100%);
+      pointer-events:none;
+    }
+    .gut-continue-wrapper::after{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:-40px;
+      height:40px;
+      background:#fff;
+      pointer-events:none;
     }
     .gut-continue-wrapper .continue-button{
       margin-top:0;
