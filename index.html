@@ -104,6 +104,8 @@
 
     /* ===== Overlay Résultats / Loader (affiché avant l’email) ===== */
     .result-wrapper{
+      --gut-preview-top:rgba(124,58,237,.16);
+      --gut-preview-bottom:rgba(124,58,237,.08);
       background:#ffffff;
       height:100vh; height:100dvh;
       display:none;
@@ -115,7 +117,7 @@
       position:fixed; inset:0; z-index:30;
     }
     .result-wrapper.preview-mode{
-      background:linear-gradient(180deg,#f5f3ff 0%,#ede9fe 100%);
+      background:linear-gradient(180deg,var(--gut-preview-top) 0%,var(--gut-preview-bottom) 100%);
       justify-content:flex-start;
       align-items:center;
       padding:36px 18px 44px;
@@ -287,12 +289,16 @@
       text-shadow:0 1px 0 rgba(255,255,255,.65);
     }
     .gut-arrow{
+      --gut-needle-color:#4338ca;
+      --gut-needle-highlight:#7c3aed;
+      --gut-needle-shadow:rgba(76,29,149,.28);
+      --gut-needle-triangle:#4338ca;
       position:absolute;
       width:26px;
       height:26px;
-      background:linear-gradient(135deg,#4338ca 0%,#7c3aed 100%);
+      background:linear-gradient(135deg,var(--gut-needle-highlight) 0%,var(--gut-needle-color) 100%);
       border-radius:50%;
-      box-shadow:0 12px 28px rgba(76,29,149,.28);
+      box-shadow:0 12px 28px var(--gut-needle-shadow);
       z-index:5;
       transform-origin:center;
     }
@@ -313,7 +319,7 @@
       height:0;
       border-left:7px solid transparent;
       border-right:7px solid transparent;
-      border-top:26px solid #4338ca;
+      border-top:26px solid var(--gut-needle-triangle);
       border-radius:0 0 6px 6px;
     }
     .gut-info-cards{
@@ -859,9 +865,11 @@
     const GUT_TAU = Math.PI * 2;
     const gutToRad = d => d * Math.PI / 180;
     const GUT_STOPS = [
-      { p:0.00, c:'#34d399' }, { p:0.18, c:'#10b981' }, { p:0.36, c:'#22d3ee' },
-      { p:0.52, c:'#38bdf8' }, { p:0.68, c:'#6366f1' }, { p:0.84, c:'#a855f7' },
-      { p:1.00, c:'#f472b6' }
+      { p:0.00, c:'#22c55e' },
+      { p:0.25, c:'#84cc16' },
+      { p:0.50, c:'#facc15' },
+      { p:0.75, c:'#f97316' },
+      { p:1.00, c:'#ef4444' }
     ];
     const GUT_GEO = { cx:0, cy:0, innerR:0, outerR:0, frameOuterR:0, frameInnerR:0, labelR:0, arrowR:0, left:0, right:0, span:0 };
     let gutGaugeInitialized = false;
@@ -886,6 +894,39 @@
         }
       }
       return GUT_STOPS[GUT_STOPS.length - 1].c;
+    }
+
+    function gutParseRgb(str){
+      const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(str);
+      if (!match) return { r:0, g:0, b:0 };
+      return { r:parseInt(match[1], 10), g:parseInt(match[2], 10), b:parseInt(match[3], 10) };
+    }
+
+    function gutRgbToString({ r, g, b }){
+      return `rgb(${Math.round(Math.max(0, Math.min(255, r)))}, ${Math.round(Math.max(0, Math.min(255, g)))}, ${Math.round(Math.max(0, Math.min(255, b)))})`;
+    }
+
+    function gutLightenColor(str, factor = 0.25){
+      const { r, g, b } = gutParseRgb(str);
+      return gutRgbToString({
+        r: r + (255 - r) * factor,
+        g: g + (255 - g) * factor,
+        b: b + (255 - b) * factor
+      });
+    }
+
+    function gutDarkenColor(str, factor = 0.2){
+      const { r, g, b } = gutParseRgb(str);
+      return gutRgbToString({
+        r: r * (1 - factor),
+        g: g * (1 - factor),
+        b: b * (1 - factor)
+      });
+    }
+
+    function gutToRgba(str, alpha){
+      const { r, g, b } = gutParseRgb(str);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
     function drawGutGauge(){
@@ -1016,6 +1057,16 @@
       needle.style.left = `${ax}px`;
       needle.style.top = `${ay}px`;
       needle.style.transform = `translate(-50%, -50%) rotate(${(ang + Math.PI / 2) * 180 / Math.PI}deg)`;
+      const color = gutColorAt(s);
+      needle.style.setProperty('--gut-needle-color', color);
+      needle.style.setProperty('--gut-needle-highlight', gutLightenColor(color, 0.28));
+      needle.style.setProperty('--gut-needle-shadow', gutToRgba(color, 0.32));
+      needle.style.setProperty('--gut-needle-triangle', gutDarkenColor(color, 0.18));
+      const wrapper = document.getElementById('resultsWrapper');
+      if (wrapper){
+        wrapper.style.setProperty('--gut-preview-top', gutToRgba(color, 0.22));
+        wrapper.style.setProperty('--gut-preview-bottom', gutToRgba(color, 0.08));
+      }
       gutGaugeCurrentScore = score;
     }
 
