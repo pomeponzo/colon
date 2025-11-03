@@ -859,9 +859,9 @@
     const GUT_TAU = Math.PI * 2;
     const gutToRad = d => d * Math.PI / 180;
     const GUT_STOPS = [
-      { p:0.00, c:'#34d399' }, { p:0.18, c:'#10b981' }, { p:0.36, c:'#22d3ee' },
-      { p:0.52, c:'#38bdf8' }, { p:0.68, c:'#6366f1' }, { p:0.84, c:'#a855f7' },
-      { p:1.00, c:'#f472b6' }
+      { p:0.00, c:'#16a34a' }, { p:0.20, c:'#22c55e' }, { p:0.40, c:'#84cc16' },
+      { p:0.60, c:'#facc15' }, { p:0.78, c:'#f97316' }, { p:0.90, c:'#fb923c' },
+      { p:1.00, c:'#dc2626' }
     ];
     const GUT_GEO = { cx:0, cy:0, innerR:0, outerR:0, frameOuterR:0, frameInnerR:0, labelR:0, arrowR:0, left:0, right:0, span:0 };
     let gutGaugeInitialized = false;
@@ -886,6 +886,12 @@
         }
       }
       return GUT_STOPS[GUT_STOPS.length - 1].c;
+    }
+
+    function gutRgbToRgba(rgb, alpha){
+      const parts = rgb.match(/\d+/g) || [];
+      const [r = 0, g = 0, b = 0] = parts.map(Number);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
     function drawGutGauge(){
@@ -941,10 +947,12 @@
       bars.innerHTML = '';
 
       const ringPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      ringPath.setAttribute('id', 'gutGaugeBackground');
       const bigStart = apex - gutToRad(240) / 2;
       const bigEnd = apex + gutToRad(240) / 2;
       ringPath.setAttribute('d', gutDonutArcPath(cx, cy, frameOuterR, frameInnerR, bigStart, bigEnd, true));
-      ringPath.setAttribute('fill', 'rgba(125,105,255,0.12)');
+      const baseTone = gutColorAt(Math.max(0, Math.min(1, gutGaugeCurrentScore / 100)));
+      ringPath.setAttribute('fill', gutRgbToRgba(baseTone, 0.12));
       frame.appendChild(ringPath);
 
       let barCount = 75;
@@ -1016,6 +1024,15 @@
       needle.style.left = `${ax}px`;
       needle.style.top = `${ay}px`;
       needle.style.transform = `translate(-50%, -50%) rotate(${(ang + Math.PI / 2) * 180 / Math.PI}deg)`;
+      const tone = gutColorAt(s);
+      const background = document.getElementById('gutGaugeBackground');
+      if (background){
+        background.setAttribute('fill', gutRgbToRgba(tone, 0.14));
+      }
+      const wrapper = document.getElementById('gutGaugeWrapper');
+      if (wrapper){
+        wrapper.style.background = `radial-gradient(circle at 50% 50%, ${gutRgbToRgba(tone, 0.16)} 0%, rgba(255, 255, 255, 0) 70%)`;
+      }
       gutGaugeCurrentScore = score;
     }
 
