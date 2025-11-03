@@ -282,16 +282,19 @@
       font-variant-numeric:tabular-nums;
     }
     .gut-gauge-label{
-      position:absolute;
-      font-size:clamp(.6rem,1.7vw,.78rem);
+      font-size:clamp(.62rem,1.75vw,.82rem);
       font-weight:700;
-      letter-spacing:1.8px;
-      color:#4c1d95;
-      z-index:4;
-      transform-origin:center;
-      white-space:nowrap;
+      letter-spacing:2.2px;
+      fill:#4c1d95;
       text-transform:uppercase;
       text-shadow:0 1px 0 rgba(255,255,255,.65);
+      dominant-baseline:middle;
+      paint-order:stroke fill;
+      stroke:rgba(255,255,255,.65);
+      stroke-width:.6px;
+    }
+    .gut-gauge-label textPath{
+      letter-spacing:inherit;
     }
     .gut-arrow{
       --gut-needle-color:#4338ca;
@@ -488,17 +491,24 @@
           <div class="gut-gauge-container">
             <div class="gut-gauge-wrapper" id="gutGaugeWrapper">
               <svg class="gut-gauge-svg" id="gutGaugeSvg" viewBox="0 0 600 580" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <path id="gutLabelPathLeft" fill="none" />
+                  <path id="gutLabelPathRight" fill="none" />
+                </defs>
                 <g id="gutGaugeFrame"></g>
                 <g id="gutGaugeBars"></g>
+                <text class="gut-gauge-label">
+                  <textPath id="gutLabelLeft" href="#gutLabelPathLeft" startOffset="50%" text-anchor="middle">BALANCED</textPath>
+                </text>
+                <text class="gut-gauge-label">
+                  <textPath id="gutLabelRight" href="#gutLabelPathRight" startOffset="50%" text-anchor="middle">IMBALANCED</textPath>
+                </text>
               </svg>
 
               <div class="gut-gauge-center" id="gutGaugeCenter">
                 <div class="gut-score-label">SCORE</div>
                 <div class="gut-score-value" id="gutScoreValue">0</div>
               </div>
-
-              <div class="gut-gauge-label" id="gutLabelLeft">BALANCED</div>
-              <div class="gut-gauge-label" id="gutLabelRight">IMBALANCED</div>
 
               <div class="gut-arrow" id="gutNeedle"></div>
             </div>
@@ -946,9 +956,11 @@
       const frame = document.getElementById('gutGaugeFrame');
       const bars = document.getElementById('gutGaugeBars');
       const center = document.getElementById('gutGaugeCenter');
+      const labelPathLeft = document.getElementById('gutLabelPathLeft');
+      const labelPathRight = document.getElementById('gutLabelPathRight');
       const labelLeft = document.getElementById('gutLabelLeft');
       const labelRight = document.getElementById('gutLabelRight');
-      if (!wrap || !svg || !frame || !bars || !center || !labelLeft || !labelRight) return;
+      if (!wrap || !svg || !frame || !bars || !center || !labelLeft || !labelRight || !labelPathLeft || !labelPathRight) return;
 
       const w = wrap.clientWidth;
       const h = wrap.clientHeight;
@@ -1022,20 +1034,27 @@
         bars.appendChild(line);
       }
 
-      const leftAng = GUT_GEO.left + gutToRad(12);
-      const rightAng = GUT_GEO.right - gutToRad(12);
+      const labelArcInset = gutToRad(8);
+      const labelMidSpacing = gutToRad(6);
+      const leftStart = GUT_GEO.left + labelArcInset;
+      const leftEnd = apex - labelMidSpacing;
+      const rightStart = apex + labelMidSpacing;
+      const rightEnd = GUT_GEO.right - labelArcInset;
 
-      const lpx = cx + labelR * Math.cos(leftAng);
-      const lpy = cy + labelR * Math.sin(leftAng);
-      labelLeft.style.left = `${lpx}px`;
-      labelLeft.style.top = `${lpy}px`;
-      labelLeft.style.transform = 'translate(-50%, -50%) rotate(-90deg)';
+      const leftPath = gutArcPath(cx, cy, labelR, leftStart, leftEnd);
+      const rightPath = gutArcPath(cx, cy, labelR, rightStart, rightEnd);
+      labelPathLeft.setAttribute('d', leftPath);
+      labelPathRight.setAttribute('d', rightPath);
 
-      const rpx = cx + labelR * Math.cos(rightAng);
-      const rpy = cy + labelR * Math.sin(rightAng);
-      labelRight.style.left = `${rpx}px`;
-      labelRight.style.top = `${rpy}px`;
-      labelRight.style.transform = 'translate(-50%, -50%) rotate(90deg)';
+      const XLINK_NS = 'http://www.w3.org/1999/xlink';
+      if (labelLeft.getAttribute('href') !== '#gutLabelPathLeft'){
+        labelLeft.setAttribute('href', '#gutLabelPathLeft');
+        labelLeft.setAttributeNS(XLINK_NS, 'xlink:href', '#gutLabelPathLeft');
+      }
+      if (labelRight.getAttribute('href') !== '#gutLabelPathRight'){
+        labelRight.setAttribute('href', '#gutLabelPathRight');
+        labelRight.setAttributeNS(XLINK_NS, 'xlink:href', '#gutLabelPathRight');
+      }
 
       setGutNeedle(gutGaugeCurrentScore);
     }
@@ -1056,6 +1075,17 @@
         `A ${rInner} ${rInner} 0 ${largeArc} ${sweepInner} ${xI1} ${yI1}`,
         'Z'
       ].join(' ');
+    }
+
+    function gutArcPath(cx, cy, r, aStart, aEnd){
+      const x1 = cx + r * Math.cos(aStart);
+      const y1 = cy + r * Math.sin(aStart);
+      const x2 = cx + r * Math.cos(aEnd);
+      const y2 = cy + r * Math.sin(aEnd);
+      const delta = Math.abs(aEnd - aStart) % GUT_TAU;
+      const largeArc = delta > Math.PI ? 1 : 0;
+      const sweep = aEnd >= aStart ? 1 : 0;
+      return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} ${sweep} ${x2} ${y2}`;
     }
 
     function setGutNeedle(score){
