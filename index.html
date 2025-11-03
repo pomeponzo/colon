@@ -384,20 +384,22 @@
     }
     .gut-overview-text{ font-size:clamp(.9rem,2.7vw,1.05rem); line-height:1.5; color:#334155; }
     .gut-overview-text strong{ font-weight:700; color:#1e293b; }
-    .gut-cta{
-      position:sticky;
-      bottom:0;
-      width:100%;
-      padding:16px 0 8px;
-      background:linear-gradient(180deg,rgba(255,255,255,0) 0%,#fff 45%);
-      display:flex;
-      justify-content:center;
-      margin-top:auto;
-    }
     .gut-continue-button{
+      background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%);
+      color:#fff;
+      border:none;
+      border-radius:16px;
+      padding:16px;
       width:100%;
       max-width:420px;
-      margin-top:0;
+      margin:4px auto 0;
+      display:block;
+      font-size:15px;
+      font-weight:800;
+      letter-spacing:2.2px;
+      text-transform:uppercase;
+      cursor:pointer;
+      box-shadow:0 18px 36px rgba(124,58,237,.26);
     }
 
     @media (max-width:520px){
@@ -541,9 +543,7 @@
             </div>
           </div>
 
-          <div class="gut-cta">
-            <button class="continue-button gut-continue-button" id="gutPreviewContinue">Continuer</button>
-          </div>
+          <button class="gut-continue-button" id="gutPreviewContinue">CONTINUE</button>
         </div>
       </div>
 
