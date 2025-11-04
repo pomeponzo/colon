@@ -535,7 +535,7 @@
                 <span class="gut-icon">✨</span>
                 <div class="gut-info-card-title">ÂGE MÉTABOLIQUE</div>
               </div>
-              <div class="gut-info-card-value">44 ans</div>
+              <div class="gut-info-card-value" id="metabolicAgeValue">44 ans</div>
             </div>
             <div class="gut-info-card">
               <div class="gut-info-card-header">
@@ -1285,10 +1285,38 @@
       }, 350);
     }
 
+    function getMetabolicAgeValue(){
+      const fallback = '44 ans';
+      const raw = answers['q1'];
+      if (!raw || typeof raw !== 'string') return fallback;
+
+      const matches = raw.match(/\d+/g) || [];
+      if (!matches.length) return fallback;
+
+      let baseAge;
+      if (matches.length === 1){
+        baseAge = parseInt(matches[0], 10);
+      } else {
+        const first = parseInt(matches[0], 10);
+        const last = parseInt(matches[matches.length - 1], 10);
+        baseAge = (first + last) / 2;
+      }
+
+      if (Number.isNaN(baseAge)) return fallback;
+
+      const metabolicAge = Math.round(baseAge + 10);
+      return `${metabolicAge} ans`;
+    }
+
     function showResultPreview(){
       const wrapper = document.getElementById('resultsWrapper');
       const preview = document.getElementById('resultPreview');
       if (!wrapper || !preview) return;
+
+      const metabolicAgeEl = document.getElementById('metabolicAgeValue');
+      if (metabolicAgeEl){
+        metabolicAgeEl.textContent = getMetabolicAgeValue();
+      }
 
       wrapper.classList.add('preview-mode');
       wrapper.scrollTop = 0;
