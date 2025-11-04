@@ -3,983 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Une naturopathe révèle : 5 signes du SII qui sabotent discrètement le quotidien des femmes - Science au Quotidien</title>
+    <title>5 signes du SII qui sabotent la vie des femmes</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            color-scheme: light;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.7;
+            color: #1f2933;
+            background-color: #f8fafc;
         }
 
-        /* Header Styles */
-        .header {
-            background-color: #fff;
-            border-bottom: 1px solid #e0e0e0;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .header-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.8em;
-            font-weight: 700;
-            color: #2c3e50;
-            text-decoration: none;
-            cursor: default;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-        }
-
-        .nav-menu a {
-            color: #555;
-            text-decoration: none;
-            font-weight: 500;
-            cursor: default;
-        }
-
-        /* Breadcrumb */
-        .breadcrumb {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 0 20px;
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        .breadcrumb a {
-            color: #007bff;
-            text-decoration: none;
-            cursor: default;
-        }
-
-        /* Badge Styles */
-        .badges {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-        }
-
-        .badge-news {
-            background-color: #ffc107;
-            color: #000;
-        }
-
-        .badge-health {
-            background-color: #e91e63;
-            color: #fff;
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+        header {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4ecf7 100%);
             padding: 40px 20px;
+            border-bottom: 1px solid #d9e2ec;
         }
 
-        h1 {
-            font-size: 2.2em;
-            line-height: 1.3;
-            margin-bottom: 20px;
-            color: #1a1a1a;
+        header h1 {
+            max-width: 900px;
+            margin: 0 auto;
+            font-size: 2.6rem;
+            color: #102a43;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px 20px 80px;
         }
 
         .meta {
-            color: #666;
-            font-size: 0.95em;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e0e0e0;
             display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .meta-stats {
-            display: flex;
+            flex-wrap: wrap;
             gap: 15px;
             align-items: center;
+            color: #486581;
+            font-size: 0.95rem;
+            margin: 15px auto 30px;
+            max-width: 900px;
         }
 
-        .meta-stats span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .meta strong {
+            color: #102a43;
         }
 
-        .hero-image {
+        .hero-image,
+        .figure,
+        .diagram {
             width: 100%;
-            height: 450px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            margin-bottom: 30px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
+            background-color: #e4ecf7;
+            border-radius: 16px;
+            padding: 18px 24px;
+            margin: 32px 0;
             font-style: italic;
-        }
-
-        p {
-            margin-bottom: 20px;
-            font-size: 1.05em;
-        }
-
-        .quote {
-            background-color: #f8f9fa;
-            border-left: 4px solid #007bff;
-            padding: 20px 25px;
-            margin: 30px 0;
-            font-style: italic;
-        }
-
-        .quote-author {
-            font-weight: 600;
-            margin-top: 10px;
-            font-style: normal;
-            color: #555;
+            color: #243b53;
         }
 
         h2 {
-            font-size: 1.8em;
-            margin: 40px 0 20px 0;
-            color: #1a1a1a;
+            font-size: 2rem;
+            margin-top: 48px;
+            margin-bottom: 20px;
+            color: #102a43;
         }
 
         h3 {
-            font-size: 1.4em;
-            margin: 30px 0 15px 0;
-            color: #2c3e50;
+            font-size: 1.35rem;
+            margin-top: 36px;
+            margin-bottom: 12px;
+            color: #243b53;
+        }
+
+        p {
+            margin: 18px 0;
         }
 
         ul {
-            margin: 20px 0 20px 40px;
+            padding-left: 24px;
         }
 
         li {
-            margin-bottom: 10px;
-        }
-
-        .author-card {
-            background-color: #f8f9fa;
-            padding: 20px;
-            margin: 30px 0;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .author-image {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .author-info h4 {
-            margin-bottom: 5px;
-        }
-
-        .author-info p {
-            margin: 0;
-            font-size: 0.95em;
-            color: #666;
-        }
-
-        .colon-diagram {
-            width: 100%;
-            max-width: 500px;
-            margin: 30px auto;
-            display: block;
-        }
-
-        .cta-box {
-            background: linear-gradient(135deg, #1e90ff 0%, #00bfff 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-            border-radius: 12px;
-            margin: 40px 0;
-        }
-
-        .cta-box h3 {
-            color: white;
-            margin: 0 0 15px 0;
-        }
-
-        .cta-box p {
-            margin-bottom: 25px;
-            font-size: 1.1em;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background-color: #28a745;
-            color: #fff;
-            padding: 15px 40px;
-            text-decoration: none;
-            font-weight: 600;
-            border-radius: 50px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
-        }
-
-        .cta-button:hover {
-            background-color: #218838;
-            transform: scale(1.05);
-        }
-
-        /* Author Bio Section */
-        .author-bio {
-            background-color: #f8f9fa;
-            padding: 30px;
-            border-radius: 8px;
-            margin: 40px 0;
-        }
-
-        .author-bio-header {
-            font-size: 0.85em;
-            color: #666;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .author-bio-content {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-
-        .author-bio-image {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 8px;
-            flex-shrink: 0;
-        }
-
-        .author-bio-text h4 {
-            margin-bottom: 5px;
-            font-size: 1.2em;
-        }
-
-        .author-bio-text p {
-            font-size: 0.95em;
-            margin-bottom: 10px;
-        }
-
-        .fact-check {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 15px;
-            font-size: 0.9em;
-            color: #e91e63;
-        }
-
-        /* Comments Section */
-        .comments-section {
-            margin: 60px 0;
-        }
-
-        .comments-header {
-            font-size: 1.5em;
-            margin-bottom: 30px;
-            color: #1a1a1a;
-        }
-
-        .comment {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .comment-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
             margin-bottom: 12px;
         }
 
-        .comment-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            color: #fff;
-            flex-shrink: 0;
+        blockquote {
+            border-left: 4px solid #829ab1;
+            padding-left: 16px;
+            color: #486581;
+            font-style: italic;
+            margin: 28px 0;
         }
 
-        .comment-info {
-            flex-grow: 1;
-        }
-
-        .comment-author {
-            font-weight: 600;
-            color: #1a1a1a;
-        }
-
-        .comment-date {
-            font-size: 0.85em;
-            color: #666;
-        }
-
-        .comment-text {
-            color: #333;
-            line-height: 1.6;
-        }
-
-        /* Comment Form */
-        .comment-form {
-            background-color: #f8f9fa;
-            padding: 30px;
-            border-radius: 8px;
-            margin-top: 40px;
-        }
-
-        .comment-form h3 {
-            margin: 0 0 20px 0;
-            font-size: 1.3em;
-        }
-
-        .form-note {
-            font-size: 0.9em;
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .form-group {
-            flex: 1;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 1em;
-        }
-
-        .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .submit-button {
-            background-color: #5a7c8c;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .submit-button:hover {
-            background-color: #4a6c7c;
-        }
-
-        /* Footer */
-        .footer {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            padding: 60px 20px 30px;
-            margin-top: 80px;
-        }
-
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-        }
-
-        .footer-section h4 {
-            margin-bottom: 15px;
-            color: #fff;
-        }
-
-        .footer-section ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .footer-section ul li {
-            margin-bottom: 10px;
-        }
-
-        .footer-section a {
-            color: #bdc3c7;
-            text-decoration: none;
-            cursor: default;
-        }
-
-        .footer-bottom {
-            max-width: 1200px;
-            margin: 40px auto 0;
-            padding-top: 30px;
-            border-top: 1px solid #34495e;
+        .cta {
+            background: #0b7285;
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 32px 28px;
             text-align: center;
-            color: #95a5a6;
-            font-size: 0.9em;
+            margin-top: 60px;
         }
 
-        .emoji {
-            font-size: 1.3em;
-            margin-right: 8px;
+        .cta p {
+            margin: 12px 0;
         }
 
-        strong {
-            font-weight: 600;
-            color: #1a1a1a;
-        }
-
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-
-            h1 {
-                font-size: 1.8em;
-            }
-
-            h2 {
-                font-size: 1.5em;
-            }
-
-            .container {
-                padding: 20px 15px;
-            }
-
-            .author-card,
-            .author-bio-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .form-row {
-                flex-direction: column;
-            }
-
-            .footer-container {
-                grid-template-columns: 1fr;
-            }
-
-            .sticky-cta-bar {
-                padding: 12px 15px;
-            }
-
-            .sticky-cta-content h3 {
-                font-size: 0.9em;
-            }
-
-            .sticky-cta-button {
-                padding: 10px 20px;
-                font-size: 0.9em;
-            }
-        }
-
-        /* Sticky CTA Bar */
-        .sticky-cta-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #1e90ff 0%, #00bfff 100%);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            padding: 15px 20px;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .sticky-cta-bar.visible {
-            transform: translateY(0);
-        }
-
-        .sticky-cta-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .sticky-cta-content {
-            flex: 1;
-        }
-
-        .sticky-cta-content h3 {
-            color: white;
-            font-size: 1.1em;
-            margin: 0;
-            font-weight: 600;
-        }
-
-        .sticky-cta-button {
-            background-color: #28a745;
-            color: white;
-            padding: 12px 30px;
+        .cta a {
+            display: inline-block;
+            margin-top: 16px;
+            background: #20b2aa;
+            color: #ffffff;
             text-decoration: none;
             font-weight: 600;
-            border-radius: 50px;
-            font-size: 1em;
-            white-space: nowrap;
-            transition: background-color 0.2s, transform 0.2s;
+            padding: 14px 28px;
+            border-radius: 999px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .sticky-cta-button:hover {
-            background-color: #218838;
-            transform: scale(1.05);
+        .cta a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(32, 178, 170, 0.25);
+        }
+
+        footer {
+            background: #102a43;
+            color: #d9e2ec;
+            text-align: center;
+            padding: 24px 20px;
+            font-size: 0.9rem;
+        }
+
+        @media (min-width: 768px) {
+            header h1 {
+                font-size: 3rem;
+            }
+
+            main {
+                padding: 60px 60px 100px;
+                border-radius: 28px 28px 0 0;
+                margin-top: -40px;
+                box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+            }
         }
     </style>
-    <script>
-        // Script pour la barre CTA sticky
-        window.addEventListener('scroll', function() {
-            const stickyBar = document.getElementById('sticky-cta-bar');
-            const scrollPosition = window.scrollY;
-            
-            // Afficher la barre après 300px de scroll
-            if (scrollPosition > 300) {
-                stickyBar.classList.add('visible');
-            } else {
-                stickyBar.classList.remove('visible');
-            }
-        });
-        
-        // Script pour mettre à jour automatiquement les dates à la veille
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date();
-            const yesterday = new Date(today);
-            yesterday.setDate(yesterday.getDate() - 1);
-            
-            const twoDaysAgo = new Date(today);
-            twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-            
-            const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 
-                            'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
-            
-            const day = yesterday.getDate();
-            const month = months[yesterday.getMonth()];
-            const year = yesterday.getFullYear();
-            
-            const day2 = twoDaysAgo.getDate();
-            const month2 = months[twoDaysAgo.getMonth()];
-            const year2 = twoDaysAgo.getFullYear();
-            
-            // Format long pour la date de publication
-            const longFormat = `${day} ${month} ${year}`;
-            
-            // Format court pour les commentaires
-            const shortFormat = `${day} ${month.substring(0, 3)}. ${year}`;
-            const shortFormat2 = `${day2} ${month2.substring(0, 3)}. ${year2}`;
-            
-            // Mettre à jour la date de publication
-            const metaStats = document.querySelectorAll('.meta-stats span');
-            metaStats.forEach(span => {
-                if (span.textContent.includes('Publié le')) {
-                    span.innerHTML = `📅 Publié le ${longFormat}`;
-                }
-            });
-            
-            // Mettre à jour les dates des commentaires
-            const commentDates = document.querySelectorAll('.comment-date');
-            if (commentDates.length >= 4) {
-                // Les 3 premiers commentaires = hier
-                commentDates[0].textContent = shortFormat;
-                commentDates[1].textContent = shortFormat;
-                commentDates[2].textContent = shortFormat;
-                // Le dernier commentaire = il y a 2 jours
-                commentDates[3].textContent = shortFormat2;
-            }
-        });
-    </script>
 </head>
 <body>
-    <!-- Sticky CTA Bar -->
-    <div id="sticky-cta-bar" class="sticky-cta-bar">
-        <div class="sticky-cta-container">
-            <div class="sticky-cta-content">
-                <h3>🎯 Faites le quiz santé digestive en 1 minute pour une solution personnalisée</h3>
-            </div>
-            <a href="https://www.institut-kalnins.com/afb5cd80" class="sticky-cta-button">Commencer le Quiz</a>
-        </div>
-    </div>
-
-    <!-- Header -->
-    <header class="header">
-        <div class="header-container">
-            <a href="javascript:void(0)" class="logo">Science au Quotidien</a>
-            <nav>
-                <ul class="nav-menu">
-                    <li><a href="javascript:void(0)">Sciences</a></li>
-                    <li><a href="javascript:void(0)">Style de vie</a></li>
-                    <li><a href="javascript:void(0)">Médecine</a></li>
-                    <li><a href="javascript:void(0)">Régimes</a></li>
-                    <li><a href="javascript:void(0)">Beauté</a></li>
-                    <li><a href="javascript:void(0)">Gastro</a></li>
-                </ul>
-            </nav>
-        </div>
+    <header>
+        <h1># Une naturopathe révèle : 5 signes du SII qui sabotent discrètement le quotidien des femmes... Et la solution pour en finir</h1>
     </header>
 
-    <!-- Breadcrumb -->
-    <div class="breadcrumb">
-        <a href="javascript:void(0)">Accueil</a> › <a href="javascript:void(0)">Style de vie</a> › Une naturopathe révèle : 5 signes du SII...
+    <div class="meta">
+        <span><strong>Publié par :</strong> Anne-Sophie Cortasse, Naturopathe</span>
+        <span>📖 5 min</span>
+        <span>📅 30 octobre 2025</span>
     </div>
 
-    <!-- Main Content -->
-    <article class="container">
-        <div class="badges">
-            <span class="badge badge-news">Actualités</span>
-            <span class="badge badge-health">Santé des Femmes</span>
-        </div>
+    <main>
+        <div class="hero-image">IMAGE : Femme assise sur son lit, main sur le ventre, l'air fatigué</div>
 
-        <h1>Une naturopathe révèle : 5 signes du SII qui sabotent discrètement le quotidien des femmes... Et la solution pour en finir durablement</h1>
-        
-        <div class="meta">
-            <span>Publié par Anne-Sophie Cortasse, Naturopathe</span>
-            <div class="meta-stats">
-                <span>📖 5 min</span>
-                <span>📅 Publié le 29 octobre 2025</span>
-            </div>
-        </div>
-
-        <div class="hero-image" style="background-image: url('https://d1yei2z3i6k35z.cloudfront.net/13114230/690379e3b597f_Screenshot2025-10-30at15.44.45.png'); background-size: cover; background-position: center;">
-        </div>
-
-        <p>Vous vous réveillez ballonnée, épuisée, à cran... même après une bonne nuit de sommeil et une alimentation "équilibrée".</p>
-
+        <p>Vous vous réveillez ballonnée, épuisée, à cran... même après une bonne nuit de sommeil et une alimentation « équilibrée ».</p>
         <p>Peu importe vos efforts, votre ventre reste lourd, votre humeur tourne au vinaigre, et cette fatigue ne vous lâche jamais vraiment.</p>
+        <p><strong>Vous méritez mieux que ça.</strong></p>
+        <p>D'après Anne-Sophie Cortasse, naturopathe spécialisée en troubles digestifs, ce n'est pas « juste du stress »... c'est une des manières insidieuses dont le <strong>Syndrome de l'Intestin Irritable (SII)</strong> s'empare silencieusement de la vie des femmes.</p>
 
-        <p>D'après <strong>Anne-Sophie Cortasse</strong>, naturopathe spécialisée en troubles digestifs, ce n'est pas "juste du stress"... c'est une des manières insidieuses dont le <strong>Syndrome de l'Intestin Irritable (SII)</strong> s'empare silencieusement de la vie des femmes.</p>
-
-        <div class="quote">
-            « La plupart des femmes croient que c'est hormonal ou lié au stress, mais en vérité, leur intestin et leur cerveau sont pris dans une boucle qui les maintient dans un état d'inflammation, d'anxiété et d'épuisement constant. »
-            <div class="quote-author">- Anne-Sophie Cortasse, Naturopathe</div>
-        </div>
+        <blockquote>
+            « La plupart des femmes croient que c'est hormonal ou lié au stress, mais en vérité, leur intestin et leur cerveau sont pris dans une boucle qui les maintient dans un état d'inflammation, d'anxiété et d'épuisement constant. »<br>
+            <strong>- Anne-Sophie Cortasse, Naturopathe</strong>
+        </blockquote>
 
         <h2>Pourquoi le syndrome de l'intestin irritable touche les femmes plus violemment</h2>
-
-        <p>Hommes et femmes peuvent souffrir de syndrome de l'intestin irritable, mais les femmes subissent souvent des symptômes bien plus intenses... pour des raisons que peu de praticiens prennent en compte.</p>
-
-        <p>Les hormones féminines comme l'<strong>œstrogène</strong> et la <strong>progestérone</strong> influencent directement le mouvement et la sensibilité de l'intestin.</p>
-
-        <p>Lors des fluctuations hormonales – règles, grossesse, ménopause – <strong>les terminaisons nerveuses intestinales deviennent ultra-sensibles</strong>, et le transit se met au ralenti.</p>
-
-        <p><strong>Les femmes sont aussi plus sujettes à :</strong></p>
-
+        <p>Hommes et femmes peuvent souffrir de syndrome de l'intestin irritable, mais <strong>vous, les femmes, subissez souvent des symptômes bien plus intenses</strong>... pour des raisons que peu de praticiens prennent en compte.</p>
+        <p><strong>Parce que votre corps est différent.</strong></p>
+        <p>Les hormones féminines comme l'œstrogène et la progestérone influencent directement le mouvement et la sensibilité de votre intestin.</p>
+        <p>Lors des fluctuations hormonales – règles, grossesse, ménopause – vos terminaisons nerveuses intestinales deviennent ultra-sensibles, et votre transit se met au ralenti.</p>
+        <p><strong>C'est pour ça que vous êtes plus sujettes à :</strong></p>
         <ul>
             <li>Un syndrome de l'intestin irritable à dominante constipation (SII-C)</li>
             <li>Des ballonnements extrêmes et une fatigue chronique</li>
-            <li>De l'anxiété et des variations d'humeur directement liées à leur digestion</li>
+            <li>De l'anxiété et des variations d'humeur directement liées à votre digestion</li>
         </ul>
+        <p><strong>Ce n'est pas dans votre tête.</strong></p>
 
-        <div class="quote">
-            « Ce n'est pas dans votre tête. Quand votre intestin s'enflamme, il transmet des signaux d'alerte à votre cerveau. Et quand votre cerveau stresse, il renvoie exactement les mêmes signaux vers votre intestin. »
-            <div class="quote-author">- Anne-Sophie Cortasse</div>
-        </div>
+        <blockquote>
+            « Quand votre intestin s'enflamme, il transmet des signaux d'alerte à votre cerveau. Et quand votre cerveau stresse, il renvoie exactement les mêmes signaux vers votre intestin. »<br>
+            <strong>- Anne-Sophie Cortasse</strong>
+        </blockquote>
 
-        <div class="author-card">
-            <div class="author-image" style="background-image: url('https://d1yei2z3i6k35z.cloudfront.net/13114230/69037a30a6e25_1644008645292.jpeg'); background-size: cover; background-position: center;"></div>
-            <div class="author-info">
-                <h4>Anne-Sophie Cortasse, Naturopathe</h4>
-                <p>Spécialiste du microbiote intestinal</p>
-            </div>
-        </div>
-
+        <div class="figure">IMAGE : Photo portrait d'Anne-Sophie Cortasse</div>
+        <p><strong>Anne-Sophie Cortasse, Naturopathe</strong><br><em>Spécialiste du microbiote intestinal</em></p>
         <p>Ce système de communication à double sens s'appelle <strong>l'axe intestin-cerveau</strong>... et quand il dysfonctionne, il peut discrètement détruire votre énergie, votre moral et votre assurance.</p>
+        <p><strong>Vous méritez de reprendre le contrôle.</strong></p>
 
-        <h2>Les 5 signes cachés du syndrome de l'intestin irritable qui pourrissent la vie des femmes</h2>
+        <h2>Les 5 signes cachés du syndrome de l'intestin irritable qui pourrissent votre vie</h2>
 
         <h3>1. Un ventre qui gonfle selon votre stress ou votre cycle</h3>
-
         <p>Votre journée commence bien, mais en fin d'après-midi, on dirait que vous êtes enceinte de 6 mois.</p>
+        <p><strong>Vous connaissez ça ?</strong></p>
+        <p>Les variations hormonales et l'inflammation déclenchée par le stress emprisonnent les gaz et freinent la digestion.</p>
+        <p>Si vos ballonnements empirent sous pression ou avant vos règles... <strong>ce ne sont pas « juste vos hormones »</strong>. C'est très probablement un des symptômes du SII.</p>
+        <p><strong>Et vous n'avez pas à vivre avec ça.</strong></p>
 
-        <p>Les variations hormonales et l'inflammation déclenchée par le stress emprisonnent les gaz et freinent la digestion. Si vos ballonnements empirent sous pression ou avant vos règles... <strong>ce ne sont pas "juste vos hormones". C'est très probablement un des symptômes du SII.</strong></p>
+        <h3>2. Des « papillons dans le ventre » qui virent à la douleur</h3>
+        <p>Cette sensation de nœud à l'estomac avant un rendez-vous important ?</p>
+        <p>Pour beaucoup de femmes souffrant de syndrome de l'intestin irritable, ces « papillons » se transforment en crampes violentes ou en nausées.</p>
 
-        <h3>2. Des "papillons dans le ventre" qui virent à la douleur</h3>
+        <blockquote>
+            « Votre intestin et votre cerveau utilisent les mêmes voies de communication. Dès que les hormones du stress montent en flèche, vos intestins réagissent immédiatement. »<br>
+            <strong>- Anne-Sophie Cortasse</strong>
+        </blockquote>
 
-        <p>Cette sensation de nœud à l'estomac avant un rendez-vous important ? Pour beaucoup de femmes souffrant de syndrome de l'intestin irritable, <strong>ces "papillons" se transforment en crampes violentes ou en nausées</strong>.</p>
-
-        <div class="quote">
-            « Votre intestin et votre cerveau utilisent les mêmes voies de communication. Dès que les hormones du stress montent en flèche, vos intestins réagissent immédiatement. »
-            <div class="quote-author">- Anne-Sophie Cortasse</div>
-        </div>
+        <p><strong>Vous voyez maintenant pourquoi vous avez mal au ventre quand vous êtes stressée ?</strong></p>
 
         <h3>3. Constipation, coup de fatigue et irritabilité avant les règles</h3>
-
-        <p>Si vous vous sentez <strong>gonflée, crevée et de mauvais poil</strong> dans les jours qui précèdent vos règles… <strong>ce n'est pas dans votre tête</strong>.</p>
-
+        <p>Si vous vous sentez <strong>gonflée, crevée et de mauvais poil</strong> dans les jours qui précèdent vos règles…</p>
+        <p><strong>Ce n'est PAS dans votre tête.</strong></p>
         <p>La progestérone ralentit votre transit, pendant que l'inflammation grimpe, provoquant des symptômes de SII-C qui vous laissent vidée, jour après jour.</p>
+        <p><strong>Vous ne devriez pas avoir à endurer ça chaque mois.</strong></p>
 
         <h3>4. Des crises digestives après un choc émotionnel</h3>
+        <p>Vous avez remarqué que votre ventre se détraque après une dispute, une journée pourrie, ou une nuit sans sommeil ?</p>
+        <p><strong>Ce n'est pas un hasard</strong>... c'est votre système nerveux et votre flore intestinale qui réagissent ensemble.</p>
+        <p>Quand les mauvaises bactéries prolifèrent, des toxines peuvent franchir la paroi intestinale et passer dans le sang, déclenchant une inflammation qui remonte jusqu'au cerveau et affecte directement votre humeur.</p>
 
-        <p>Vous avez remarqué que votre ventre se détraque après une dispute, une journée pourrie, ou une nuit sans sommeil ? Ce n'est pas un hasard... <strong>c'est votre système nerveux et votre flore intestinale qui réagissent ensemble</strong>.</p>
+        <blockquote>
+            « C'est un engrenage infernal. Un intestin sous tension aggrave l'anxiété, et l'anxiété empire encore l'état de l'intestin. »<br>
+            <strong>- Anne-Sophie Cortasse</strong>
+        </blockquote>
 
-        <p>Quand les <strong>mauvaises bactéries prolifèrent</strong>, des toxines peuvent franchir la paroi intestinale et passer dans le sang, déclenchant une inflammation qui remonte jusqu'au cerveau et affecte directement votre humeur.</p>
-
-        <div class="quote">
-            « C'est un engrenage infernal. Un intestin sous tension aggrave l'anxiété, et l'anxiété empire encore l'état de l'intestin. »
-            <div class="quote-author">- Anne-Sophie Cortasse</div>
-        </div>
+        <p><strong>Mais vous pouvez briser ce cycle.</strong></p>
 
         <h3>5. Un transit totalement anarchique</h3>
-
-        <p>Certains jours, impossible d'aller aux toilettes. D'autres, vous ne pouvez pas sortir de chez vous. <strong>Ce rythme chaotique est l'un des signes les plus fréquents... et les plus exaspérants... du syndrome de l'intestin irritable.</strong></p>
-
-        <p>C'est dû à un <strong>déséquilibre de la flore intestinale</strong> et à une <strong>barrière intestinale fragilisée</strong>, qui perturbent complètement le rythme naturel de votre organisme.</p>
-
+        <p>Certains jours, impossible d'aller aux toilettes. D'autres, vous ne pouvez pas sortir de chez vous.</p>
+        <p>Ce rythme chaotique est <strong>l'un des signes les plus fréquents... et les plus exaspérants... du syndrome de l'intestin irritable</strong>.</p>
+        <p>C'est dû à un déséquilibre de la flore intestinale et à une barrière intestinale fragilisée, qui perturbent complètement le rythme naturel de votre organisme.</p>
         <p>Avec le temps, ce dérèglement peut toucher votre métabolisme entier et votre équilibre psychologique.</p>
+        <p><strong>Vous méritez de retrouver une routine prévisible.</strong></p>
 
-        <div style="text-align: center; margin: 40px 0;">
-            <img src="https://d1yei2z3i6k35z.cloudfront.net/13114230/690346d573779_Constipation.png" alt="Schéma anatomique du côlon" class="colon-diagram">
+        <div class="diagram">
+            IMAGE : Schéma anatomique du côlon avec zones marquées
+            <br><br>
+            <strong>SYNDROME DE L'INTESTIN IRRITABLE (SII)</strong>
+            <ul>
+                <li>← Constipation</li>
+                <li>← Zone de spasme</li>
+                <li>← Intestin distendu</li>
+                <li>← Diarrhée</li>
+            </ul>
         </div>
 
         <h2>Pourquoi les traitements habituels ne marchent pas</h2>
-
-        <p>Probiotiques génériques, régime FODMAP strict, anti-spasmodiques... ça peut soulager temporairement, mais ça ne règle jamais le vrai problème à la racine.</p>
-
-        <p>Parce que le syndrome de l'intestin irritable n'est pas qu'une question d'aliments à éviter... c'est un <strong>déséquilibre profond de votre microbiote intestinal</strong>.</p>
-
+        <p>Probiotiques génériques, régime FODMAP strict, anti-spasmodiques... ça peut soulager temporairement, mais <strong>ça ne règle jamais le vrai problème à la racine</strong>.</p>
+        <p><strong>Parce que le syndrome de l'intestin irritable n'est pas qu'une question d'aliments à éviter</strong>... c'est un déséquilibre profond de votre microbiote intestinal.</p>
         <p>Le microbiote de la plupart des personnes souffrant du SII manque des bonnes souches bactériennes et des conditions optimales pour :</p>
-
         <ul>
-            <li>Réparer la barrière intestinale endommagée</li>
-            <li>Produire les enzymes digestives nécessaires</li>
-            <li>Réguler l'inflammation et calmer l'hypersensibilité viscérale</li>
-            <li>Communiquer efficacement avec le système nerveux entérique</li>
+            <li>✓ Réparer la barrière intestinale endommagée</li>
+            <li>✓ Produire les enzymes digestives nécessaires</li>
+            <li>✓ Réguler l'inflammation et calmer l'hypersensibilité viscérale</li>
+            <li>✓ Communiquer efficacement avec le système nerveux entérique</li>
         </ul>
 
-        <div class="quote">
-            « On ne soulage pas durablement le syndrome de l'intestin irritable en masquant les symptômes. Il faut rééquilibrer naturellement le microbiote. »
-            <div class="quote-author">- Anne-Sophie Cortasse</div>
-        </div>
+        <blockquote>
+            « On ne soulage pas durablement le syndrome de l'intestin irritable en masquant les symptômes. Il faut rééquilibrer naturellement le microbiote. »<br>
+            <strong>- Anne-Sophie Cortasse</strong>
+        </blockquote>
 
         <h2>La nouvelle approche : Le rééquilibrage naturel du microbiote</h2>
-
-        <p>La naturopathie moderne a découvert une approche en trois phases qu'on appelle <strong>le rééquilibrage naturel du microbiote</strong>... une méthode qui ne se contente pas de réduire les symptômes, mais qui restaure l'équilibre digestif de l'intérieur.</p>
-
+        <p>La naturopathie moderne a découvert une approche en trois phases qu'on appelle <strong>le rééquilibrage naturel du microbiote</strong>...</p>
+        <p>Une méthode qui ne se contente pas de réduire les symptômes, mais qui <strong>restaure l'équilibre digestif de l'intérieur</strong>.</p>
         <p>Contrairement aux solutions isolées, le rééquilibrage naturel du microbiote combine :</p>
+        <p><strong>Phase 1 : Calmer</strong> – Apaiser l'inflammation avec une alimentation douce et anti-inflammatoire</p>
+        <p><strong>Phase 2 : Réparer</strong> – Nourrir les bonnes bactéries avec des prébiotiques naturels et des nutriments ciblés</p>
+        <p><strong>Phase 3 : Personnaliser</strong> – Réintroduire progressivement les aliments en identifiant vos tolérances uniques</p>
+        <p>Ensemble, ces trois phases permettent <strong>un soulagement digestif durable</strong>, en restaurant l'harmonie de votre système digestif.</p>
 
+        <h3>Ce que vous allez gagner :</h3>
         <ul>
-            <li><strong>Phase 1 :</strong> Calmer – Apaiser l'inflammation avec une alimentation douce et anti-inflammatoire</li>
-            <li><strong>Phase 2 :</strong> Réparer – Nourrir les bonnes bactéries avec des prébiotiques naturels et des nutriments ciblés</li>
-            <li><strong>Phase 3 :</strong> Personnaliser – Réintroduire progressivement les aliments en identifiant vos tolérances uniques</li>
+            <li>✓ <strong>Fini les ballonnements et les crampes qui gâchent vos journées</strong></li>
+            <li>✓ <strong>Un transit stable et prévisible</strong></li>
+            <li>✓ <strong>Plus d'énergie et un ventre enfin léger</strong></li>
+            <li>✓ <strong>La liberté de manger à nouveau sans angoisse</strong></li>
         </ul>
 
-        <p>Ensemble, ces trois phases permettent un <strong>soulagement digestif durable</strong>, en restaurant l'harmonie de votre système digestif.</p>
-
-        <p><strong>Les bénéfices :</strong></p>
-
-        <ul>
-            <li>Fini les ballonnements et les crampes qui gâchent vos journées</li>
-            <li>Un transit stable et prévisible</li>
-            <li>Plus d'énergie et un ventre enfin léger</li>
-            <li>La liberté de manger à nouveau sans angoisse</li>
-        </ul>
+        <p><strong>Parce que vous méritez de reprendre le contrôle de votre corps.</strong></p>
 
         <h2>Comment savoir si votre microbiote est déséquilibré</h2>
-
-        <p>Si vous souffrez de ballonnements dès le réveil, d'alternance constipation-diarrhée, de fatigue chronique ou d'anxiété digestive... tout ça pourrait venir de la même cause invisible... et la solution est peut-être plus simple que vous ne l'imaginez.</p>
-
+        <p>Si vous souffrez de ballonnements dès le réveil, d'alternance constipation-diarrhée, de fatigue chronique ou d'anxiété digestive...</p>
+        <p><strong>Tout ça pourrait venir de la même cause invisible</strong>... et la solution est peut-être plus simple que vous ne l'imaginez.</p>
         <p>Pour découvrir si vos symptômes révèlent un déséquilibre du microbiote, <strong>répondez simplement à ce quiz d'une minute</strong>.</p>
-
         <p>Il vous aide à identifier votre profil digestif unique et vous montre comment retrouver l'équilibre en seulement 21 jours.</p>
 
-        <div class="cta-box">
-            <h3><span class="emoji">🎯</span> Faites le quiz santé digestive... En 1 minute chrono</h3>
-            <p>Ça ne prend qu'une minute... et ça pourrait être le premier pas vers une vie plus légère, plus libre, et enfin sans contraintes digestives.</p>
-            <a href="https://www.institut-kalnins.com/afb5cd80" class="cta-button"><span class="emoji">👉</span> Faire le Quiz Maintenant</a>
+        <div class="cta">
+            <h2>🎯 Faites le quiz santé digestive... En 1 minute chrono</h2>
+            <p>Ça ne prend qu'une minute... et ça pourrait être le premier pas vers <strong>une vie plus légère, plus libre, et enfin sans contraintes digestives</strong>.</p>
+            <p><strong>Parce que vous méritez de vivre sans douleur.</strong></p>
+            <a href="#">Faire le Quiz Maintenant</a>
+            <p><em>P.S. : Vous n'avez rien à perdre... sauf vos ballonnements, vos douleurs et votre fatigue chronique. Le quiz est gratuit et 100% confidentiel.</em></p>
         </div>
+    </main>
 
-        <!-- Author Bio -->
-        <div class="author-bio">
-            <div class="author-bio-header">ÉCRIT PAR</div>
-            <div class="author-bio-content">
-                <div class="author-bio-image" style="background-image: url('https://d1yei2z3i6k35z.cloudfront.net/13114230/69037a30a6e25_1644008645292.jpeg'); background-size: cover; background-position: center;"></div>
-                <div class="author-bio-text">
-                    <h4>Anne-Sophie Cortasse, Naturopathe</h4>
-                    <p>Anne-Sophie Cortasse est naturopathe depuis 10 ans et spécialiste du syndrome de l'intestin irritable. Après avoir personnellement souffert de troubles digestifs pendant près de 20 ans, elle a développé une méthode unique de rééquilibrage naturel du microbiote. Elle a accompagné des centaines de personnes à retrouver une vie digestive normale et partage régulièrement son expertise sur les réseaux sociaux et lors de conférences.</p>
-                    <div class="fact-check">
-                        <span>📋</span> Fact-checké par Rachon Biroute, expert en microbiote
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Comments Section -->
-        <section class="comments-section">
-            <h2 class="comments-header">Commentaires (4)</h2>
-
-            <div class="comment">
-                <div class="comment-header">
-                    <div class="comment-avatar">SM</div>
-                    <div class="comment-info">
-                        <div class="comment-author">Sophie McAlester</div>
-                        <div class="comment-date">29 oct. 2025</div>
-                    </div>
-                </div>
-                <div class="comment-text">Très intéressant !</div>
-            </div>
-
-            <div class="comment">
-                <div class="comment-header">
-                    <div class="comment-avatar" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">MM</div>
-                    <div class="comment-info">
-                        <div class="comment-author">Marie M.</div>
-                        <div class="comment-date">29 oct. 2025</div>
-                    </div>
-                </div>
-                <div class="comment-text">Merci, cela m'a aidé à comprendre quel était le vrai problème.</div>
-            </div>
-
-            <div class="comment">
-                <div class="comment-header">
-                    <div class="comment-avatar" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">LA</div>
-                    <div class="comment-info">
-                        <div class="comment-author">Layla Ahmed</div>
-                        <div class="comment-date">29 oct. 2025</div>
-                    </div>
-                </div>
-                <div class="comment-text">Si quelqu'un a essayé la formation, est-ce que ça aide vraiment avec le syndrome de l'intestin irritable ?</div>
-            </div>
-
-            <div class="comment">
-                <div class="comment-header">
-                    <div class="comment-avatar" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">FM</div>
-                    <div class="comment-info">
-                        <div class="comment-author">François M.</div>
-                        <div class="comment-date">28 oct. 2025</div>
-                    </div>
-                </div>
-                <div class="comment-text">J'ai remarqué un grand changement dans ma digestion au cours des deux premières semaines. Je me sens plus léger et impatient de continuer.</div>
-            </div>
-
-            <!-- Comment Form -->
-            <div class="comment-form">
-                <h3>Laisser un commentaire</h3>
-                <p class="form-note">Votre adresse e-mail ne sera pas publiée.</p>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="name">Entrez votre nom</label>
-                        <input type="text" id="name" placeholder="Votre nom">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Entrez votre e-mail</label>
-                        <input type="email" id="email" placeholder="Votre email">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="comment">Commentaire...</label>
-                    <textarea id="comment" placeholder="Écrivez votre commentaire ici..."></textarea>
-                </div>
-
-                <button type="submit" class="submit-button">Publier le commentaire</button>
-            </div>
-        </section>
-    </article>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-section">
-                <h4>Science au Quotidien</h4>
-                <p>Créer des expériences numériques extraordinaires qui apportent plus de bonheur dans le monde.</p>
-            </div>
-            <div class="footer-section">
-                <h4>CATÉGORIES</h4>
-                <ul>
-                    <li><a href="javascript:void(0)">Sciences</a></li>
-                    <li><a href="javascript:void(0)">Style de vie</a></li>
-                    <li><a href="javascript:void(0)">Médecine</a></li>
-                    <li><a href="javascript:void(0)">Régimes</a></li>
-                    <li><a href="javascript:void(0)">Beauté</a></li>
-                    <li><a href="javascript:void(0)">Gastro</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>RÉSEAUX SOCIAUX</h4>
-                <ul>
-                    <li><a href="javascript:void(0)">Twitter</a></li>
-                    <li><a href="javascript:void(0)">LinkedIn</a></li>
-                    <li><a href="javascript:void(0)">Facebook</a></li>
-                    <li><a href="javascript:void(0)">GitHub</a></li>
-                    <li><a href="javascript:void(0)">YouTube</a></li>
-                    <li><a href="javascript:void(0)">Instagram</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>LÉGAL</h4>
-                <ul>
-                    <li><a href="javascript:void(0)">Conditions</a></li>
-                    <li><a href="javascript:void(0)">Confidentialité</a></li>
-                    <li><a href="javascript:void(0)">Cookies</a></li>
-                    <li><a href="javascript:void(0)">Licences</a></li>
-                    <li><a href="javascript:void(0)">Paramètres</a></li>
-                    <li><a href="javascript:void(0)">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            Copyright © 2024 Science au Quotidien. Tous droits réservés. Science au Quotidien ne fournit pas de conseils médicaux, de diagnostic ou de traitement.
-        </div>
+    <footer>
+        © 2025 Anne-Sophie Cortasse — Tous droits réservés.
     </footer>
 </body>
 </html>
