@@ -221,8 +221,8 @@
         }
 
         .cta-box {
-            background: linear-gradient(135deg, #1e90ff 0%, #00bfff 100%);
-            color: white;
+            background: linear-gradient(135deg, #f1f7fb 0%, #dcebf2 100%);
+            color: #1f3a4d;
             padding: 40px;
             text-align: center;
             border-radius: 12px;
@@ -230,18 +230,19 @@
         }
 
         .cta-box h3 {
-            color: white;
+            color: #1f3a4d;
             margin: 0 0 15px 0;
         }
 
         .cta-box p {
             margin-bottom: 25px;
             font-size: 1.1em;
+            color: #345466;
         }
 
         .cta-button {
             display: inline-block;
-            background-color: #28a745;
+            background-color: #1f5d73;
             color: #fff;
             padding: 15px 40px;
             text-decoration: none;
@@ -253,7 +254,7 @@
         }
 
         .cta-button:hover {
-            background-color: #218838;
+            background-color: #17475a;
             transform: scale(1.05);
         }
 
@@ -523,12 +524,16 @@
             }
 
             .sticky-cta-content h3 {
-                font-size: 0.9em;
+                font-size: 0.85em;
             }
 
             .sticky-cta-button {
-                padding: 10px 20px;
-                font-size: 0.9em;
+                padding: 10px 18px;
+                font-size: 0.85em;
+            }
+
+            .sticky-cta-container {
+                gap: 12px;
             }
         }
 
@@ -538,7 +543,7 @@
             top: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, #1e90ff 0%, #00bfff 100%);
+            background: linear-gradient(135deg, #f1f7fb 0%, #dcebf2 100%);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
             padding: 15px 20px;
@@ -557,21 +562,26 @@
             justify-content: space-between;
             align-items: center;
             gap: 20px;
+            flex-wrap: nowrap;
         }
 
         .sticky-cta-content {
             flex: 1;
+            min-width: 0;
         }
 
         .sticky-cta-content h3 {
-            color: white;
+            color: #1f3a4d;
             font-size: 1.1em;
             margin: 0;
             font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .sticky-cta-button {
-            background-color: #28a745;
+            background-color: #1f5d73;
             color: white;
             padding: 12px 30px;
             text-decoration: none;
@@ -579,11 +589,12 @@
             border-radius: 50px;
             font-size: 1em;
             white-space: nowrap;
+            flex-shrink: 0;
             transition: background-color 0.2s, transform 0.2s;
         }
 
         .sticky-cta-button:hover {
-            background-color: #218838;
+            background-color: #17475a;
             transform: scale(1.05);
         }
     </style>
