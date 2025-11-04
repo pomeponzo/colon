@@ -50,7 +50,8 @@
     .options-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
     .options-grid-mobile-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
 
-    .option-card{ background:#fff; border:2px solid #e5e7eb; border-radius:12px; padding:12px; cursor:pointer; transition:.18s; display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .option-card{ background:#fff; border:2px solid #e5e7eb; border-radius:12px; padding:12px; cursor:pointer; transition:.18s; display:flex; align-items:center; gap:10px; flex-shrink:0; user-select:none; }
+    .option-card *{ user-select:none; }
     .option-card:hover{ border-color:#8b5cf6; background:rgba(139,92,246,.02); }
     .option-card.selected{ border-color:#8b5cf6; background:rgba(139,92,246,.05); }
 
