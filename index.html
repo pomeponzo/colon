@@ -91,16 +91,24 @@
     /* ===== Écran d'information ===== */
     .info-break{ padding:12px; }
     .info-break.active{ align-items:center; justify-content:center; }
-    .info-card{ background:transparent; border:none; border-radius:0; box-shadow:none; padding:0; max-width:520px; display:flex; flex-direction:column; gap:18px; text-align:left; margin:0 auto; }
-    .info-eyebrow{ font-size:.85rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#7c3aed; }
-    .info-title{ font-size:1.4rem; line-height:1.35; font-weight:800; color:#1e293b; }
-    .info-text{ font-size:.95rem; line-height:1.6; color:#475569; }
-    .info-list{ list-style:disc; padding-left:22px; display:block; }
-    .info-list li{ font-size:.95rem; line-height:1.5; color:#1e293b; margin-bottom:10px; }
+    .info-card{ background:transparent; border:none; border-radius:0; box-shadow:none; padding:0; max-width:520px; display:flex; flex-direction:column; gap:14px; text-align:left; margin:0 auto; }
+    .info-illustration{ width:100%; border-radius:16px; object-fit:cover; max-height:220px; box-shadow:0 10px 26px rgba(15,23,42,.12); }
+    .info-eyebrow{ font-size:.82rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#7c3aed; }
+    .info-title{ font-size:1.32rem; line-height:1.3; font-weight:800; color:#1e293b; }
+    .info-text{ font-size:.92rem; line-height:1.55; color:#475569; }
+    .info-list{ list-style:disc; padding-left:18px; display:block; }
+    .info-list li{ font-size:.92rem; line-height:1.45; color:#1e293b; margin-bottom:8px; }
     .info-list li strong{ font-weight:700; color:#0f172a; }
     @media (max-width:599px){
       .info-card{ padding:0; }
       .info-title{ font-size:1.25rem; }
+    }
+    @media (max-height:740px){
+      .info-break{ padding:8px; }
+      .info-card{ gap:12px; }
+      .info-title{ font-size:1.24rem; }
+      .info-text,.info-list li{ font-size:.9rem; }
+      .info-illustration{ max-height:180px; }
     }
 
     /* ===== Q1 — grille 2×2 pleine hauteur (images bien cadrées) ===== */
@@ -687,6 +695,12 @@
       <!-- Pause info -->
       <section class="question-section info-break" id="q5">
         <div class="info-card">
+          <img
+            src="https://d1yei2z3i6k35z.cloudfront.net/13114230/690b220860402_Votretextedeparagraphe5.png"
+            alt="Illustration médicale"
+            class="info-illustration"
+            loading="lazy"
+          />
           <p class="info-eyebrow">Le saviez-vous&nbsp;?</p>
           <h2 class="info-title">Votre médecin vous a peut-être parlé du «&nbsp;Syndrome de l'intestin irritable&nbsp;»...</h2>
           <p class="info-text">Mais il existe en réalité 4 sous-types complètement différents. Chacun nécessite une approche spécifique&nbsp;:</p>
