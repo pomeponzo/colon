@@ -22,6 +22,7 @@
             color: #333;
             background-color: #fff;
             overflow-x: hidden;
+            padding-top: clamp(70px, 12vw, 110px);
         }
 
         /* Header Styles */
@@ -656,12 +657,6 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
             padding: 15px 20px;
-            transform: translateY(-100%);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .sticky-cta-bar.visible {
-            transform: translateY(0);
         }
 
         .sticky-cta-container {
@@ -708,19 +703,6 @@
         }
     </style>
     <script>
-        // Script pour la barre CTA sticky
-        window.addEventListener('scroll', function() {
-            const stickyBar = document.getElementById('sticky-cta-bar');
-            const scrollPosition = window.scrollY;
-            
-            // Afficher la barre après 300px de scroll
-            if (scrollPosition > 300) {
-                stickyBar.classList.add('visible');
-            } else {
-                stickyBar.classList.remove('visible');
-            }
-        });
-        
         // Script pour mettre à jour automatiquement les dates à la veille
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date();
