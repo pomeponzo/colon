@@ -901,6 +901,26 @@
       }
     }
 
+    function resetViewportScroll(){
+      if (typeof window.scrollTo === 'function'){
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      } else {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }
+    }
+
+    function resetQuestionScroll(section){
+      if (!section) return;
+      const content = section.querySelector('.question-content');
+      if (content){
+        if (typeof content.scrollTo === 'function'){
+          content.scrollTo({ top: 0, behavior: 'auto' });
+        }
+        content.scrollTop = 0;
+      }
+    }
+
     function goToStep(step){
       document.querySelectorAll('.question-section').forEach(s => s.classList.remove('active'));
       const target = document.getElementById(`q${step}`);
@@ -908,6 +928,10 @@
         target.classList.add('active');
         currentStep = step;
         updateUI();
+        requestAnimationFrame(() => {
+          resetQuestionScroll(target);
+          resetViewportScroll();
+        });
       }
     }
 
