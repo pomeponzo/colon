@@ -83,6 +83,14 @@
     .continue-button:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(139,92,246,.3); }
     .continue-button:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
 
+    .has-sticky-button{ overflow:visible; }
+    .has-sticky-button .question-content{ padding-bottom:calc(110px + env(safe-area-inset-bottom, 0)); }
+    .info-break.has-sticky-button .info-card{ padding-bottom:calc(110px + env(safe-area-inset-bottom, 0)); }
+
+    .continue-footer{ position:sticky; bottom:calc(16px + env(safe-area-inset-bottom, 0)); margin-top:auto; width:100%; padding:12px 0 calc(12px + env(safe-area-inset-bottom, 0)); background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.92) 40%, #fff 100%); display:flex; justify-content:center; z-index:15; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+    .continue-footer .continue-button{ margin-top:0; margin-bottom:0; }
+    .info-card .continue-footer{ align-self:stretch; }
+
     /* Scroller pour listes de choix longues */
     .options-scroll-container{ display:flex; flex-direction:column; gap:12px; max-height:320px; overflow-y:auto; padding-right:4px; }
     .options-scroll-container::-webkit-scrollbar{ width:6px; }
@@ -693,7 +701,7 @@
       </section>
 
       <!-- Pause info -->
-      <section class="question-section info-break" id="q5">
+      <section class="question-section info-break has-sticky-button" id="q5">
         <div class="info-card">
           <img
             src="https://d1yei2z3i6k35z.cloudfront.net/13114230/690b220860402_Votretextedeparagraphe5.png"
@@ -711,12 +719,14 @@
             <li><strong>Type 4&nbsp;:</strong>&nbsp;Inflammation chronique de bas grade</li>
           </ul>
           <p class="info-text">Votre échec jusqu'ici&nbsp;? Vous avez probablement appliqué des solutions génériques... qui ne correspondent pas à VOTRE type spécifique.</p>
-          <button class="continue-button">Je continue</button>
+          <div class="continue-footer">
+            <button class="continue-button">Je continue</button>
+          </div>
         </div>
       </section>
 
       <!-- Q6 -->
-      <section class="question-section" id="q6">
+      <section class="question-section has-sticky-button" id="q6">
         <div class="question-content">
           <div class="question-header">
             <h2 class="question-title">💔 Quel est l’impact sur votre quotidien&nbsp;?</h2>
@@ -731,11 +741,13 @@
             <div class="option-card" data-value="couple"><input type="checkbox" /><span class="option-emoji">💔</span><div class="option-text"><div class="option-label">Vie de couple</div></div></div>
           </div>
         </div>
-        <button class="continue-button" disabled>Continuer</button>
+        <div class="continue-footer">
+          <button class="continue-button" disabled>Continuer</button>
+        </div>
       </section>
 
       <!-- Q7 -->
-      <section class="question-section" id="q7">
+      <section class="question-section has-sticky-button" id="q7">
         <div class="question-content">
           <div class="question-header">
             <h2 class="question-title">🔍 Qu'avez-vous déjà essayé&nbsp;?</h2>
@@ -750,7 +762,9 @@
             <div class="option-card" data-value="rien"><input type="checkbox" /><span class="option-emoji">🙅‍♀️</span><div class="option-text"><div class="option-label">Rien de tout ça</div></div></div>
           </div>
         </div>
-        <button class="continue-button" disabled>Continuer</button>
+        <div class="continue-footer">
+          <button class="continue-button" disabled>Continuer</button>
+        </div>
       </section>
 
       <!-- Q8 -->
@@ -820,7 +834,7 @@
       </section>
 
       <!-- Q12 -->
-      <section class="question-section" id="q12">
+      <section class="question-section has-sticky-button" id="q12">
         <div class="question-content">
           <div class="question-header">
             <h2 class="question-title">🕐 Quand ressentez‑vous l’inconfort&nbsp;?</h2>
@@ -835,7 +849,9 @@
             <div class="option-card" data-value="aucun"><input type="checkbox" /><span class="option-emoji">🚫</span><div class="option-text"><div class="option-label">Aucun</div></div></div>
           </div>
         </div>
-        <button class="continue-button" disabled>Continuer</button>
+        <div class="continue-footer">
+          <button class="continue-button" disabled>Continuer</button>
+        </div>
       </section>
 
       <!-- Q13 -->
