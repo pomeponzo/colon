@@ -79,9 +79,9 @@
     }
 
     /* bouton continuer générique */
-    .continue-button{ width:min(468px,calc(100% - 32px)); background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); color:#fff; border:none; border-radius:12px; padding:16px; font-size:1rem; font-weight:700; cursor:pointer; margin-top:0; transition:.18s; box-shadow:0 2px 8px rgba(139,92,246,.2); position:fixed; left:50%; bottom:16px; bottom:calc(16px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:40; }
-    .continue-button:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(139,92,246,.3); }
-    .continue-button:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
+    .continue-button{ width:min(468px,calc(100% - 32px)); background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); color:#fff; border:none; border-radius:12px; padding:16px; font-size:1rem; font-weight:700; cursor:pointer; margin-top:0; transition:.18s; box-shadow:0 2px 8px rgba(139,92,246,.2); position:fixed; left:50%; bottom:16px; bottom:calc(16px + env(safe-area-inset-bottom)); transform:translate(-50%,0); z-index:40; }
+    .continue-button:hover{ transform:translate(-50%,-1px); box-shadow:0 4px 12px rgba(139,92,246,.3); }
+    .continue-button:disabled{ opacity:.5; cursor:not-allowed; transform:translate(-50%,0); }
     body.overlay-active .app-content .continue-button{ display:none; }
 
     /* Scroller pour listes de choix longues */
