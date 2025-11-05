@@ -83,32 +83,6 @@
     .continue-button:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(139,92,246,.3); }
     .continue-button:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
 
-    .sticky-continue-wrapper{
-      position:sticky;
-      bottom:0;
-      width:100%;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      margin-top:auto;
-      padding:16px 0 calc(16px + env(safe-area-inset-bottom));
-      background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.92) 45%,#fff 100%);
-      z-index:5;
-    }
-    .sticky-continue-wrapper .continue-button{ margin-top:0; }
-    @supports(padding:max(0px)){
-      .sticky-continue-wrapper{ padding-bottom:max(16px,calc(16px + env(safe-area-inset-bottom))); }
-    }
-
-    .question-section.has-continue .question-content{
-      padding-bottom:140px;
-    }
-    @supports(padding:max(0px)){
-      .question-section.has-continue .question-content{
-        padding-bottom:calc(140px + env(safe-area-inset-bottom));
-      }
-    }
-
     /* Scroller pour listes de choix longues */
     .options-scroll-container{ display:flex; flex-direction:column; gap:12px; max-height:320px; overflow-y:auto; padding-right:4px; }
     .options-scroll-container::-webkit-scrollbar{ width:6px; }
@@ -719,7 +693,7 @@
       </section>
 
       <!-- Pause info -->
-      <section class="question-section info-break has-continue" id="q5">
+      <section class="question-section info-break" id="q5">
         <div class="info-card">
           <img
             src="https://d1yei2z3i6k35z.cloudfront.net/13114230/690b220860402_Votretextedeparagraphe5.png"
@@ -737,14 +711,12 @@
             <li><strong>Type 4&nbsp;:</strong>&nbsp;Inflammation chronique de bas grade</li>
           </ul>
           <p class="info-text">Votre échec jusqu'ici&nbsp;? Vous avez probablement appliqué des solutions génériques... qui ne correspondent pas à VOTRE type spécifique.</p>
-        </div>
-        <div class="sticky-continue-wrapper">
           <button class="continue-button">Je continue</button>
         </div>
       </section>
 
       <!-- Q6 -->
-      <section class="question-section has-continue" id="q6">
+      <section class="question-section" id="q6">
         <div class="question-content">
           <div class="question-header">
             <h2 class="question-title">💔 Quel est l’impact sur votre quotidien&nbsp;?</h2>
@@ -759,13 +731,11 @@
             <div class="option-card" data-value="couple"><input type="checkbox" /><span class="option-emoji">💔</span><div class="option-text"><div class="option-label">Vie de couple</div></div></div>
           </div>
         </div>
-        <div class="sticky-continue-wrapper">
-          <button class="continue-button" disabled>Continuer</button>
-        </div>
+        <button class="continue-button" disabled>Continuer</button>
       </section>
 
       <!-- Q7 -->
-      <section class="question-section has-continue" id="q7">
+      <section class="question-section" id="q7">
         <div class="question-content">
           <div class="question-header">
             <h2 class="question-title">🔍 Qu'avez-vous déjà essayé&nbsp;?</h2>
@@ -780,9 +750,7 @@
             <div class="option-card" data-value="rien"><input type="checkbox" /><span class="option-emoji">🙅‍♀️</span><div class="option-text"><div class="option-label">Rien de tout ça</div></div></div>
           </div>
         </div>
-        <div class="sticky-continue-wrapper">
-          <button class="continue-button" disabled>Continuer</button>
-        </div>
+        <button class="continue-button" disabled>Continuer</button>
       </section>
 
       <!-- Q8 -->
@@ -852,7 +820,7 @@
       </section>
 
       <!-- Q12 -->
-      <section class="question-section has-continue" id="q12">
+      <section class="question-section" id="q12">
         <div class="question-content">
           <div class="question-header">
             <h2 class="question-title">🕐 Quand ressentez‑vous l’inconfort&nbsp;?</h2>
@@ -867,9 +835,7 @@
             <div class="option-card" data-value="aucun"><input type="checkbox" /><span class="option-emoji">🚫</span><div class="option-text"><div class="option-label">Aucun</div></div></div>
           </div>
         </div>
-        <div class="sticky-continue-wrapper">
-          <button class="continue-button" disabled>Continuer</button>
-        </div>
+        <button class="continue-button" disabled>Continuer</button>
       </section>
 
       <!-- Q13 -->
