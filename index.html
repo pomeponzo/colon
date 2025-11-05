@@ -41,7 +41,10 @@
 
     @keyframes slideIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
 
-    .question-content{ flex:1; display:flex; flex-direction:column; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:4px; margin:-4px; }
+    .question-content{ flex:1; display:flex; flex-direction:column; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:4px; margin:-4px; padding-bottom:120px; }
+    @supports(padding:max(0px)){
+      .question-content{ padding-bottom:max(120px,calc(120px + env(safe-area-inset-bottom))); }
+    }
     .question-header{ margin-bottom:20px; flex-shrink:0; }
     .question-title{ font-size:1.4rem; font-weight:800; color:#1e293b; margin-bottom:8px; line-height:1.3; }
     .question-subtitle{ font-size:.95rem; color:#64748b; line-height:1.5; }
@@ -83,6 +86,22 @@
     .continue-button:hover{ transform:translateY(-1px); box-shadow:0 4px 12px rgba(139,92,246,.3); }
     .continue-button:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
 
+    .continue-bar{
+      position:sticky;
+      bottom:0;
+      left:0;
+      width:100%;
+      padding:16px 0 calc(16px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.95) 55%,rgba(255,255,255,1) 100%);
+      margin-top:auto;
+      flex-shrink:0;
+      z-index:5;
+    }
+    .continue-bar .continue-button{ margin-top:0; }
+    @supports(padding:max(0px)){
+      .continue-bar{ padding-bottom:max(16px,calc(16px + env(safe-area-inset-bottom))); }
+    }
+
     /* Scroller pour listes de choix longues */
     .options-scroll-container{ display:flex; flex-direction:column; gap:12px; max-height:320px; overflow-y:auto; padding-right:4px; }
     .options-scroll-container::-webkit-scrollbar{ width:6px; }
@@ -91,7 +110,10 @@
     /* ===== Écran d'information ===== */
     .info-break{ padding:12px; }
     .info-break.active{ align-items:center; justify-content:center; }
-    .info-card{ background:transparent; border:none; border-radius:0; box-shadow:none; padding:0; max-width:520px; display:flex; flex-direction:column; gap:14px; text-align:left; margin:0 auto; }
+    .info-card{ background:transparent; border:none; border-radius:0; box-shadow:none; padding:0; max-width:520px; display:flex; flex-direction:column; gap:14px; text-align:left; margin:0 auto; padding-bottom:120px; }
+    @supports(padding:max(0px)){
+      .info-card{ padding-bottom:max(120px,calc(120px + env(safe-area-inset-bottom))); }
+    }
     .info-illustration{ width:100%; border-radius:16px; object-fit:cover; max-height:220px; box-shadow:0 10px 26px rgba(15,23,42,.12); }
     .info-eyebrow{ font-size:.82rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#7c3aed; }
     .info-title{ font-size:1.32rem; line-height:1.3; font-weight:800; color:#1e293b; }
@@ -100,7 +122,10 @@
     .info-list li{ font-size:.92rem; line-height:1.45; color:#1e293b; margin-bottom:8px; }
     .info-list li strong{ font-weight:700; color:#0f172a; }
     @media (max-width:599px){
-      .info-card{ padding:0; }
+      .info-card{ padding:0; padding-bottom:120px; }
+      @supports(padding:max(0px)){
+        .info-card{ padding-bottom:max(120px,calc(120px + env(safe-area-inset-bottom))); }
+      }
       .info-title{ font-size:1.25rem; }
     }
     @media (max-height:740px){
@@ -711,6 +736,8 @@
             <li><strong>Type 4&nbsp;:</strong>&nbsp;Inflammation chronique de bas grade</li>
           </ul>
           <p class="info-text">Votre échec jusqu'ici&nbsp;? Vous avez probablement appliqué des solutions génériques... qui ne correspondent pas à VOTRE type spécifique.</p>
+        </div>
+        <div class="continue-bar">
           <button class="continue-button">Je continue</button>
         </div>
       </section>
@@ -731,7 +758,9 @@
             <div class="option-card" data-value="couple"><input type="checkbox" /><span class="option-emoji">💔</span><div class="option-text"><div class="option-label">Vie de couple</div></div></div>
           </div>
         </div>
-        <button class="continue-button" disabled>Continuer</button>
+        <div class="continue-bar">
+          <button class="continue-button" disabled>Continuer</button>
+        </div>
       </section>
 
       <!-- Q7 -->
@@ -750,7 +779,9 @@
             <div class="option-card" data-value="rien"><input type="checkbox" /><span class="option-emoji">🙅‍♀️</span><div class="option-text"><div class="option-label">Rien de tout ça</div></div></div>
           </div>
         </div>
-        <button class="continue-button" disabled>Continuer</button>
+        <div class="continue-bar">
+          <button class="continue-button" disabled>Continuer</button>
+        </div>
       </section>
 
       <!-- Q8 -->
@@ -835,7 +866,9 @@
             <div class="option-card" data-value="aucun"><input type="checkbox" /><span class="option-emoji">🚫</span><div class="option-text"><div class="option-label">Aucun</div></div></div>
           </div>
         </div>
-        <button class="continue-button" disabled>Continuer</button>
+        <div class="continue-bar">
+          <button class="continue-button" disabled>Continuer</button>
+        </div>
       </section>
 
       <!-- Q13 -->
