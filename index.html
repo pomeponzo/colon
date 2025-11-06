@@ -32,7 +32,6 @@
     @media (min-width:600px){ .progress-bar{ max-width:500px; } }
     .progress-fill{ height:100%; background:linear-gradient(90deg,#8b5cf6 0%,#7c3aed 100%); transition:width .5s cubic-bezier(.4,0,.2,1); }
 
-    body.overlay-active .app-header,
     body.overlay-active .progress-bar{
       display:none;
     }
@@ -237,10 +236,10 @@
     }
     .success-headline span{ color:#0e5130; }
     .success-input-card{
-      background:#fff;
-      border-radius:22px;
-      padding:clamp(18px,4vw,22px);
-      box-shadow:0 16px 32px rgba(15,80,38,.18);
+      background:transparent;
+      border-radius:0;
+      padding:0;
+      box-shadow:none;
       display:flex;
       flex-direction:column;
       gap:14px;
@@ -786,7 +785,7 @@
 
       <div id="searchSuccessCard" class="success-card" aria-hidden="true">
         <div class="success-inner">
-          <h2 class="success-headline">Enter your email to get up to 33% off your <span>Gut-Brain Reset Solution!</span></h2>
+          <h2 class="success-headline">Entrez votre e-mail pour profiter jusqu'à 33&nbsp;% de réduction sur votre <span>Solution Reset Intestin-Cerveau&nbsp;!</span></h2>
           <div class="success-input-card">
             <div class="success-form">
               <div id="sioEmailSlot" class="options-container">
@@ -796,7 +795,7 @@
             </div>
             <div class="success-privacy">
               <div class="success-privacy-icon" aria-hidden="true">🔒</div>
-              <p>We respect your privacy and are committed to protecting your personal data.</p>
+              <p>Nous respectons votre vie privée et nous nous engageons à protéger vos données personnelles.</p>
             </div>
           </div>
         </div>
