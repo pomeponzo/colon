@@ -106,6 +106,20 @@
     .info-list{ list-style:disc; padding-left:18px; display:block; }
     .info-list li{ font-size:.92rem; line-height:1.45; color:#1e293b; margin-bottom:8px; }
     .info-list li strong{ font-weight:700; color:#0f172a; }
+    .result-info-screen{
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      gap:clamp(16px,4vw,24px);
+      width:100%;
+      max-width:520px;
+      margin:0 auto;
+      padding:0 0 calc(140px + env(safe-area-inset-bottom));
+      opacity:0;
+      transition:opacity .4s ease;
+      text-align:left;
+    }
+    .result-info-screen.active{ opacity:1; }
     @media (max-width:599px){
       .info-card{ padding:0; }
       .info-title{ font-size:1.25rem; }
@@ -602,6 +616,45 @@
           <div class="gut-continue-wrapper">
             <button class="continue-button" id="gutPreviewContinue">Continuer</button>
           </div>
+        </div>
+      </div>
+
+      <div id="postGutInfo" class="result-info-screen info-break" aria-hidden="true">
+        <div class="info-card">
+          <img
+            src="https://d1yei2z3i6k35z.cloudfront.net/13114230/6904c9888d56f_microbiote.jpg"
+            alt="Illustration du microbiote intestinal"
+            class="info-illustration"
+            loading="lazy"
+          />
+          <p class="info-eyebrow">Et ensuite&nbsp;?</p>
+          <h2 class="info-title">Ce que révèle un intestin déséquilibré sur votre quotidien</h2>
+          <p class="info-text">
+            Lorsque le microbiote est perturbé, l'intestin n'agit plus comme un filtre fiable. Des molécules
+            pro-inflammatoires passent dans le sang et entretiennent un cercle vicieux de fatigue, de troubles
+            digestifs et de stress.
+          </p>
+          <ul class="info-list">
+            <li>
+              <strong>Ballonnements et digestion lente</strong>
+              traduisent une flore qui manque de diversité.
+            </li>
+            <li>
+              <strong>Crises de fatigue et sautes d'humeur</strong>
+              apparaissent lorsque l'axe intestin-cerveau est saturé.
+            </li>
+            <li>
+              <strong>Solutions génériques inefficaces</strong>&nbsp;:
+              votre type d'intestin réclame une stratégie ciblée.
+            </li>
+          </ul>
+          <p class="info-text">
+            Bonne nouvelle&nbsp;: la suite du protocole explique comment réensemencer votre microbiote étape par étape,
+            avec les ajustements précis dont vous avez besoin.
+          </p>
+        </div>
+        <div class="gut-continue-wrapper">
+          <button class="continue-button" id="gutInfoContinue">Je découvre mes recommandations</button>
         </div>
       </div>
 
@@ -1261,6 +1314,7 @@
       const successCard = document.getElementById('searchSuccessCard');
       const loaderStage = document.getElementById('loaderStage');
       const preview = document.getElementById('resultPreview');
+      const postInfo = document.getElementById('postGutInfo');
       const headerTitle = wrapper ? wrapper.querySelector('.header-title') : null;
       const scoreEl = document.getElementById('gutScoreValue');
 
@@ -1293,6 +1347,12 @@
         preview.classList.remove('active');
         preview.style.display = 'none';
         preview.setAttribute('aria-hidden', 'true');
+      }
+
+      if (postInfo){
+        postInfo.classList.remove('active');
+        postInfo.style.display = 'none';
+        postInfo.setAttribute('aria-hidden', 'true');
       }
 
       if (scoreEl){
@@ -1399,6 +1459,7 @@
     function showResultPreview(){
       const wrapper = document.getElementById('resultsWrapper');
       const preview = document.getElementById('resultPreview');
+      const postInfo = document.getElementById('postGutInfo');
       if (!wrapper || !preview) return;
 
       const metabolicAgeEl = document.getElementById('metabolicAgeValue');
@@ -1411,9 +1472,45 @@
       preview.style.display = 'flex';
       preview.setAttribute('aria-hidden', 'false');
 
+      if (postInfo){
+        postInfo.classList.remove('active');
+        postInfo.style.display = 'none';
+        postInfo.setAttribute('aria-hidden', 'true');
+      }
+
       requestAnimationFrame(() => {
         preview.classList.add('active');
         setupGutGauge();
+      });
+    }
+
+    function showPostGutInfo(){
+      const wrapper = document.getElementById('resultsWrapper');
+      const preview = document.getElementById('resultPreview');
+      const postInfo = document.getElementById('postGutInfo');
+
+      if (!wrapper || !postInfo){
+        showEmailCapture();
+        return;
+      }
+
+      wrapper.classList.add('preview-mode');
+      wrapper.scrollTop = 0;
+
+      if (preview){
+        preview.classList.remove('active');
+        preview.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+          preview.style.display = 'none';
+        }, 400);
+      }
+
+      postInfo.classList.remove('active');
+      postInfo.style.display = 'flex';
+      postInfo.setAttribute('aria-hidden', 'false');
+
+      requestAnimationFrame(() => {
+        postInfo.classList.add('active');
       });
     }
 
@@ -1421,6 +1518,7 @@
       const wrapper = document.getElementById('resultsWrapper');
       const successCard = document.getElementById('searchSuccessCard');
       const preview = document.getElementById('resultPreview');
+      const postInfo = document.getElementById('postGutInfo');
 
       if (!wrapper || !successCard) return;
 
@@ -1432,6 +1530,14 @@
         preview.setAttribute('aria-hidden', 'true');
         setTimeout(() => {
           preview.style.display = 'none';
+        }, 400);
+      }
+
+      if (postInfo){
+        postInfo.classList.remove('active');
+        postInfo.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+          postInfo.style.display = 'none';
         }, 400);
       }
 
@@ -1566,7 +1672,12 @@
 
     const previewContinueBtn = document.getElementById('gutPreviewContinue');
     if (previewContinueBtn){
-      previewContinueBtn.addEventListener('click', showEmailCapture);
+      previewContinueBtn.addEventListener('click', showPostGutInfo);
+    }
+
+    const gutInfoContinueBtn = document.getElementById('gutInfoContinue');
+    if (gutInfoContinueBtn){
+      gutInfoContinueBtn.addEventListener('click', showEmailCapture);
     }
 
     // ===== Init
