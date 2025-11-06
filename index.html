@@ -216,31 +216,26 @@
     .checklist-text{ color:#334155; font-size:.85rem; font-weight:600; line-height:1.2; }
 
     .success-card{
-      background:linear-gradient(180deg,#f3fce8 0%,#1f7a3d 100%);
+      background:transparent;
       border:none;
       border-radius:24px;
-      padding:clamp(28px,5vw,36px) clamp(20px,5vw,32px);
+      padding:clamp(12px,4vw,24px) clamp(12px,4vw,24px);
       width:100%;
       max-width:520px;
       display:none;
-      box-shadow:0 28px 62px rgba(15,80,38,.25);
-      color:#0b1f14;
+      box-shadow:none;
+      color:#0f172a;
     }
     .success-card.visible{ display:block; }
     .success-inner{ display:flex; flex-direction:column; gap:clamp(18px,4vw,24px); align-items:stretch; width:100%; }
-    .success-headline{
-      font-size:clamp(1.15rem,3.8vw,1.65rem);
-      font-weight:800;
-      line-height:1.25;
-      text-align:center;
-      color:#0b1f14;
-    }
-    .success-headline span{ color:#0e5130; }
+    .success-card .question-header{ text-align:center; margin-bottom:0; }
+    .success-card .question-title{ font-size:clamp(1.3rem,4.2vw,1.8rem); }
+    .success-card .question-subtitle{ color:#475569; }
     .success-input-card{
       background:#fff;
       border-radius:22px;
       padding:clamp(18px,4vw,22px);
-      box-shadow:0 16px 32px rgba(15,80,38,.18);
+      box-shadow:0 16px 32px rgba(15,23,42,.12);
       display:flex;
       flex-direction:column;
       gap:14px;
@@ -786,7 +781,10 @@
 
       <div id="searchSuccessCard" class="success-card" aria-hidden="true">
         <div class="success-inner">
-          <h2 class="success-headline">Enter your email to get up to 33% off your <span>Gut-Brain Reset Solution!</span></h2>
+          <div class="question-header">
+            <h2 class="question-title">🎯 Vos recommandations personnalisées sont prêtes</h2>
+            <p class="question-subtitle">Entrez votre e-mail pour obtenir jusqu'à 33&nbsp;% de réduction sur votre Solution Reset Intestin-Cerveau.</p>
+          </div>
           <div class="success-input-card">
             <div class="success-form">
               <div id="sioEmailSlot" class="options-container">
@@ -796,7 +794,7 @@
             </div>
             <div class="success-privacy">
               <div class="success-privacy-icon" aria-hidden="true">🔒</div>
-              <p>We respect your privacy and are committed to protecting your personal data.</p>
+              <p>Nous respectons votre vie privée et nous nous engageons à protéger vos données personnelles.</p>
             </div>
           </div>
         </div>
