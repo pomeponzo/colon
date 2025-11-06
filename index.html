@@ -36,6 +36,12 @@
     body.overlay-active .progress-bar{
       display:none;
     }
+    body.overlay-active.showing-email .app-header{
+      display:flex;
+    }
+    body.overlay-active.showing-email .progress-bar{
+      display:block;
+    }
 
     .app-content{ flex:1; display:flex; flex-direction:column; overflow:hidden; padding:calc(16px + 48px + 2px) 16px 120px; min-height:0; padding:calc(16px + 48px + 2px) 16px calc(120px + env(safe-area-inset-bottom)); }
     .question-section{ display:none; flex:1; flex-direction:column; animation:slideIn .25s ease; overflow:hidden; }
@@ -216,15 +222,15 @@
     .checklist-text{ color:#334155; font-size:.85rem; font-weight:600; line-height:1.2; }
 
     .success-card{
-      background:linear-gradient(180deg,#f3fce8 0%,#1f7a3d 100%);
+      background:transparent;
       border:none;
-      border-radius:24px;
-      padding:clamp(28px,5vw,36px) clamp(20px,5vw,32px);
+      border-radius:0;
+      padding:0;
       width:100%;
       max-width:520px;
       display:none;
-      box-shadow:0 28px 62px rgba(15,80,38,.25);
-      color:#0b1f14;
+      box-shadow:none;
+      color:#1e293b;
     }
     .success-card.visible{ display:block; }
     .success-inner{ display:flex; flex-direction:column; gap:clamp(18px,4vw,24px); align-items:stretch; width:100%; }
@@ -233,17 +239,18 @@
       font-weight:800;
       line-height:1.25;
       text-align:center;
-      color:#0b1f14;
+      color:#1e293b;
     }
-    .success-headline span{ color:#0e5130; }
+    .success-headline span{ color:#7c3aed; }
     .success-input-card{
       background:#fff;
       border-radius:22px;
       padding:clamp(18px,4vw,22px);
-      box-shadow:0 16px 32px rgba(15,80,38,.18);
+      box-shadow:0 16px 32px rgba(15,23,42,.08);
       display:flex;
       flex-direction:column;
       gap:14px;
+      border:1px solid rgba(148,163,184,.35);
     }
 
     /* ===== Etape email intégrée : ne garder que le bouton SIO ===== */
@@ -292,7 +299,7 @@
       padding:18px 20px !important;
       font-size:1rem !important;
       color:#1f2937 !important;
-      box-shadow:0 10px 24px rgba(15,80,38,.12) !important;
+      box-shadow:0 10px 24px rgba(15,23,42,.08) !important;
     }
     .success-card #sioEmailSlot input[type="email"]::placeholder,
     .success-card #sioEmailSlot input[name="email"]::placeholder,
@@ -786,7 +793,7 @@
 
       <div id="searchSuccessCard" class="success-card" aria-hidden="true">
         <div class="success-inner">
-          <h2 class="success-headline">Enter your email to get up to 33% off your <span>Gut-Brain Reset Solution!</span></h2>
+          <h2 class="success-headline">Entrez votre email pour obtenir jusqu'à 33&nbsp;% de réduction sur votre <span>Solution Réinitialisation Intestin-Cerveau&nbsp;!</span></h2>
           <div class="success-input-card">
             <div class="success-form">
               <div id="sioEmailSlot" class="options-container">
@@ -796,7 +803,7 @@
             </div>
             <div class="success-privacy">
               <div class="success-privacy-icon" aria-hidden="true">🔒</div>
-              <p>We respect your privacy and are committed to protecting your personal data.</p>
+              <p>Nous respectons votre vie privée et nous nous engageons à protéger vos données personnelles.</p>
             </div>
           </div>
         </div>
@@ -1466,6 +1473,7 @@
       if (!wrapper || !progressCard || !loaderStage) return;
 
       document.body.classList.add('overlay-active');
+      document.body.classList.remove('showing-email');
       wrapper.style.display = 'flex';
       wrapper.setAttribute('aria-hidden', 'false');
       wrapper.classList.remove('preview-mode');
@@ -1619,6 +1627,7 @@
         metabolicAgeEl.textContent = getMetabolicAgeValue();
       }
 
+      document.body.classList.remove('showing-email');
       wrapper.classList.add('preview-mode');
       wrapper.scrollTop = 0;
       preview.style.display = 'flex';
@@ -1653,6 +1662,7 @@
         return;
       }
 
+      document.body.classList.remove('showing-email');
       wrapper.classList.add('preview-mode');
       wrapper.scrollTop = 0;
 
@@ -1691,6 +1701,7 @@
         return;
       }
 
+      document.body.classList.remove('showing-email');
       wrapper.classList.add('preview-mode');
       wrapper.scrollTop = 0;
 
@@ -1723,6 +1734,7 @@
       if (!wrapper || !successCard) return;
 
       wrapper.classList.remove('preview-mode');
+      document.body.classList.add('showing-email');
       wrapper.scrollTop = 0;
 
       if (preview){
