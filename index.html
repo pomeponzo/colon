@@ -102,7 +102,12 @@
     .options-scroll-container::-webkit-scrollbar-thumb{ background:rgba(124,58,237,.3); border-radius:999px; }
 
     /* ===== Écran d'information ===== */
-    .info-break{ padding:12px; }
+    .info-break{
+      padding:12px;
+      overflow-y:auto;
+      overflow-x:hidden;
+      -webkit-overflow-scrolling:touch;
+    }
     .info-break.active{ align-items:center; justify-content:center; }
     .info-card{ background:transparent; border:none; border-radius:0; box-shadow:none; padding:0; max-width:520px; display:flex; flex-direction:column; gap:14px; text-align:left; margin:0 auto; }
     .info-illustration{ width:100%; border-radius:16px; object-fit:cover; max-height:220px; box-shadow:0 10px 26px rgba(15,23,42,.12); }
