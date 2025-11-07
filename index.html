@@ -263,6 +263,34 @@
     }
 
     /* ===== Etape email intégrée : ne garder que le bouton SIO ===== */
+    [data-test-id="send-form-button"],
+    [data-testid="send-form-button"],
+    .sio-subscribe-button,
+    .sio-submit,
+    [data-element="cta-button"],
+    button[id^="button-"],
+    input[type="submit"],
+    button[type="submit"]{
+      display:none !important;
+    }
+    #sioEmailSlot [data-test-id="send-form-button"],
+    #sioEmailSlot [data-testid="send-form-button"],
+    #sioEmailSlot .sio-subscribe-button,
+    #sioEmailSlot .sio-submit,
+    #sioEmailSlot [data-element="cta-button"],
+    #sioEmailSlot button[id^="button-"],
+    #sioEmailSlot input[type="submit"],
+    #sioEmailSlot button[type="submit"],
+    #emailQuestion [data-test-id="send-form-button"],
+    #emailQuestion [data-testid="send-form-button"],
+    #emailQuestion .sio-subscribe-button,
+    #emailQuestion .sio-submit,
+    #emailQuestion [data-element="cta-button"],
+    #emailQuestion button[id^="button-"],
+    #emailQuestion input[type="submit"],
+    #emailQuestion button[type="submit"]{
+      display:block !important;
+    }
     #sioEmailSlot form button,
     #sioEmailSlot form input[type="submit"],
     #sioEmailSlot [data-test-id="send-form-button"],
