@@ -96,6 +96,64 @@
     .gut-continue-wrapper .continue-button:hover{ transform:none; }
     body.overlay-active .app-content .continue-button{ display:none; }
 
+    .quiz-status-card{
+      position:fixed;
+      left:50%;
+      bottom:calc(88px + env(safe-area-inset-bottom));
+      transform:translateX(-50%);
+      display:none;
+      align-items:center;
+      gap:12px;
+      padding:12px 18px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid rgba(148,163,184,.45);
+      box-shadow:0 8px 24px rgba(15,23,42,.08);
+      color:#1e293b;
+      font-size:.95rem;
+      line-height:1.25;
+      z-index:50;
+      width:min(420px,calc(100% - 32px));
+      pointer-events:none;
+    }
+    .quiz-status-card .quiz-status-icon{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:32px;
+      height:32px;
+      border-radius:10px;
+      background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);
+      color:#fff;
+      font-size:1.1rem;
+      flex-shrink:0;
+    }
+    .quiz-status-card .quiz-status-text{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .quiz-status-card .quiz-status-text strong{
+      font-weight:700;
+      color:#1f2937;
+    }
+    .quiz-status-card .quiz-status-text span{
+      font-size:.82rem;
+      color:#64748b;
+      font-weight:500;
+    }
+    .question-section.active .quiz-status-card{ display:flex; }
+    @media (max-width:480px){
+      .quiz-status-card{
+        padding:10px 14px;
+        gap:10px;
+        font-size:.9rem;
+      }
+      .quiz-status-card .quiz-status-text span{
+        font-size:.78rem;
+      }
+    }
+
     /* Scroller pour listes de choix longues */
     .options-scroll-container{ display:flex; flex-direction:column; gap:12px; max-height:320px; overflow-y:auto; padding-right:4px; }
     .options-scroll-container::-webkit-scrollbar{ width:6px; }
@@ -1026,6 +1084,13 @@
             <div class="option-card" data-value="6-mois-2-ans"><span class="option-emoji">📅</span><div class="option-text"><div class="option-label">6 mois – 2 ans</div></div></div>
             <div class="option-card" data-value="2-5-ans"><span class="option-emoji">⏰</span><div class="option-text"><div class="option-label">2 – 5 ans</div></div></div>
             <div class="option-card" data-value="plus-5-ans"><span class="option-emoji">😔</span><div class="option-text"><div class="option-label">Plus de 5 ans</div></div></div>
+          </div>
+          <div class="quiz-status-card">
+            <div class="quiz-status-icon">👍</div>
+            <div class="quiz-status-text">
+              <strong>Bravo — continuez&nbsp;!</strong>
+              <span>98 autres répondent à ce quiz en ce moment.</span>
+            </div>
           </div>
         </div>
       </section>
