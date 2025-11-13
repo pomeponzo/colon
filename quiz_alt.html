@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Quel est votre profil digestif ? - Quiz personnalisé</title>
+
+  <!-- icônes (facultatif) -->
+  <link rel="icon" type="image/png" href="/13114230/687b524473004_Votretextedeparagraphe1.png" />
+  <link rel="apple-touch-icon" href="/13114230/687b524473004_Votretextedeparagraphe1.png" />
+
+  <style>
+    /* Reset & base */
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html, body { min-height:100vh; min-height:100dvh; width:100%; overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:none; }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Inter',Roboto,'Helvetica Neue',Arial,sans-serif; background:#fff; }
+
+    /* App shell */
+    .app-container{ background:#fff; width:100%; min-height:100vh; min-height:100dvh; display:flex; flex-direction:column; overflow-x:hidden; }
+    @media (min-width:600px){ .app-container{ max-width:500px; margin:0 auto; } }
+
+    .app-header{ display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#fff; border-bottom:1px solid rgba(0,0,0,.05); height:48px; position:fixed; top:0; left:50%; transform:translateX(-50%); width:100%; max-width:100%; z-index:100; flex-shrink:0; }
+    @media (min-width:600px){ .app-header{ max-width:500px; } }
+    .back-button{ background:none; border:none; color:#64748b; cursor:pointer; padding:6px; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; transition:.2s; }
+    .back-button:hover{ background:rgba(139,92,246,.1); color:#7c3aed; }
+    .back-button svg{ width:18px; height:18px; }
+    .app-logo{ font-size:1rem; font-weight:600; background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; position:absolute; left:50%; transform:translateX(-50%); }
+    .header-right{ display:flex; align-items:center; gap:10px; }
+    .step-counter{ font-size:.8rem; color:#64748b; font-weight:500; min-width:44px; text-align:right; }
+
+    .progress-bar{ height:2px; background:rgba(0,0,0,.05); position:fixed; top:48px; left:50%; transform:translateX(-50%); width:100%; max-width:100%; overflow:hidden; flex-shrink:0; z-index:95; }
+    @media (min-width:600px){ .progress-bar{ max-width:500px; } }
+    .progress-fill{ height:100%; background:linear-gradient(90deg,#8b5cf6 0%,#7c3aed 100%); transition:width .5s cubic-bezier(.4,0,.2,1); }
+
+    body.overlay-active .app-header,
+    body.overlay-active .progress-bar{
+      display:none;
+    }
+    body.overlay-active.showing-email .app-header{
+      display:flex;
+    }
+    body.overlay-active.showing-email .progress-bar{
+      display:block;
+    }
+
+    .app-content{ flex:1; display:flex; flex-direction:column; overflow:hidden; padding:calc(16px + 48px + 2px) 16px 120px; min-height:0; padding:calc(16px + 48px + 2px) 16px calc(120px + env(safe-area-inset-bottom)); }
+    .question-section{ display:none; flex:1; flex-direction:column; animation:slideIn .25s ease; overflow:hidden; }
+    .question-section.active{ display:flex; }
+
+    @keyframes slideIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+
+    .question-content{ flex:1; display:flex; flex-direction:column; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; padding:4px; margin:-4px; padding-bottom:120px; padding-bottom:calc(120px + env(safe-area-inset-bottom)); }
+    .question-header{ margin-bottom:20px; flex-shrink:0; }
+    .question-title{ font-size:1.4rem; font-weight:800; color:#1e293b; margin-bottom:8px; line-height:1.3; }
+    .question-subtitle{ font-size:.95rem; color:#64748b; line-height:1.5; }
+
+    .options-container{ display:flex; flex-direction:column; gap:8px; flex:1; min-height:0; }
+    .options-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .options-grid-mobile-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+
+    .option-card{ background:#fff; border:2px solid #e5e7eb; border-radius:12px; padding:12px; cursor:pointer; transition:.18s; display:flex; align-items:center; gap:10px; flex-shrink:0; user-select:none; }
+    .option-card *{ user-select:none; }
+    .option-card:hover{ border-color:#8b5cf6; background:rgba(139,92,246,.02); }
+    .option-card.selected{ border-color:#8b5cf6; background:rgba(139,92,246,.05); }
+
+    .option-emoji{ font-size:1.6rem; flex-shrink:0; }
+    .option-text{ flex:1; }
+    .option-label{ font-size:.95rem; font-weight:700; color:#1e293b; margin-bottom:1px; }
+    .option-description{ font-size:.8rem; color:#64748b; line-height:1.35; }
+    .option-card input[type="checkbox"]{ width:18px; height:18px; cursor:pointer; flex-shrink:0; accent-color:#8b5cf6; }
+
+    /* cartes image (Q1) */
+    .option-card.image-option{ flex-direction:column; align-items:center; gap:16px; padding:32px 18px 20px; overflow:visible; position:relative; }
+    .option-card.image-option .option-image-wrapper{ width:100%; display:flex; justify-content:center; position:relative; margin-top:-36px; }
+    .option-card.image-option .option-image{ width:100%; display:block; aspect-ratio:3/4; object-fit:cover; object-position:top center; border-radius:16px; box-shadow:0 8px 18px rgba(15,23,42,.12); transform:translateY(-18px); }
+    .option-card.image-option .option-text{ width:100%; display:flex; align-items:center; justify-content:center; padding:0 44px 0 4px; position:relative; }
+    .option-card.image-option .option-label{ font-size:1.05rem; text-align:center; }
+    .option-card.image-option .option-arrow{ position:absolute; right:0; top:50%; transform:translateY(-50%); width:36px; height:36px; border-radius:50%; background:rgba(15,23,42,.05); display:flex; align-items:center; justify-content:center; color:#1e293b; font-weight:700; font-size:1rem; box-shadow:0 2px 6px rgba(15,23,42,.12); transition:.18s; }
+    .option-card.image-option.selected .option-arrow{ background:rgba(139,92,246,.15); color:#7c3aed; transform:translateY(-50%) scale(1.05); }
+
+    @media (max-width:599px){
+      .option-card.image-option{ padding:28px 16px 18px; gap:14px; }
+      .option-card.image-option .option-image-wrapper{ margin-top:-32px; }
+      .option-card.image-option .option-arrow{ width:32px; height:32px; right:2px; }
+      .options-grid{ grid-template-columns:1fr; }
+      .options-grid-mobile-2{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+
+    /* bouton continuer générique */
+    .continue-button{ width:min(468px,calc(100% - 32px)); background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); color:#fff; border:none; border-radius:12px; padding:16px; font-size:1rem; font-weight:700; cursor:pointer; margin-top:0; transition:.18s; box-shadow:0 2px 8px rgba(139,92,246,.2); position:fixed; left:50%; bottom:16px; bottom:calc(16px + env(safe-area-inset-bottom)); transform:translate(-50%,0); z-index:40; }
+    .continue-button:hover{ transform:translate(-50%,-1px); box-shadow:0 4px 12px rgba(139,92,246,.3); }
+    .continue-button:disabled{ opacity:.5; cursor:not-allowed; transform:translate(-50%,0); }
+    .result-wrapper .continue-button,
+    .gut-continue-wrapper .continue-button{ position:relative; left:auto; bottom:auto; transform:none; width:100%; max-width:100%; z-index:auto; }
+    .result-wrapper .continue-button:hover,
+    .gut-continue-wrapper .continue-button:hover{ transform:none; }
+    body.overlay-active .app-content .continue-button{ display:none; }
+
+    .quiz-status-card{
+      position:fixed;
+      left:50%;
+      bottom:calc(88px + env(safe-area-inset-bottom));
+      transform:translateX(-50%);
+      display:none;
+      align-items:center;
+      gap:12px;
+      padding:12px 18px;
+      border-radius:999px;
+      background:#fff;
+      border:1px solid rgba(148,163,184,.45);
+      box-shadow:0 8px 24px rgba(15,23,42,.08);
+      color:#1e293b;
+      font-size:.95rem;
+      line-height:1.25;
+      z-index:50;
+      width:min(420px,calc(100% - 32px));
+      pointer-events:none;
+    }
+    .quiz-status-card .quiz-status-icon{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      width:32px;
+      height:32px;
+      border-radius:10px;
+      background:linear-gradient(135deg,#3b82f6 0%,#2563eb 100%);
+      color:#fff;
+      font-size:1.1rem;
+      flex-shrink:0;
+    }
+    .quiz-status-card .quiz-status-text{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .quiz-status-card .quiz-status-text strong{
+      font-weight:700;
+      color:#1f2937;
+    }
+    .quiz-status-card .quiz-status-text span{
+      font-size:.82rem;
+      color:#64748b;
+      font-weight:500;
+    }
+    .question-section.active .quiz-status-card{ display:flex; }
+    @media (max-width:480px){
+      .quiz-status-card{
+        padding:10px 14px;
+        gap:10px;
+        font-size:.9rem;
+      }
+      .quiz-status-card .quiz-status-text span{
+        font-size:.78rem;
+      }
+    }
+
+    /* Scroller pour listes de choix longues */
+    .options-scroll-container{ display:flex; flex-direction:column; gap:12px; max-height:320px; overflow-y:auto; padding-right:4px; }
+    .options-scroll-container::-webkit-scrollbar{ width:6px; }
+    .options-scroll-container::-webkit-scrollbar-thumb{ background:rgba(124,58,237,.3); border-radius:999px; }
+
+    /* ===== Écran d'information ===== */
+    .info-break{ padding:12px; }
+    .info-break.active{ align-items:center; justify-content:center; }
+    .info-card{ background:transparent; border:none; border-radius:0; box-shadow:none; padding:0; max-width:520px; display:flex; flex-direction:column; gap:14px; text-align:left; margin:0 auto; }
+    .info-illustration{ width:100%; height:auto; border-radius:16px; object-fit:contain; box-shadow:none; }
+    .info-eyebrow{ font-size:.82rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#7c3aed; }
+    .info-title{ font-size:1.32rem; line-height:1.3; font-weight:800; color:#1e293b; }
+    .info-text{ font-size:.92rem; line-height:1.55; color:#475569; }
+    .info-list{ list-style:disc; padding-left:18px; display:block; }
+    .info-list li{ font-size:.92rem; line-height:1.45; color:#1e293b; margin-bottom:8px; }
+    .info-list li strong{ font-weight:700; color:#0f172a; }
+    .info-highlights{ display:flex; flex-direction:column; gap:12px; }
+    .info-highlights-split{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:clamp(16px,6vw,48px);
+      align-items:stretch;
+    }
+    .info-highlights-split .info-highlight{
+      height:100%;
+    }
+    .info-highlight{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px; background:rgba(255,255,255,.85); border-radius:16px; padding:16px; box-shadow:0 8px 24px rgba(15,23,42,.08); }
+    .info-highlight-icon{ font-size:1.6rem; line-height:1; }
+    .info-highlight-content{ display:flex; flex-direction:column; gap:6px; align-items:center; }
+    .info-highlight-title{ font-size:.96rem; font-weight:700; color:#0f172a; }
+    .info-highlight-text{ font-size:.88rem; color:#1f2937; line-height:1.45; }
+    .result-info-screen{
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      gap:clamp(16px,4vw,24px);
+      width:100%;
+      max-width:520px;
+      margin:0 auto;
+      padding:0 0 calc(140px + env(safe-area-inset-bottom));
+      opacity:0;
+      transition:opacity .4s ease;
+      text-align:left;
+    }
+    .result-info-screen.active{ opacity:1; }
+    @media (max-width:599px){
+      .info-card{ padding:0; }
+      .info-title{ font-size:1.25rem; }
+    }
+    @media (max-height:740px){
+      .info-break{ padding:8px; }
+      .info-card{ gap:12px; }
+      .info-title{ font-size:1.24rem; }
+      .info-text,.info-list li{ font-size:.9rem; }
+    }
+
+    /* ===== Q1 — grille 2×2 pleine hauteur (images bien cadrées) ===== */
+    .q1 .question-content{ display:flex; flex-direction:column; min-height:0; }
+    .q1 .options-container{ flex:1; min-height:0; }
+    .q1 .options-grid{ display:grid !important; height:100%; grid-template-columns:repeat(2,1fr)!important; grid-template-rows:repeat(2,minmax(0,1fr))!important; gap:10px!important; }
+    .q1 .option-card.image-option{ height:100%!important; display:flex!important; flex-direction:column!important; padding:10px 10px 6px!important; border-radius:12px!important; overflow:visible!important; }
+    .q1 .option-image-wrapper{ flex:1 1 auto!important; display:block!important; position:relative!important; margin:0!important; overflow:visible!important; }
+    .q1 .option-image{ width:100%!important; height:100%!important; object-fit:cover!important; object-position:50% 0%!important; border-radius:12px!important; box-shadow:none!important; transform:translateY(-8px)!important; aspect-ratio:auto!important; }
+    .q1 .option-text{ position:relative!important; display:flex!important; align-items:center!important; justify-content:center!important; min-height:44px!important; padding:0 28px!important; text-align:center!important; }
+    .q1 .option-label{ font-weight:800!important; font-size:.98rem!important; }
+    .q1 .option-arrow{ width:28px!important; height:28px!important; right:0; top:50%; position:absolute; transform:translateY(-50%); border-radius:50%; background:rgba(15,23,42,.06); display:flex; align-items:center; justify-content:center; }
+    .q1 .question-header{ margin-bottom:8px; }
+    .q1 .question-title{ font-size:1.16rem; margin-bottom:4px; }
+    .q1 .question-subtitle{ font-size:.9rem; }
+    @media (max-height:700px){
+      .q1 .option-card.image-option{ padding:10px 8px 6px; }
+      .q1 .option-image-wrapper{ margin-top:-10px; }
+      .q1 .option-image{ transform:translateY(-5px); }
+      .q1 .option-text{ min-height:38px; }
+    }
+
+    /* ===== Overlay Résultats / Loader (affiché avant l’email) ===== */
+    .result-wrapper{
+      --gut-preview-top:rgba(124,58,237,.16);
+      --gut-preview-bottom:rgba(124,58,237,.08);
+      background:#ffffff;
+      height:100vh; height:100dvh;
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:24px 16px 140px;
+      padding:24px 16px calc(140px + env(safe-area-inset-bottom));
+      overflow-y:auto;
+      position:fixed; inset:0; z-index:30;
+    }
+    .result-wrapper.preview-mode{
+      background:
+        linear-gradient(
+          180deg,
+          var(--gut-preview-top) 0%,
+          var(--gut-preview-bottom) 55%,
+          rgba(255,255,255,.95) 78%,
+          #fff 100%
+        );
+      background-color:#fff;
+      justify-content:flex-start;
+      align-items:center;
+      padding:32px 16px 140px;
+      padding:32px 16px calc(140px + env(safe-area-inset-bottom));
+    }
+    .loader-stage{
+      width:100%;
+      max-width:480px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+    .loader-stage .container{ width:100%; animation:fadeIn .5s ease; }
+    .result-wrapper .header-title{ text-align:center; color:#1e293b; font-size:1.5rem; font-weight:800; margin-bottom:24px; line-height:1.2; transition:all .4s ease; }
+    .progress-card{ background:#fff; border-radius:16px; padding:24px 20px; box-shadow:0 8px 24px rgba(0,0,0,.1); border:2px solid #e5e7eb; position:relative; transition:all .4s ease; }
+    .progress-card.hidden{ opacity:0; transform:scale(.95); pointer-events:none; }
+    .progress-header{ margin-bottom:20px; }
+    .progress-percentage{ font-size:2.2rem; font-weight:800; background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+    .progress-subtitle{ color:#64748b; font-size:.9rem; }
+    .progress-bar-container{ height:6px; background:#e5e7eb; border-radius:100px; overflow:hidden; margin-bottom:24px; position:relative; }
+    .progress-bar-fill{ height:100%; background:linear-gradient(90deg,#8b5cf6 0%,#7c3aed 100%); border-radius:100px; width:0%; transition:width .5s cubic-bezier(.4,0,.2,1); position:relative; overflow:hidden; }
+    .progress-bar-fill::after{ content:''; position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent); animation:shimmer 2s infinite; }
+    @keyframes shimmer{ 0%{ transform:translateX(-100%);} 100%{ transform:translateX(100%);} }
+    .checklist{ display:flex; flex-direction:column; gap:12px; margin-bottom:20px; }
+    .checklist-item{ display:flex; align-items:center; gap:10px; opacity:.5; transition:opacity .3s ease; }
+    .checklist-item.active{ opacity:1; }
+    .checklist-icon{ width:20px; height:20px; border:2px solid #e5e7eb; border-radius:50%; display:flex; align-items:center; justify-content:center; transition:all .3s ease; flex-shrink:0; }
+    .checklist-item.completed .checklist-icon{ background:linear-gradient(135deg,#8b5cf6 0%,#7c3aed 100%); border-color:transparent; }
+    .checklist-icon svg{ width:12px; height:12px; stroke:#fff; stroke-width:3; fill:none; opacity:0; transform:scale(0); transition:all .3s ease; }
+    .checklist-item.completed .checklist-icon svg{ opacity:1; transform:scale(1); }
+    .checklist-text{ color:#334155; font-size:.85rem; font-weight:600; line-height:1.2; }
+
+    .success-card{
+      background:transparent;
+      border:none;
+      border-radius:0;
+      padding:0;
+      width:100%;
+      max-width:520px;
+      display:none;
+      box-shadow:none;
+      color:#1e293b;
+    }
+    .success-card.visible{ display:block; }
+    .success-inner{ display:flex; flex-direction:column; gap:clamp(18px,4vw,24px); align-items:stretch; width:100%; }
+    .success-headline{
+      font-size:1.4rem;
+      font-weight:800;
+      line-height:1.3;
+      text-align:left;
+      color:#1e293b;
+      margin-bottom:8px;
+    }
+    .success-headline span{ color:#7c3aed; }
+    .success-input-card{
+      background:#fff;
+      border-radius:22px;
+      padding:clamp(18px,4vw,22px);
+      box-shadow:0 16px 32px rgba(15,23,42,.08);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      border:1px solid rgba(148,163,184,.35);
+    }
+
+    /* ===== Etape email intégrée : ne garder que le bouton SIO ===== */
+    [data-test-id="send-form-button"],
+    [data-testid="send-form-button"],
+    .sio-subscribe-button,
+    .sio-submit,
+    [data-element="cta-button"],
+    button[id^="button-"],
+    input[type="submit"],
+    button[type="submit"]{
+      display:none !important;
+    }
+    #sioEmailSlot [data-test-id="send-form-button"],
+    #sioEmailSlot [data-testid="send-form-button"],
+    #sioEmailSlot .sio-subscribe-button,
+    #sioEmailSlot .sio-submit,
+    #sioEmailSlot [data-element="cta-button"],
+    #sioEmailSlot button[id^="button-"],
+    #sioEmailSlot input[type="submit"],
+    #sioEmailSlot button[type="submit"],
+    #emailQuestion [data-test-id="send-form-button"],
+    #emailQuestion [data-testid="send-form-button"],
+    #emailQuestion .sio-subscribe-button,
+    #emailQuestion .sio-submit,
+    #emailQuestion [data-element="cta-button"],
+    #emailQuestion button[id^="button-"],
+    #emailQuestion input[type="submit"],
+    #emailQuestion button[type="submit"]{
+      display:block !important;
+    }
+    #sioEmailSlot form button,
+    #sioEmailSlot form input[type="submit"],
+    #sioEmailSlot [data-test-id="send-form-button"],
+    #sioEmailSlot [data-testid="send-form-button"],
+    #sioEmailSlot .sio-subscribe-button,
+    #sioEmailSlot .sio-submit,
+    #sioEmailSlot [data-element="cta-button"],
+    #sioEmailSlot button[id^="button-"]{
+      display:block !important;
+      width:100% !important;
+      background:#d4d4d8 !important;
+      color:#1f2937 !important;
+      border:none !important;
+      border-radius:18px !important;
+      padding:18px !important;
+      font-size:1rem !important;
+      font-weight:800 !important;
+      letter-spacing:.06em !important;
+      text-transform:uppercase !important;
+      box-shadow:none !important;
+      visibility:visible !important;
+    }
+    #sioEmailSlot form button:hover,
+    #sioEmailSlot form input[type="submit"]:hover,
+    #sioEmailSlot [data-test-id="send-form-button"]:hover,
+    #sioEmailSlot [data-testid="send-form-button"]:hover,
+    #sioEmailSlot .sio-subscribe-button:hover,
+    #sioEmailSlot .sio-submit:hover,
+    #sioEmailSlot [data-element="cta-button"]:hover,
+    #sioEmailSlot button[id^="button-"]:hover{
+      background:#c7c7cc !important;
+    }
+
+    .success-card .success-form{ display:flex; flex-direction:column; gap:18px; }
+    .success-card #sioEmailSlot{ display:flex; flex-direction:column; gap:12px; }
+    .success-card #sioEmailSlot form{ width:100%; display:flex; flex-direction:column; gap:12px; }
+    .success-card #sioEmailSlot input[type="email"],
+    .success-card #sioEmailSlot input[name="email"],
+    .success-card #sioEmailSlot input[name*="email" i]{
+      background:#fff !important;
+      border:1px solid #d1d5db !important;
+      border-radius:18px !important;
+      padding:18px 20px !important;
+      font-size:1rem !important;
+      color:#1f2937 !important;
+      box-shadow:0 10px 24px rgba(15,23,42,.08) !important;
+    }
+    .success-card #sioEmailSlot input[type="email"]::placeholder,
+    .success-card #sioEmailSlot input[name="email"]::placeholder,
+    .success-card #sioEmailSlot input[name*="email" i]::placeholder{
+      color:#9ca3af !important;
+    }
+
+    .success-loading{
+      padding:18px 20px;
+      border-radius:16px;
+      background:rgba(226,232,240,.6);
+      color:#475569;
+      font-weight:600;
+      text-align:center;
+    }
+
+    .success-privacy{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      font-size:.82rem;
+      line-height:1.4;
+      color:#1f2937;
+    }
+    .success-privacy-icon{
+      flex-shrink:0;
+      width:32px;
+      height:32px;
+      border-radius:12px;
+      background:linear-gradient(135deg,#e0f2f1 0%,#b2f5ea 100%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:1.1rem;
+      color:#047857;
+      box-shadow:0 8px 16px rgba(4,120,87,.18);
+    }
+
+    .result-preview{
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      width:100%;
+      min-height:100%;
+      padding:0 0 calc(160px + env(safe-area-inset-bottom));
+      opacity:0;
+      transition:opacity .4s ease;
+    }
+    .result-preview.active{ display:flex; opacity:1; }
+    .gut-container{
+      width:100%;
+      max-width:480px;
+      margin:0 auto;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:clamp(10px,3.2vw,18px);
+      text-align:center;
+      padding:0 0 calc(140px + env(safe-area-inset-bottom));
+    }
+    .gut-header{ display:flex; flex-direction:column; align-items:center; gap:clamp(4px,1.2vw,8px); }
+    .gut-title{
+      font-size:clamp(.75rem,2.2vw,.95rem);
+      letter-spacing:2px;
+      font-weight:800;
+      color:#7c3aed;
+      text-transform:uppercase;
+    }
+    .gut-status{
+      font-size:clamp(1.9rem,5.6vw,2.35rem);
+      font-weight:800;
+      color:#1e293b;
+      letter-spacing:.4px;
+      line-height:1.05;
+    }
+    .gut-description{
+      font-size:clamp(.85rem,2.6vw,1rem);
+      line-height:1.5;
+      color:#475569;
+      max-width:100%;
+      margin:0 auto;
+    }
+    .gut-description strong{ color:#1e293b; font-weight:700; }
+    .gut-gauge-container{
+      position:relative;
+      width:100%;
+      display:flex;
+      justify-content:center;
+      padding:0;
+    }
+    .gut-gauge-wrapper{
+      position:relative;
+      width:100%;
+      max-width:360px;
+      aspect-ratio:600 / 520;
+      height:auto;
+    }
+    @supports not (aspect-ratio:1){
+      .gut-gauge-wrapper{ height:0; padding-bottom:86%; }
+    }
+    .gut-gauge-svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:1; }
+    .gut-gauge-center{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      background:linear-gradient(180deg,#f8f7ff 0%,#eae7ff 100%);
+      border-radius:50%;
+      box-shadow:0 18px 40px rgba(99,102,241,.16);
+      border:1px solid rgba(125,105,255,.25);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      z-index:3;
+    }
+    .gut-score-label{
+      font-size:clamp(.6rem,1.8vw,.75rem);
+      font-weight:700;
+      letter-spacing:3px;
+      color:#6366f1;
+      margin-bottom:6px;
+    }
+    .gut-score-value{
+      font-size:clamp(2.5rem,7.4vw,3.6rem);
+      font-weight:800;
+      color:#0f172a;
+      line-height:1;
+      font-variant-numeric:tabular-nums;
+    }
+    .gut-gauge-label{
+      font-size:clamp(.62rem,1.75vw,.82rem);
+      font-weight:700;
+      letter-spacing:2.2px;
+      fill:#4c1d95;
+      text-transform:uppercase;
+      text-shadow:0 1px 0 rgba(255,255,255,.65);
+      dominant-baseline:middle;
+      paint-order:stroke fill;
+      stroke:rgba(255,255,255,.65);
+      stroke-width:.6px;
+    }
+    .gut-gauge-label textPath{
+      letter-spacing:inherit;
+    }
+    .gut-arrow{
+      --gut-needle-color:#4338ca;
+      --gut-needle-highlight:#7c3aed;
+      --gut-needle-shadow:rgba(76,29,149,.28);
+      --gut-needle-triangle:#4338ca;
+      position:absolute;
+      width:26px;
+      height:26px;
+      background:linear-gradient(135deg,var(--gut-needle-highlight) 0%,var(--gut-needle-color) 100%);
+      border-radius:50%;
+      box-shadow:0 12px 28px var(--gut-needle-shadow);
+      z-index:5;
+      transform-origin:center;
+    }
+    .gut-arrow::before{
+      content:"";
+      position:absolute;
+      inset:6px;
+      border-radius:50%;
+      background:linear-gradient(135deg,rgba(255,255,255,.4),rgba(255,255,255,.1));
+    }
+    .gut-arrow::after{
+      content:"";
+      position:absolute;
+      top:100%;
+      left:50%;
+      transform:translate(-50%,-4px);
+      width:0;
+      height:0;
+      border-left:7px solid transparent;
+      border-right:7px solid transparent;
+      border-top:26px solid var(--gut-needle-triangle);
+      border-radius:0 0 6px 6px;
+    }
+    .gut-info-cards{
+      width:100%;
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:clamp(8px,2.2vw,12px);
+    }
+    .gut-info-card{
+      background:linear-gradient(145deg,rgba(255,255,255,.95) 0%,rgba(237,233,254,.9) 100%);
+      border-radius:18px;
+      padding:clamp(14px,3.2vw,18px) clamp(12px,3vw,16px);
+      box-shadow:0 16px 32px rgba(79,70,229,.12);
+      border:1px solid rgba(99,102,241,.18);
+      text-align:left;
+      display:flex;
+      flex-direction:column;
+      gap:clamp(4px,1.2vw,6px);
+    }
+    .gut-info-card-header{ display:flex; align-items:center; gap:clamp(4px,1.4vw,8px); margin-bottom:4px; }
+    .gut-icon{ font-size:clamp(1rem,4.4vw,1.35rem); }
+    .gut-info-card-title{
+      font-size:clamp(.6rem,1.7vw,.78rem);
+      letter-spacing:1.5px;
+      font-weight:700;
+      color:#6366f1;
+    }
+    .gut-info-card-value{
+      font-size:clamp(1.15rem,4.9vw,1.45rem);
+      font-weight:700;
+      color:#0f172a;
+      line-height:1.2;
+      font-variant-numeric:tabular-nums;
+    }
+    .gut-overview-card{
+      width:100%;
+      background:linear-gradient(155deg,rgba(255,255,255,.95) 0%,rgba(229,231,255,.92) 100%);
+      border-radius:20px;
+      padding:clamp(18px,3.8vw,22px) clamp(16px,4vw,20px) clamp(18px,4.2vw,22px);
+      box-shadow:0 20px 36px rgba(79,70,229,.14);
+      border:1px solid rgba(99,102,241,.2);
+      text-align:left;
+      display:flex;
+      flex-direction:column;
+      gap:clamp(4px,1.2vw,6px);
+    }
+    .gut-overview-header{ display:flex; align-items:center; gap:clamp(6px,1.8vw,10px); margin-bottom:8px; }
+    .gut-overview-title{
+      font-size:clamp(.62rem,1.8vw,.8rem);
+      font-weight:700;
+      letter-spacing:1.4px;
+      color:#6366f1;
+      text-transform:uppercase;
+    }
+    .gut-overview-text{ font-size:clamp(.9rem,2.7vw,1.05rem); line-height:1.5; color:#334155; }
+    .gut-overview-text strong{ font-weight:700; color:#1e293b; }
+    .gut-continue-wrapper{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      width:100%;
+      padding:16px 16px calc(16px + env(safe-area-inset-bottom));
+      background:#fff;
+      z-index:60;
+      display:flex;
+      justify-content:center;
+    }
+    .gut-continue-wrapper::before{
+      content:"";
+      position:absolute;
+      left:0;
+      right:0;
+      top:-48px;
+      height:48px;
+      background:linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,1) 100%);
+      pointer-events:none;
+    }
+    .gut-continue-wrapper .continue-button{
+      margin-top:0;
+      position:static;
+      transform:none;
+      width:min(468px,100%);
+      max-width:468px;
+    }
+    @supports(padding:max(0px)){
+      .gut-continue-wrapper{ padding-bottom:max(16px,calc(16px + env(safe-area-inset-bottom))); }
+    }
+
+    @media (max-width:520px){
+      .gut-container{ max-width:100%; }
+      .gut-gauge-wrapper{ max-width:300px; }
+    }
+    @media (max-width:480px){
+      .gut-score-value{ font-size:clamp(1.9rem,8vw,2.3rem); }
+    }
+    @media (max-width:380px){
+      .gut-gauge-wrapper{ max-width:280px; }
+      .gut-info-cards{ grid-template-columns:1fr; }
+      .gut-status{ font-size:clamp(1.8rem,6vw,2.1rem); }
+    }
+
+    /* Gate CSS : masque inputs SIO globaux, n’affiche que dans #sioEmailSlot */
+    input[name="first_name"], input[name="surname"], input[name="email"]{ display:none !important; }
+    #sioEmailSlot input[name="first_name"],
+    #sioEmailSlot input[name="surname"],
+    #sioEmailSlot input[name="email"]{ display:block !important; }
+  </style>
+</head>
+
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <button class="back-button" id="backButton" aria-label="Retour">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <div class="app-logo">Profil Digestif</div>
+      <div class="header-right"><span class="step-counter" id="stepCounter">1/12</span></div>
+    </header>
+
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width: 8.33%"></div></div>
+
+    <!-- ===== Overlay Résultats (avant email) ===== -->
+    <div id="resultsWrapper" class="result-wrapper" role="dialog" aria-modal="true" aria-hidden="true">
+      <div id="loaderStage" class="loader-stage">
+        <div class="container">
+          <h3 class="header-title">Nous analysons vos réponses…</h3>
+
+          <div id="searchProgressCard" class="progress-card">
+            <div class="progress-header">
+              <div id="searchProgressPercentage" class="progress-percentage">0%</div>
+              <div class="progress-subtitle">Recherche de votre profil digestif</div>
+            </div>
+
+            <div class="progress-bar-container"><div id="searchProgressBar" class="progress-bar-fill"></div></div>
+
+            <div class="checklist">
+              <div class="checklist-item" data-step="1">
+                <div class="checklist-icon">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span class="checklist-text">Analyse des symptômes & de la fréquence</span>
+              </div>
+              <div class="checklist-item" data-step="2">
+                <div class="checklist-icon">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span class="checklist-text">Prise en compte de l’historique</span>
+              </div>
+              <div class="checklist-item" data-step="3">
+                <div class="checklist-icon">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <span class="checklist-text">Construction de votre profil</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="resultPreview" class="result-preview" aria-hidden="true">
+        <div class="gut-container">
+          <div class="gut-header">
+            <h1 class="gut-title">ÉQUILIBRE DIGESTIF :</h1>
+            <div class="gut-status">Déséquilibré</div>
+          </div>
+
+          <p class="gut-description">
+            Vos réponses révèlent un déséquilibre de votre microbiote intestinal.<br/>
+            Cela signifie que <strong>les mauvaises bactéries ont pris<br/>
+            le dessus sur les bonnes</strong>, ce qui empêche votre<br/>
+            intestin de fonctionner correctement.
+          </p>
+
+          <div class="gut-gauge-container">
+            <div class="gut-gauge-wrapper" id="gutGaugeWrapper">
+              <svg class="gut-gauge-svg" id="gutGaugeSvg" viewBox="0 0 600 580" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                  <path id="gutLabelPathLeft" fill="none" />
+                  <path id="gutLabelPathRight" fill="none" />
+                </defs>
+                <g id="gutGaugeFrame"></g>
+                <g id="gutGaugeBars"></g>
+                <text class="gut-gauge-label">
+                  <textPath id="gutLabelLeft" href="#gutLabelPathLeft" startOffset="50%" text-anchor="middle">ÉQUILIBRÉ</textPath>
+                </text>
+                <text class="gut-gauge-label">
+                  <textPath id="gutLabelRight" href="#gutLabelPathRight" startOffset="50%" text-anchor="middle">DÉSÉQUILIBRÉ</textPath>
+                </text>
+              </svg>
+
+              <div class="gut-gauge-center" id="gutGaugeCenter">
+                <div class="gut-score-label">SCORE</div>
+                <div class="gut-score-value" id="gutScoreValue">0</div>
+              </div>
+
+              <div class="gut-arrow" id="gutNeedle"></div>
+            </div>
+          </div>
+
+          <div class="gut-info-cards">
+            <div class="gut-info-card">
+              <div class="gut-info-card-header">
+                <span class="gut-icon">✨</span>
+                <div class="gut-info-card-title">ÂGE MÉTABOLIQUE</div>
+              </div>
+              <div class="gut-info-card-value" id="metabolicAgeValue">44 ans</div>
+            </div>
+            <div class="gut-info-card">
+              <div class="gut-info-card-header">
+                <span class="gut-icon">🦠</span>
+                <div class="gut-info-card-title">TYPE D'INTESTIN</div>
+              </div>
+              <div class="gut-info-card-value">Intestin Stressé</div>
+            </div>
+          </div>
+
+          <div class="gut-overview-card">
+            <div class="gut-overview-header">
+              <span class="gut-icon">⚙️</span>
+              <div class="gut-overview-title">APERÇU DE VOTRE PROFIL</div>
+            </div>
+            <div class="gut-overview-text">
+              Un déséquilibre du microbiote intestinal fragilise la paroi intestinale et perturbe la digestion. Ce
+              <strong>processus silencieux</strong> provoque non seulement <strong>ballonnements, crampes et transit imprévisible</strong>,
+              mais envoie aussi des signaux de stress au cerveau, déclenchant anxiété et sautes d'humeur.
+            </div>
+          </div>
+
+          <div class="gut-continue-wrapper">
+            <button class="continue-button" id="gutPreviewContinue">Continuer</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="postGutInfo" class="result-info-screen info-break" aria-hidden="true">
+        <div class="info-card">
+          <p class="info-eyebrow">Et ensuite&nbsp;?</p>
+          <h2 class="info-title">Que se passe-t-il lorsque votre microbiote est déséquilibré&nbsp;?</h2>
+          <p class="info-text">
+            Lorsque les bactéries pathogènes prennent le dessus, votre paroi intestinale s'affaiblit progressivement.
+            Ce phénomène crée ce que les experts appellent une "hyperperméabilité intestinale".
+          </p>
+
+          <div class="info-highlights info-highlights-split" style="margin-top: 20px;">
+            <div class="info-highlight" style="background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); border: 1px solid rgba(244, 63, 94, 0.2);">
+              <span class="info-highlight-icon" style="font-size: 1.8rem;">⚠️</span>
+              <div class="info-highlight-content">
+                <div class="info-highlight-title" style="color: #be123c;">INTESTIN DÉSÉQUILIBRÉ</div>
+                <p class="info-highlight-text">
+                  Les toxines traversent la paroi affaiblie et pénètrent dans votre circulation sanguine,
+                  déclenchant une inflammation qui affecte aussi votre santé cérébrale.
+                </p>
+              </div>
+            </div>
+
+            <div class="info-highlight" style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 1px solid rgba(34, 197, 94, 0.2);">
+              <span class="info-highlight-icon" style="font-size: 1.8rem;">✅</span>
+              <div class="info-highlight-content">
+                <div class="info-highlight-title" style="color: #15803d;">RÉÉQUILIBRAGE NATUREL</div>
+                <p class="info-highlight-text">
+                  Notre méthode restaure l'équilibre de votre microbiote, renforce votre paroi intestinale
+                  et apaise l'inflammation — naturellement.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <img
+            src="https://d1yei2z3i6k35z.cloudfront.net/13114230/690dd3b1c9dad_IntestinDesequilibre.png"
+            alt="Illustration du microbiote intestinal déséquilibré"
+            class="info-illustration"
+            loading="lazy"
+            style="margin-top: 0;"
+          />
+
+          <p class="info-text" style="margin-top: 16px;">
+            <strong>Ce cercle vicieux explique pourquoi&nbsp;:</strong>
+          </p>
+          <ul class="info-list">
+            <li>
+              <strong>Vos ballonnements persistent</strong>
+              même après avoir éliminé certains aliments
+            </li>
+            <li>
+              <strong>Votre fatigue s'installe</strong>
+              alors que vous dormez suffisamment
+            </li>
+            <li>
+              <strong>Les probiotiques classiques échouent</strong>&nbsp;:
+              ils ne ciblent pas VOTRE déséquilibre spécifique
+            </li>
+          </ul>
+          <p class="info-text" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 16px; border-radius: 12px; border: 1px solid rgba(217, 119, 6, 0.2);">
+            <strong>💡 Bonne nouvelle&nbsp;:</strong> En identifiant les véritables déclencheurs et en rééquilibrant
+            votre microbiote avec une approche personnalisée, vous pouvez retrouver un bien-être digestif
+            en seulement 21 jours.
+          </p>
+        </div>
+        <div class="gut-continue-wrapper">
+          <button class="continue-button" id="postGutInfoNext">Je découvre mon plan d'action</button>
+        </div>
+      </div>
+
+      <div id="postGutInfoPlan" class="result-info-screen info-break" aria-hidden="true">
+        <div class="info-card">
+          <p class="info-eyebrow">Votre transformation</p>
+          <h2 class="info-title">D'ici 21 jours, voici ce qui pourrait changer pour vous</h2>
+          <p class="info-text">
+            En appliquant le rééquilibrage naturel du microbiote avec une approche personnalisée,
+            des centaines de personnes ont retrouvé un bien-être digestif qu'elles n'espéraient plus.
+          </p>
+
+          <div class="info-highlights" style="margin-top: 24px; gap: 16px;">
+            <!-- AVANT -->
+            <div style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border: 2px solid #fca5a5; border-radius: 18px; padding: 20px;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                <span style="font-size: 1.5rem;">😫</span>
+                <div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.2px; color: #991b1b; text-transform: uppercase;">Aujourd'hui</div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+                <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.92rem; color: #7f1d1d; line-height: 1.4;">
+                  <span style="color: #dc2626; font-weight: 700; flex-shrink: 0;">✗</span>
+                  <span>Ballonnements dès le réveil, ventre gonflé après chaque repas</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.92rem; color: #7f1d1d; line-height: 1.4;">
+                  <span style="color: #dc2626; font-weight: 700; flex-shrink: 0;">✗</span>
+                  <span>Peur de manger certains aliments, régimes restrictifs</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.92rem; color: #7f1d1d; line-height: 1.4;">
+                  <span style="color: #dc2626; font-weight: 700; flex-shrink: 0;">✗</span>
+                  <span>Transit imprévisible qui gâche vos sorties</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.92rem; color: #7f1d1d; line-height: 1.4;">
+                  <span style="color: #dc2626; font-weight: 700; flex-shrink: 0;">✗</span>
+                  <span>Fatigue constante malgré le sommeil</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.92rem; color: #7f1d1d; line-height: 1.4;">
+                  <span style="color: #dc2626; font-weight: 700; flex-shrink: 0;">✗</span>
+                  <span>Isolement social : "personne ne comprend"</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- FLÈCHE DE TRANSFORMATION -->
+            <div style="text-align: center; margin: 8px 0;">
+              <div style="display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); box-shadow: 0 8px 20px rgba(124, 58, 237, 0.3);">
+                <span style="font-size: 1.8rem; transform: rotate(90deg); display: inline-block;">→</span>
+              </div>
+              <div style="font-size: 0.75rem; font-weight: 700; color: #7c3aed; margin-top: 8px; letter-spacing: 1px; text-transform: uppercase;">21 jours plus tard</div>
+            </div>
+
+            <!-- APRÈS -->
+            <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #86efac; border-radius: 18px; padding: 20px;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                <span style="font-size: 1.5rem;">✨</span>
+                <div style="font-size: 0.85rem; font-weight: 700; letter-spacing: 1.2px; color: #14532d; text-transform: uppercase;">Votre nouvelle vie</div>
+              </div>
+              <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px;">
+                <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.92rem; color: #14532d; line-height: 1.4;">
+                  <span style="color: #16a34a; font-weight: 700; flex-shrink: 0;">✓</span>
+                  <span><strong>Digestion apaisée</strong> : ventre plat et confortable</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.92rem; color: #14532d; line-height: 1.4;">
+                  <span style="color: #16a34a; font-weight: 700; flex-shrink: 0;">✓</span>
+                  <span><strong>Liberté alimentaire</strong> : vous mangez sans crainte</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.92rem; color: #14532d; line-height: 1.4;">
+                  <span style="color: #16a34a; font-weight: 700; flex-shrink: 0;">✓</span>
+                  <span><strong>Transit régulier</strong> : vous reprenez confiance</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.92rem; color: #14532d; line-height: 1.4;">
+                  <span style="color: #16a34a; font-weight: 700; flex-shrink: 0;">✓</span>
+                  <span><strong>Énergie retrouvée</strong> : vous vous sentez léger(e)</span>
+                </li>
+                <li style="display: flex; align-items: flex-start; gap: 8px; font-size: 0.92rem; color: #14532d; line-height: 1.4;">
+                  <span style="color: #16a34a; font-weight: 700; flex-shrink: 0;">✓</span>
+                  <span><strong>Vie sociale épanouie</strong> : restaurants, voyages... tout redevient possible</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 16px; padding: 20px; margin-top: 24px; border: 1px solid rgba(217, 119, 6, 0.3);">
+            <div style="display: flex; align-items: flex-start; gap: 12px;">
+              <span style="font-size: 1.8rem; flex-shrink: 0;">💫</span>
+              <div>
+                <div style="font-size: 0.95rem; font-weight: 700; color: #78350f; margin-bottom: 6px;">Comment c'est possible en si peu de temps&nbsp;?</div>
+                <p style="font-size: 0.88rem; line-height: 1.5; color: #78350f; margin: 0;">
+                  Notre méthode ne traite pas que les symptômes. Elle cible <strong>la racine du problème</strong> en
+                  rééquilibrant votre microbiote avec une approche personnalisée, adaptée à VOTRE type d'intestin irritable.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <p class="info-text" style="margin-top: 20px; text-align: center; font-size: 0.95rem;">
+            Dans l'étape suivante, vous découvrirez exactement comment appliquer cette méthode
+            pour <strong>transformer votre quotidien en 21 jours</strong>.
+          </p>
+        </div>
+        <div class="gut-continue-wrapper">
+          <button class="continue-button" id="gutInfoContinue">Je veux commencer ma transformation</button>
+        </div>
+      </div>
+
+      <div id="searchSuccessCard" class="success-card" aria-hidden="true">
+        <div class="success-inner">
+          <h2 class="success-headline">Entrez votre email pour recevoir votre Méthode de Rééquilibrage Naturel du Microbiote en 21&nbsp;Jours&nbsp;!</h2>
+          <div class="success-input-card">
+            <div class="success-form">
+              <div id="sioEmailSlot" class="options-container">
+                <!-- placeholder pendant l’injection SIO -->
+                <div id="sioEmailLoading" class="success-loading">Chargement du formulaire…</div>
+              </div>
+            </div>
+            <div class="success-privacy">
+              <div class="success-privacy-icon" aria-hidden="true">🔒</div>
+              <p>Nous respectons votre vie privée et nous nous engageons à protéger vos données personnelles.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ===== Fin overlay ===== -->
+
+    <!-- ===== Contenu Quiz ===== -->
+    <main class="app-content">
+
+      <!-- Q1 -->
+      <section class="question-section active q1" id="q1">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">🎯 Cette année, ma priorité digestive numéro&nbsp;1 est...</h2>
+            <p class="question-subtitle">Choisissez l’objectif qui compte le plus pour vous</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="eliminer-douleurs">
+              <span class="option-emoji">💊</span>
+              <div class="option-text"><div class="option-label">D’éliminer mes douleurs abdominales chroniques</div></div>
+            </div>
+            <div class="option-card" data-value="transit-regulier">
+              <span class="option-emoji">🔄</span>
+              <div class="option-text"><div class="option-label">De retrouver un transit intestinal régulier</div></div>
+            </div>
+            <div class="option-card" data-value="plus-energie">
+              <span class="option-emoji">⚡</span>
+              <div class="option-text"><div class="option-label">D’augmenter mon niveau d'énergie au quotidien</div></div>
+            </div>
+            <div class="option-card" data-value="restaurant-sans-anxiete">
+              <span class="option-emoji">🍽️</span>
+              <div class="option-text"><div class="option-label">De pouvoir manger au restaurant sans anxiété</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Q2 -->
+      <section class="question-section" id="q2">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">📊 Sur une échelle de 1 à 5, à quelle fréquence ressentez-vous des ballonnements après les repas&nbsp;?</h2>
+            <p class="question-subtitle">Indiquez l’intensité qui reflète le mieux votre situation actuelle</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="1-jamais"><span class="option-emoji">1️⃣</span><div class="option-text"><div class="option-label">1 (Jamais)</div></div></div>
+            <div class="option-card" data-value="2-rarement"><span class="option-emoji">2️⃣</span><div class="option-text"><div class="option-label">2 (Rarement)</div></div></div>
+            <div class="option-card" data-value="3-regulierement"><span class="option-emoji">3️⃣</span><div class="option-text"><div class="option-label">3 (Régulièrement)</div></div></div>
+            <div class="option-card" data-value="4-tres-souvent"><span class="option-emoji">4️⃣</span><div class="option-text"><div class="option-label">4 (Très souvent)</div></div></div>
+            <div class="option-card" data-value="5-tout-le-temps"><span class="option-emoji">5️⃣</span><div class="option-text"><div class="option-label">5 (Tout le temps)</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Q3 -->
+      <section class="question-section" id="q3">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">💥 Je remarque que le symptôme qui affecte le plus ma qualité de vie est...</h2>
+            <p class="question-subtitle">Sélectionnez le symptôme le plus perturbant pour vous</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="douleurs-imprevisibles"><span class="option-emoji">⚠️</span><div class="option-text"><div class="option-label">Les douleurs abdominales imprévisibles</div></div></div>
+            <div class="option-card" data-value="alternance-transit"><span class="option-emoji">🔁</span><div class="option-text"><div class="option-label">L'alternance constipation/diarrhée</div></div></div>
+            <div class="option-card" data-value="fatigue-chronique"><span class="option-emoji">😴</span><div class="option-text"><div class="option-label">La fatigue chronique liée à mes problèmes digestifs</div></div></div>
+            <div class="option-card" data-value="anxiete-sociale"><span class="option-emoji">😟</span><div class="option-text"><div class="option-label">L'anxiété sociale due à mes contraintes alimentaires</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Q4 -->
+      <section class="question-section" id="q4">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">😤 Je suis le plus frustré(e) par le fait que...</h2>
+            <p class="question-subtitle">Identifiez ce qui vous agace le plus au quotidien</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="repas-famille"><span class="option-emoji">🍲</span><div class="option-text"><div class="option-label">Je ne peux pas profiter des repas en famille comme avant</div></div></div>
+            <div class="option-card" data-value="opportunites-pro"><span class="option-emoji">💼</span><div class="option-text"><div class="option-label">Mes problèmes digestifs limitent mes opportunités professionnelles</div></div></div>
+            <div class="option-card" data-value="traitements-inefficaces"><span class="option-emoji">🧪</span><div class="option-text"><div class="option-label">Les traitements que j'ai essayés n'ont pas donné de résultats durables</div></div></div>
+            <div class="option-card" data-value="crainte-sante"><span class="option-emoji">🛑</span><div class="option-text"><div class="option-label">Je crains pour ma santé à long terme à cause de ces problèmes</div></div></div>
+          </div>
+          <div class="quiz-status-card">
+            <div class="quiz-status-icon">👍</div>
+            <div class="quiz-status-text">
+              <strong>Bravo — continuez&nbsp;!</strong>
+              <span>98 autres répondent à ce quiz en ce moment.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pause info -->
+      <section class="question-section info-break" id="q5">
+        <div class="info-card">
+          <img
+            src="https://d1yei2z3i6k35z.cloudfront.net/13114230/690b220860402_Votretextedeparagraphe5.png"
+            alt="Illustration médicale"
+            class="info-illustration"
+            loading="lazy"
+          />
+          <p class="info-eyebrow">Le saviez-vous&nbsp;?</p>
+          <h2 class="info-title">Votre médecin vous a peut-être parlé du Syndrome de l'intestin irritable...</h2>
+          <p class="info-text">Mais il existe en réalité 4 sous-types complètement différents. Chacun nécessite une approche spécifique&nbsp;:</p>
+          <ul class="info-list">
+            <li><strong>Type 1&nbsp;:</strong>&nbsp;Dysbiose par fermentation excessive</li>
+            <li><strong>Type 2&nbsp;:</strong>&nbsp;Hypersensibilité de la paroi intestinale</li>
+            <li><strong>Type 3&nbsp;:</strong>&nbsp;Déséquilibre bactérien post-antibiotiques</li>
+            <li><strong>Type 4&nbsp;:</strong>&nbsp;Inflammation chronique de bas grade</li>
+          </ul>
+          <p class="info-text">Votre échec jusqu'ici&nbsp;? Vous avez probablement appliqué des solutions génériques... qui ne correspondent pas à VOTRE type spécifique.</p>
+          <button class="continue-button">Je continue</button>
+        </div>
+      </section>
+
+      <!-- Q6 -->
+      <section class="question-section" id="q6">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">🧭 Sur une échelle de 1 à 5, à quel point avez-vous l'impression que vos problèmes digestifs contrôlent votre vie&nbsp;?</h2>
+            <p class="question-subtitle">Exprimez votre ressenti global face à la situation</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="1-pas-du-tout"><span class="option-emoji">1️⃣</span><div class="option-text"><div class="option-label">1 (Pas du tout)</div></div></div>
+            <div class="option-card" data-value="2-genent-parfois"><span class="option-emoji">2️⃣</span><div class="option-text"><div class="option-label">2 (Ils me gênent parfois)</div></div></div>
+            <div class="option-card" data-value="3-souvent"><span class="option-emoji">3️⃣</span><div class="option-text"><div class="option-label">3 (C’est souvent un problème)</div></div></div>
+            <div class="option-card" data-value="4-quotidien"><span class="option-emoji">4️⃣</span><div class="option-text"><div class="option-label">4 (Tous les jours c’est présent)</div></div></div>
+            <div class="option-card" data-value="5-controle-total"><span class="option-emoji">5️⃣</span><div class="option-text"><div class="option-label">5 (Ma vie tourne autour de ça)</div></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Q7 -->
+      <section class="question-section" id="q7">
+        <div class="question-content">
+          <div class="question-header">
+            <h2 class="question-title">🌟 Si je pouvais résoudre un seul aspect de mes problèmes digestifs, ce serait...</h2>
+            <p class="question-subtitle">Choisissez la transformation qui changerait tout pour vous</p>
+          </div>
+          <div class="options-container">
+            <div class="option-card" data-value="eliminer-douleurs"><span class="option-emoji">🚫</span><div class="option-text"><div class="option-label">Éliminer complètement mes douleurs abdominales</div></div></div>
+            <div class="option-card" data-value="transit-parfait"><span class="option-emoji">✅</span><div class="option-text"><div class="option-label">Retrouver un transit intestinal parfaitement régulier</div></div></div>
+            <div class="option-card" data-value="manger-sans-crainte"><span class="option-emoji">🍽️</span><div class="option-text"><div class="option-label">Pouvoir manger tous les aliments sans crainte</div></div></div>
+            <div class="option-card" data-value="fin-anxiete"><span class="option-emoji">🧘‍♀️</span><div class="option-text"><div class="option-label">Ne plus jamais ressentir d'anxiété liée à ma digestion</div></div></div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- ===== Fin Contenu Quiz ===== -->
+  </div>
+
+  <script>
+    /* =========================
+       Etat & éléments
+       ========================= */
+    let currentStep = 1;
+    const totalSteps = 7;
+    const answers = {};
+
+    const backButton   = document.getElementById('backButton');
+    const stepCounter  = document.getElementById('stepCounter');
+    const progressFill = document.getElementById('progressFill');
+
+    backButton.addEventListener('click', () => { if (currentStep > 1) goToStep(currentStep - 1); });
+
+    function updateUI(){
+      stepCounter.textContent = `${currentStep}/${totalSteps}`;
+      const progress = (currentStep / totalSteps) * 100;
+      progressFill.style.width = `${progress}%`;
+      backButton.style.visibility = currentStep > 1 ? 'visible' : 'hidden';
+
+      const resultsWrapper = document.getElementById('resultsWrapper');
+      if (resultsWrapper){
+        const overlayVisible = resultsWrapper.getAttribute('aria-hidden') === 'false';
+        document.body.classList.toggle('overlay-active', overlayVisible);
+      }
+    }
+
+    function resetViewportScroll(){
+      if (typeof window.scrollTo === 'function'){
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      } else {
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      }
+    }
+
+    function resetQuestionScroll(section){
+      if (!section) return;
+      const content = section.querySelector('.question-content');
+      if (content){
+        if (typeof content.scrollTo === 'function'){
+          content.scrollTo({ top: 0, behavior: 'auto' });
+        }
+        content.scrollTop = 0;
+      }
+    }
+
+    function goToStep(step){
+      document.querySelectorAll('.question-section').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById(`q${step}`);
+      if (target){
+        target.classList.add('active');
+        currentStep = step;
+        updateUI();
+        requestAnimationFrame(() => {
+          resetQuestionScroll(target);
+          resetViewportScroll();
+        });
+      }
+    }
+
+    /* ==========
+       Wiring Q*
+       ========== */
+    document.querySelectorAll('.question-section').forEach((section, index) => {
+
+      const questionId    = `q${index + 1}`;
+      const options       = section.querySelectorAll('.option-card');
+      const continueBtn   = section.querySelector('.continue-button');
+      const hasCheckboxes = section.querySelector('input[type="checkbox"]') !== null;
+
+      if (!hasCheckboxes){
+        options.forEach(option => {
+          option.addEventListener('click', () => {
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+            answers[questionId] = option.dataset.value;
+            if (continueBtn) continueBtn.disabled = false;
+
+            if (!continueBtn){
+              if (index + 1 < totalSteps) goToStep(index + 2);
+              else showResultsOverlay(); // étape finale -> overlay
+            }
+          });
+        });
+      } else {
+        options.forEach(option => {
+          const checkbox = option.querySelector('input[type="checkbox"]');
+          if (!checkbox) return;
+          option.addEventListener('click', (e) => {
+            if (e.target !== checkbox) checkbox.checked = !checkbox.checked;
+            option.classList.toggle('selected', checkbox.checked);
+            const checkedValues = Array.from(section.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.parentElement.dataset.value);
+            answers[questionId] = checkedValues;
+            if (continueBtn) continueBtn.disabled = checkedValues.length === 0;
+          });
+        });
+      }
+
+      if (continueBtn){
+        continueBtn.addEventListener('click', () => {
+          if (index + 1 < totalSteps) goToStep(index + 2);
+          else showResultsOverlay(); // étape finale -> overlay
+        });
+      }
+    });
+
+    /* =========================
+       Overlay de chargement
+       ========================= */
+    const totalSearchSteps = 3;
+    let searchProgress = 0;
+    let currentSearchStep = 0;
+
+    const GUT_TAU = Math.PI * 2;
+    const gutToRad = d => d * Math.PI / 180;
+    const GUT_STOPS = [
+      { p:0.00, c:'#22c55e' },
+      { p:0.25, c:'#84cc16' },
+      { p:0.50, c:'#facc15' },
+      { p:0.75, c:'#f97316' },
+      { p:1.00, c:'#ef4444' }
+    ];
+    const GUT_GEO = { cx:0, cy:0, innerR:0, outerR:0, frameOuterR:0, frameInnerR:0, labelR:0, arrowR:0, left:0, right:0, span:0 };
+    const INFO_BACKGROUND_COLORS = {
+      postGut:'#f97316',
+      plan:'#22c55e'
+    };
+    let gutGaugeInitialized = false;
+    let gutGaugeResizeBound = false;
+    let gutGaugeCurrentScore = 0;
+
+    function gutMix(c1, c2, t){
+      const r1 = parseInt(c1.slice(1, 3), 16), g1 = parseInt(c1.slice(3, 5), 16), b1 = parseInt(c1.slice(5, 7), 16);
+      const r2 = parseInt(c2.slice(1, 3), 16), g2 = parseInt(c2.slice(3, 5), 16), b2 = parseInt(c2.slice(5, 7), 16);
+      const r = Math.round(r1 + (r2 - r1) * t);
+      const g = Math.round(g1 + (g2 - g1) * t);
+      const b = Math.round(b1 + (b2 - b1) * t);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function gutColorAt(x){
+      for (let i = 0; i < GUT_STOPS.length - 1; i++){
+        const a = GUT_STOPS[i], b = GUT_STOPS[i + 1];
+        if (x >= a.p && x <= b.p){
+          const t = (x - a.p) / (b.p - a.p);
+          return gutMix(a.c, b.c, t);
+        }
+      }
+      return GUT_STOPS[GUT_STOPS.length - 1].c;
+    }
+
+    function gutParseRgb(str){
+      const match = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/.exec(str);
+      if (!match) return { r:0, g:0, b:0 };
+      return { r:parseInt(match[1], 10), g:parseInt(match[2], 10), b:parseInt(match[3], 10) };
+    }
+
+    function gutRgbToString({ r, g, b }){
+      return `rgb(${Math.round(Math.max(0, Math.min(255, r)))}, ${Math.round(Math.max(0, Math.min(255, g)))}, ${Math.round(Math.max(0, Math.min(255, b)))})`;
+    }
+
+    function gutLightenColor(str, factor = 0.25){
+      const { r, g, b } = gutParseRgb(str);
+      return gutRgbToString({
+        r: r + (255 - r) * factor,
+        g: g + (255 - g) * factor,
+        b: b + (255 - b) * factor
+      });
+    }
+
+    function gutDarkenColor(str, factor = 0.2){
+      const { r, g, b } = gutParseRgb(str);
+      return gutRgbToString({
+        r: r * (1 - factor),
+        g: g * (1 - factor),
+        b: b * (1 - factor)
+      });
+    }
+
+    function gutToRgba(str, alpha){
+      const { r, g, b } = gutParseRgb(str);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+
+    function setPreviewBackgroundFromHex(hexColor, topAlpha = 0.22, bottomAlpha = 0.08){
+      if (!hexColor) return;
+      const wrapper = document.getElementById('resultsWrapper');
+      if (!wrapper) return;
+      const rgb = gutMix(hexColor, hexColor, 0);
+      wrapper.style.setProperty('--gut-preview-top', gutToRgba(rgb, topAlpha));
+      wrapper.style.setProperty('--gut-preview-bottom', gutToRgba(rgb, bottomAlpha));
+    }
+
+    function drawGutGauge(){
+      const wrap = document.getElementById('gutGaugeWrapper');
+      const svg = document.getElementById('gutGaugeSvg');
+      const frame = document.getElementById('gutGaugeFrame');
+      const bars = document.getElementById('gutGaugeBars');
+      const center = document.getElementById('gutGaugeCenter');
+      const labelPathLeft = document.getElementById('gutLabelPathLeft');
+      const labelPathRight = document.getElementById('gutLabelPathRight');
+      const labelLeft = document.getElementById('gutLabelLeft');
+      const labelRight = document.getElementById('gutLabelRight');
+      if (!wrap || !svg || !frame || !bars || !center || !labelLeft || !labelRight || !labelPathLeft || !labelPathRight) return;
+
+      const w = wrap.clientWidth;
+      const h = wrap.clientHeight;
+      if (w === 0 || h === 0) return;
+
+      const labelPadding = Math.max(14, w * 0.05);
+      const labelR = w / 2 - labelPadding;
+      const frameOuterR = labelR - Math.max(6, w * 0.015);
+      const frameThickness = Math.max(28, frameOuterR * 0.18);
+      const frameInnerR = frameOuterR - frameThickness;
+      const barPadding = Math.max(10, frameOuterR * 0.035);
+      const outerR = frameInnerR - barPadding;
+      const barThickness = Math.max(28, frameOuterR * 0.2);
+      const innerR = outerR - barThickness;
+      const discPadding = Math.max(12, frameOuterR * 0.05);
+      let discR = innerR - discPadding;
+      const discMin = innerR * 0.62;
+      if (discR < discMin) discR = discMin;
+
+      const apex = gutToRad(-90);
+      const span = gutToRad(216);
+      const topMargin = Math.max(16, w * 0.04);
+      const cy = frameOuterR + topMargin;
+      const cx = w / 2;
+
+      Object.assign(GUT_GEO, {
+        cx, cy, innerR, outerR, frameOuterR, frameInnerR, labelR,
+        arrowR: frameOuterR + 14,
+        left: apex - span / 2,
+        right: apex + span / 2,
+        span
+      });
+
+      center.style.width = `${discR * 2}px`;
+      center.style.height = `${discR * 2}px`;
+      center.style.top = `${cy}px`;
+      center.style.left = `${cx}px`;
+      center.style.transform = 'translate(-50%, -50%)';
+
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+      frame.innerHTML = '';
+      bars.innerHTML = '';
+
+      const ringPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const bigStart = apex - gutToRad(240) / 2;
+      const bigEnd = apex + gutToRad(240) / 2;
+      ringPath.setAttribute('d', gutDonutArcPath(cx, cy, frameOuterR, frameInnerR, bigStart, bigEnd, true));
+      ringPath.setAttribute('fill', 'rgba(125,105,255,0.12)');
+      frame.appendChild(ringPath);
+
+      let barCount = 75;
+      if (w <= 420) barCount = 65;
+      if (w <= 360) barCount = 55;
+      if (w <= 320) barCount = 48;
+
+      for (let i = 0; i < barCount; i++){
+        const t = barCount === 1 ? 0 : i / (barCount - 1);
+        const ang = GUT_GEO.left + t * GUT_GEO.span;
+        const x1 = cx + innerR * Math.cos(ang);
+        const y1 = cy + innerR * Math.sin(ang);
+        const x2 = cx + outerR * Math.cos(ang);
+        const y2 = cy + outerR * Math.sin(ang);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y1);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('stroke', gutColorAt(t));
+        line.setAttribute('stroke-width', Math.max(4, w * 0.008));
+        line.setAttribute('stroke-linecap', 'round');
+        bars.appendChild(line);
+      }
+
+      const labelArcInset = gutToRad(8);
+      const labelMidSpacing = gutToRad(6);
+      const leftStart = GUT_GEO.left + labelArcInset;
+      const leftEnd = apex - labelMidSpacing;
+      const rightStart = apex + labelMidSpacing;
+      const rightEnd = GUT_GEO.right - labelArcInset;
+
+      const leftPath = gutArcPath(cx, cy, labelR, leftStart, leftEnd);
+      const rightPath = gutArcPath(cx, cy, labelR, rightStart, rightEnd);
+      labelPathLeft.setAttribute('d', leftPath);
+      labelPathRight.setAttribute('d', rightPath);
+
+      const XLINK_NS = 'http://www.w3.org/1999/xlink';
+      if (labelLeft.getAttribute('href') !== '#gutLabelPathLeft'){
+        labelLeft.setAttribute('href', '#gutLabelPathLeft');
+        labelLeft.setAttributeNS(XLINK_NS, 'xlink:href', '#gutLabelPathLeft');
+      }
+      if (labelRight.getAttribute('href') !== '#gutLabelPathRight'){
+        labelRight.setAttribute('href', '#gutLabelPathRight');
+        labelRight.setAttributeNS(XLINK_NS, 'xlink:href', '#gutLabelPathRight');
+      }
+
+      setGutNeedle(gutGaugeCurrentScore);
+    }
+
+    function gutDonutArcPath(cx, cy, rOuter, rInner, aStart, aEnd, clockwise = true){
+      const xO1 = cx + rOuter * Math.cos(aStart), yO1 = cy + rOuter * Math.sin(aStart);
+      const xO2 = cx + rOuter * Math.cos(aEnd), yO2 = cy + rOuter * Math.sin(aEnd);
+      const xI2 = cx + rInner * Math.cos(aEnd), yI2 = cy + rInner * Math.sin(aEnd);
+      const xI1 = cx + rInner * Math.cos(aStart), yI1 = cy + rInner * Math.sin(aStart);
+      const delta = Math.abs(aEnd - aStart) % GUT_TAU;
+      const largeArc = delta > Math.PI ? 1 : 0;
+      const sweepOuter = clockwise ? 1 : 0;
+      const sweepInner = clockwise ? 0 : 1;
+      return [
+        `M ${xO1} ${yO1}`,
+        `A ${rOuter} ${rOuter} 0 ${largeArc} ${sweepOuter} ${xO2} ${yO2}`,
+        `L ${xI2} ${yI2}`,
+        `A ${rInner} ${rInner} 0 ${largeArc} ${sweepInner} ${xI1} ${yI1}`,
+        'Z'
+      ].join(' ');
+    }
+
+    function gutArcPath(cx, cy, r, aStart, aEnd){
+      const x1 = cx + r * Math.cos(aStart);
+      const y1 = cy + r * Math.sin(aStart);
+      const x2 = cx + r * Math.cos(aEnd);
+      const y2 = cy + r * Math.sin(aEnd);
+      const delta = Math.abs(aEnd - aStart) % GUT_TAU;
+      const largeArc = delta > Math.PI ? 1 : 0;
+      const sweep = aEnd >= aStart ? 1 : 0;
+      return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} ${sweep} ${x2} ${y2}`;
+    }
+
+    function setGutNeedle(score){
+      const needle = document.getElementById('gutNeedle');
+      if (!needle) return;
+      const s = Math.max(0, Math.min(100, score)) / 100;
+      const ang = GUT_GEO.left + s * GUT_GEO.span;
+      const ax = GUT_GEO.cx + GUT_GEO.arrowR * Math.cos(ang);
+      const ay = GUT_GEO.cy + GUT_GEO.arrowR * Math.sin(ang);
+      needle.style.left = `${ax}px`;
+      needle.style.top = `${ay}px`;
+      needle.style.transform = `translate(-50%, -50%) rotate(${(ang + Math.PI / 2) * 180 / Math.PI}deg)`;
+      const color = gutColorAt(s);
+      needle.style.setProperty('--gut-needle-color', color);
+      needle.style.setProperty('--gut-needle-highlight', gutLightenColor(color, 0.28));
+      needle.style.setProperty('--gut-needle-shadow', gutToRgba(color, 0.32));
+      needle.style.setProperty('--gut-needle-triangle', gutDarkenColor(color, 0.18));
+      const wrapper = document.getElementById('resultsWrapper');
+      if (wrapper){
+        wrapper.style.setProperty('--gut-preview-top', gutToRgba(color, 0.22));
+        wrapper.style.setProperty('--gut-preview-bottom', gutToRgba(color, 0.08));
+      }
+      gutGaugeCurrentScore = score;
+    }
+
+    function animateGutGauge(target = 85.5, duration = 2000){
+      const scoreEl = document.getElementById('gutScoreValue');
+      if (!scoreEl) return;
+      const start = performance.now();
+      const ease = t => 1 - Math.pow(1 - t, 3);
+
+      function step(now){
+        const progress = Math.min(1, (now - start) / duration);
+        const value = ease(progress) * target;
+        scoreEl.textContent = value.toFixed(1);
+        setGutNeedle(value);
+        if (progress < 1){
+          requestAnimationFrame(step);
+        }
+      }
+
+      requestAnimationFrame(step);
+    }
+
+    function handleGutResize(){
+      if (!gutGaugeInitialized) return;
+      const scoreEl = document.getElementById('gutScoreValue');
+      const current = scoreEl ? parseFloat(scoreEl.textContent) || gutGaugeCurrentScore : gutGaugeCurrentScore;
+      drawGutGauge();
+      setGutNeedle(current);
+    }
+
+    function setupGutGauge(){
+      requestAnimationFrame(() => {
+        drawGutGauge();
+        animateGutGauge();
+        gutGaugeInitialized = true;
+        if (!gutGaugeResizeBound){
+          window.addEventListener('resize', handleGutResize);
+          gutGaugeResizeBound = true;
+        }
+      });
+    }
+
+    function showResultsOverlay(){
+      const wrapper = document.getElementById('resultsWrapper');
+      const progressCard = document.getElementById('searchProgressCard');
+      const successCard = document.getElementById('searchSuccessCard');
+      const loaderStage = document.getElementById('loaderStage');
+      const preview = document.getElementById('resultPreview');
+      const postInfo = document.getElementById('postGutInfo');
+      const postInfoPlan = document.getElementById('postGutInfoPlan');
+      const headerTitle = wrapper ? wrapper.querySelector('.header-title') : null;
+      const scoreEl = document.getElementById('gutScoreValue');
+
+      if (!wrapper || !progressCard || !loaderStage) return;
+
+      document.body.classList.add('overlay-active');
+      document.body.classList.remove('showing-email');
+      wrapper.style.display = 'flex';
+      wrapper.setAttribute('aria-hidden', 'false');
+      wrapper.classList.remove('preview-mode');
+      wrapper.scrollTop = 0;
+
+      loaderStage.style.display = 'flex';
+      loaderStage.setAttribute('aria-hidden', 'false');
+      progressCard.style.display = '';
+      progressCard.classList.remove('hidden');
+
+      if (headerTitle){
+        headerTitle.style.display = '';
+        headerTitle.style.opacity = '';
+        headerTitle.style.transform = '';
+      }
+
+      if (successCard){
+        successCard.classList.remove('visible');
+        successCard.style.display = 'none';
+        successCard.setAttribute('aria-hidden', 'true');
+      }
+
+      if (preview){
+        preview.classList.remove('active');
+        preview.style.display = 'none';
+        preview.setAttribute('aria-hidden', 'true');
+      }
+
+      if (postInfo){
+        postInfo.classList.remove('active');
+        postInfo.style.display = 'none';
+        postInfo.setAttribute('aria-hidden', 'true');
+      }
+
+      if (postInfoPlan){
+        postInfoPlan.classList.remove('active');
+        postInfoPlan.style.display = 'none';
+        postInfoPlan.setAttribute('aria-hidden', 'true');
+      }
+
+      if (scoreEl){
+        scoreEl.textContent = '0';
+      }
+      gutGaugeInitialized = false;
+      gutGaugeCurrentScore = 0;
+
+      document.querySelectorAll('.question-section').forEach(s => s.classList.remove('active'));
+      currentStep = totalSteps;
+      updateUI();
+
+      startSearchProgress();
+      console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Overlay loader affiché');
+    }
+
+    function startSearchProgress(){
+      searchProgress = 0; currentSearchStep = 0;
+      const wrapper = document.getElementById('resultsWrapper');
+      const bar = wrapper.querySelector('#searchProgressBar');
+      const percentage = wrapper.querySelector('#searchProgressPercentage');
+      const items = wrapper.querySelectorAll('.checklist-item');
+
+      bar.style.width = '0%';
+      percentage.textContent = '0%';
+      items.forEach(i => i.classList.remove('active','completed'));
+
+      setTimeout(updateSearchProgress, 400);
+    }
+
+    function updateSearchProgress(){
+      const wrapper = document.getElementById('resultsWrapper');
+      const bar = wrapper.querySelector('#searchProgressBar');
+      const percentage = wrapper.querySelector('#searchProgressPercentage');
+      const items = wrapper.querySelectorAll('.checklist-item');
+
+      searchProgress += 2; if (searchProgress > 100) searchProgress = 100;
+      bar.style.width = searchProgress + '%';
+      percentage.textContent = Math.floor(searchProgress) + '%';
+
+      const stepProgress = Math.floor((searchProgress / 100) * totalSearchSteps);
+      if (stepProgress > currentSearchStep){
+        for (let i = currentSearchStep; i < stepProgress && i < totalSearchSteps; i++){
+          setTimeout(() => {
+            items[i].classList.add('active');
+            setTimeout(() => { items[i].classList.add('completed'); }, 150);
+          }, i * 100);
+        }
+        currentSearchStep = stepProgress;
+      }
+
+      if (searchProgress < 100){
+        setTimeout(updateSearchProgress, 100);
+      } else {
+        items.forEach((item, idx) => { setTimeout(() => { item.classList.add('active','completed'); }, idx * 50); });
+        setTimeout(showSearchSuccess, 900);
+      }
+    }
+
+    function showSearchSuccess(){
+      const progressCard = document.getElementById('searchProgressCard');
+      const loaderStage = document.getElementById('loaderStage');
+      const headerTitle = loaderStage ? loaderStage.querySelector('.header-title') : null;
+
+      if (progressCard) progressCard.classList.add('hidden');
+      if (headerTitle){
+        headerTitle.style.opacity = '0';
+        headerTitle.style.transform = 'translateY(-20px)';
+      }
+
+      setTimeout(() => {
+        if (loaderStage){
+          loaderStage.style.display = 'none';
+          loaderStage.setAttribute('aria-hidden', 'true');
+        }
+        showResultPreview();
+        console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Overlay loader terminé → aperçu profil');
+      }, 350);
+    }
+
+    function getMetabolicAgeValue(){
+      const fallback = '44 ans';
+      const raw = answers['q1'];
+      if (!raw || typeof raw !== 'string') return fallback;
+
+      const matches = raw.match(/\d+/g) || [];
+      if (!matches.length) return fallback;
+
+      let baseAge;
+      if (matches.length === 1){
+        baseAge = parseInt(matches[0], 10);
+      } else {
+        const first = parseInt(matches[0], 10);
+        const last = parseInt(matches[matches.length - 1], 10);
+        baseAge = (first + last) / 2;
+      }
+
+      if (Number.isNaN(baseAge)) return fallback;
+
+      const metabolicAge = Math.round(baseAge + 10);
+      return `${metabolicAge} ans`;
+    }
+
+    function showResultPreview(){
+      const wrapper = document.getElementById('resultsWrapper');
+      const preview = document.getElementById('resultPreview');
+      const postInfo = document.getElementById('postGutInfo');
+      const postInfoPlan = document.getElementById('postGutInfoPlan');
+      if (!wrapper || !preview) return;
+
+      const metabolicAgeEl = document.getElementById('metabolicAgeValue');
+      if (metabolicAgeEl){
+        metabolicAgeEl.textContent = getMetabolicAgeValue();
+      }
+
+      document.body.classList.remove('showing-email');
+      wrapper.classList.add('preview-mode');
+      wrapper.scrollTop = 0;
+      preview.style.display = 'flex';
+      preview.setAttribute('aria-hidden', 'false');
+
+      if (postInfo){
+        postInfo.classList.remove('active');
+        postInfo.style.display = 'none';
+        postInfo.setAttribute('aria-hidden', 'true');
+      }
+
+      if (postInfoPlan){
+        postInfoPlan.classList.remove('active');
+        postInfoPlan.style.display = 'none';
+        postInfoPlan.setAttribute('aria-hidden', 'true');
+      }
+
+      requestAnimationFrame(() => {
+        preview.classList.add('active');
+        setupGutGauge();
+      });
+    }
+
+    function showPostGutInfo(){
+      const wrapper = document.getElementById('resultsWrapper');
+      const preview = document.getElementById('resultPreview');
+      const postInfo = document.getElementById('postGutInfo');
+      const postInfoPlan = document.getElementById('postGutInfoPlan');
+
+      if (!wrapper || !postInfo){
+        showEmailCapture();
+        return;
+      }
+
+      document.body.classList.remove('showing-email');
+      wrapper.classList.add('preview-mode');
+      wrapper.scrollTop = 0;
+
+      if (preview){
+        preview.classList.remove('active');
+        preview.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+          preview.style.display = 'none';
+        }, 400);
+      }
+
+      if (postInfoPlan){
+        postInfoPlan.classList.remove('active');
+        postInfoPlan.setAttribute('aria-hidden', 'true');
+        postInfoPlan.style.display = 'none';
+      }
+
+      setPreviewBackgroundFromHex(INFO_BACKGROUND_COLORS.postGut);
+
+      postInfo.classList.remove('active');
+      postInfo.style.display = 'flex';
+      postInfo.setAttribute('aria-hidden', 'false');
+
+      requestAnimationFrame(() => {
+        postInfo.classList.add('active');
+      });
+    }
+
+    function showPostGutPlan(){
+      const wrapper = document.getElementById('resultsWrapper');
+      const postInfo = document.getElementById('postGutInfo');
+      const postInfoPlan = document.getElementById('postGutInfoPlan');
+
+      if (!wrapper || !postInfoPlan){
+        showEmailCapture();
+        return;
+      }
+
+      document.body.classList.remove('showing-email');
+      wrapper.classList.add('preview-mode');
+      wrapper.scrollTop = 0;
+
+      if (postInfo){
+        postInfo.classList.remove('active');
+        postInfo.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+          postInfo.style.display = 'none';
+        }, 400);
+      }
+
+      setPreviewBackgroundFromHex(INFO_BACKGROUND_COLORS.plan);
+
+      postInfoPlan.classList.remove('active');
+      postInfoPlan.style.display = 'flex';
+      postInfoPlan.setAttribute('aria-hidden', 'false');
+
+      requestAnimationFrame(() => {
+        postInfoPlan.classList.add('active');
+      });
+    }
+
+    function showEmailCapture(){
+      const wrapper = document.getElementById('resultsWrapper');
+      const successCard = document.getElementById('searchSuccessCard');
+      const preview = document.getElementById('resultPreview');
+      const postInfo = document.getElementById('postGutInfo');
+      const postInfoPlan = document.getElementById('postGutInfoPlan');
+
+      if (!wrapper || !successCard) return;
+
+      wrapper.classList.remove('preview-mode');
+      document.body.classList.add('showing-email');
+      wrapper.scrollTop = 0;
+
+      if (preview){
+        preview.classList.remove('active');
+        preview.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+          preview.style.display = 'none';
+        }, 400);
+      }
+
+      if (postInfo){
+        postInfo.classList.remove('active');
+        postInfo.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+          postInfo.style.display = 'none';
+        }, 400);
+      }
+
+      if (postInfoPlan){
+        postInfoPlan.classList.remove('active');
+        postInfoPlan.setAttribute('aria-hidden', 'true');
+        setTimeout(() => {
+          postInfoPlan.style.display = 'none';
+        }, 400);
+      }
+
+      successCard.classList.add('visible');
+      successCard.style.display = 'block';
+      successCard.setAttribute('aria-hidden', 'false');
+
+      prepareSioEmailSlot();
+      console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Aperçu terminé → étape email');
+    }
+
+    /* =========================
+       Formulaire email (SIO)
+       ========================= */
+    let sioMutationObserver = null;
+
+    function prepareSioEmailSlot(){
+      if (sioMutationObserver){ sioMutationObserver.disconnect(); sioMutationObserver = null; }
+
+      setTimeout(() => {
+        relocateSioIntoSlot();
+        sioMutationObserver = new MutationObserver(() => relocateSioIntoSlot());
+        sioMutationObserver.observe(document.body, { childList:true, subtree:true });
+        setTimeout(() => {
+          if (sioMutationObserver){ sioMutationObserver.disconnect(); sioMutationObserver = null; }
+        }, 10000);
+      }, 0);
+    }
+
+    function getSioSubmitButton(){
+      const sel = [
+        'button[type="submit"]',
+        'input[type="submit"]',
+        '.sio-subscribe-button',
+        '.sio-submit',
+        '[data-element="cta-button"]',
+        '[data-test-id="send-form-button"]',
+        '[data-testid="send-form-button"]',
+        'button[id^="button-"]'
+      ].join(', ');
+      const slot = document.getElementById('sioEmailSlot');
+      // d’abord dans le slot…
+      let btn = slot ? slot.querySelector(sel) : null;
+      // …sinon global
+      if (!btn) btn = document.querySelector(sel);
+      return btn || null;
+    }
+
+    function clickSioSubmit(){
+      const slot = document.getElementById('sioEmailSlot');
+      const formInSlot = slot ? slot.querySelector('form') : null;
+      const btn  = getSioSubmitButton();
+
+      if (btn && typeof btn.click === 'function'){ btn.click(); console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Click bouton SIO'); return; }
+      if (formInSlot){ if (formInSlot.requestSubmit) formInSlot.requestSubmit(); else formInSlot.submit(); console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Form.submit() SIO'); }
+    }
+
+    function relocateSioIntoSlot(){
+      const slot = document.getElementById('sioEmailSlot');
+      if (!slot){ console.warn('[SIO][DBG] slot email introuvable'); return; }
+
+      // Gate CSS (au cas où)
+      if (!document.getElementById('sioEmailGate')){
+        const css = document.createElement('style');
+        css.id = 'sioEmailGate';
+        css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"]{display:none!important;} #sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"]{display:block!important;}';
+        (document.head || document.documentElement).appendChild(css);
+      }
+
+      // Localise le champ email SIO n’importe où
+      const EMAIL_SEL = [
+        'input[type="email"]',
+        'input[name="email"]',
+        'input[name*="email" i]',
+        'input[id*="email" i]',
+        'input[placeholder*="mail" i]',
+        'input[id^="field-"]'
+      ].join(', ');
+      const email = document.querySelector(EMAIL_SEL);
+
+      // Déplace le formulaire si possible
+      if (email){
+        const form = email.closest('form') || email.form;
+        if (form && !slot.contains(form)){
+          slot.innerHTML = '';
+          slot.appendChild(form);
+          console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Formulaire SIO déplacé → #sioEmailSlot');
+        }else if(!form && !slot.contains(email)){
+          slot.innerHTML = '';
+          slot.appendChild(email);
+          console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Input email SIO déplacé → #sioEmailSlot (pas de <form>)');
+        }
+      }
+
+      // Trouve le bouton SIO ; s’il n’est pas dans le slot, on le déplace
+      let btn = getSioSubmitButton();
+      if (btn && !slot.contains(btn)){
+        const ref = slot.querySelector('form') || slot;
+        try{
+          ref.appendChild(btn);
+          console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Bouton SIO déplacé → #sioEmailSlot');
+        }catch(_){}
+      }
+
+      // Style & accessibilité
+      btn = getSioSubmitButton();
+      if (btn){
+        btn.disabled = false;
+        btn.style.display = 'block';
+        btn.style.visibility = 'visible';
+        btn.style.width = '100%';
+      }
+      console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Bouton SIO natif trouvé :', !!btn);
+
+      // Entrée => submit
+      const successCardEl = document.getElementById('searchSuccessCard');
+      if (successCardEl && !successCardEl.dataset.enterBound){
+        successCardEl.dataset.enterBound = '1';
+        successCardEl.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter'){
+            e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+            clickSioSubmit();
+          }
+        }, { capture:true });
+        console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Listener Enter→submit SIO ajouté');
+      }
+
+      // retire le placeholder si un form ou input a été trouvé
+      const loading = document.getElementById('sioEmailLoading');
+      if (loading && (slot.querySelector('form') || slot.querySelector(EMAIL_SEL))) loading.remove();
+    }
+
+    const previewContinueBtn = document.getElementById('gutPreviewContinue');
+    if (previewContinueBtn){
+      previewContinueBtn.addEventListener('click', showPostGutInfo);
+    }
+
+    const postGutInfoNextBtn = document.getElementById('postGutInfoNext');
+    if (postGutInfoNextBtn){
+      postGutInfoNextBtn.addEventListener('click', showPostGutPlan);
+    }
+
+    const gutInfoContinueBtn = document.getElementById('gutInfoContinue');
+    if (gutInfoContinueBtn){
+      gutInfoContinueBtn.addEventListener('click', showEmailCapture);
+    }
+
+    // ===== Init
+    updateUI();
+  </script>
+</body>
+</html>
