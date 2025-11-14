@@ -1,15 +1,40 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Quel est votre profil digestif ? - Quiz personnalisé</title>
+<!-- Configuration du document injectée dynamiquement pour la plateforme SIO -->
+<script>
+(function() {
+  const doc = document;
+  doc.documentElement.lang = 'fr';
+  const ensureMeta = (selector, factory) => {
+    if (!doc.head.querySelector(selector)) {
+      doc.head.appendChild(factory());
+    }
+  };
+  ensureMeta('meta[charset]', () => {
+    const el = doc.createElement('meta');
+    el.setAttribute('charset', 'UTF-8');
+    return el;
+  });
+  ensureMeta('meta[name="viewport"]', () => {
+    const el = doc.createElement('meta');
+    el.name = 'viewport';
+    el.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+    return el;
+  });
+  doc.title = "Quel est votre profil digestif ? - Quiz personnalis\u00e9";
+  const iconHref = "/13114230/687b524473004_Votretextedeparagraphe1.png";
+  const ensureLink = (rel) => {
+    if (!doc.head.querySelector(`link[rel="${rel}"][href="${iconHref}"]`)) {
+      const link = doc.createElement('link');
+      link.rel = rel;
+      link.href = iconHref;
+      doc.head.appendChild(link);
+    }
+  };
+  ensureLink('icon');
+  ensureLink('apple-touch-icon');
+})();
+</script>
 
-  <!-- icônes (facultatif) -->
-  <link rel="icon" type="image/png" href="/13114230/687b524473004_Votretextedeparagraphe1.png" />
-  <link rel="apple-touch-icon" href="/13114230/687b524473004_Votretextedeparagraphe1.png" />
-
-  <style>
+<style>
     /* Reset & base */
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
     html, body { min-height:100vh; min-height:100dvh; width:100%; overflow-x:hidden; overflow-y:auto; overscroll-behavior-y:none; }
@@ -680,9 +705,7 @@
     #sioEmailSlot input[name="surname"],
     #sioEmailSlot input[name="email"]{ display:block !important; }
   </style>
-</head>
 
-<body>
   <div class="app-container">
     <!-- Header -->
     <header class="app-header">
@@ -2147,5 +2170,4 @@
     // ===== Init
     updateUI();
   </script>
-</body>
-</html>
+
