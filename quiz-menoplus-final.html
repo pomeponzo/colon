@@ -1,0 +1,1469 @@
+   <style>
+       .app-container {
+           box-sizing: border-box;
+           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, 'Helvetica Neue', Arial, sans-serif;
+           background: #ffffff;
+           width: 100%;
+           min-height: 600px;
+           height: 100vh;
+           max-height: 900px;
+           display: flex;
+           flex-direction: column;
+           overflow: hidden;
+       }
+       
+       .app-container * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
+
+       @media (min-width: 600px) {
+           .app-container {
+               max-width: 500px;
+               margin: 0 auto;
+           }
+       }
+
+       .app-header {
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+           padding: 12px 16px;
+           background: white;
+           border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+           flex-shrink: 0;
+           z-index: 10;
+           height: 48px;
+       }
+
+       .back-button {
+           background: none;
+           border: none;
+           color: #64748b;
+           cursor: pointer;
+           padding: 6px;
+           border-radius: 8px;
+           transition: all 0.2s ease;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           width: 32px;
+           height: 32px;
+       }
+
+       .back-button:hover {
+           background: rgba(16, 185, 129, 0.1);
+           color: #059669;
+       }
+
+       .back-button svg {
+           width: 18px;
+           height: 18px;
+       }
+
+       .app-logo {
+           font-size: 1rem;
+           font-weight: 600;
+           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           -webkit-background-clip: text;
+           -webkit-text-fill-color: transparent;
+           background-clip: text;
+           position: absolute;
+           left: 50%;
+           transform: translateX(-50%);
+       }
+
+       .step-counter {
+           font-size: 0.8rem;
+           color: #64748b;
+           font-weight: 500;
+           width: 32px;
+           text-align: right;
+       }
+
+       .progress-bar {
+           height: 2px;
+           background: rgba(0, 0, 0, 0.05);
+           position: relative;
+           overflow: hidden;
+           flex-shrink: 0;
+       }
+
+       .progress-fill {
+           height: 100%;
+           background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+           transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+       }
+
+       .app-content {
+           flex: 1;
+           display: flex;
+           flex-direction: column;
+           overflow: hidden;
+           padding: 16px;
+           min-height: 0;
+       }
+
+       .question-section {
+           display: none;
+           flex: 1;
+           flex-direction: column;
+           animation: slideIn 0.3s ease;
+           overflow: hidden;
+       }
+
+       .question-section.active {
+           display: flex;
+       }
+
+       @keyframes slideIn {
+           from {
+               opacity: 0;
+               transform: translateX(20px);
+           }
+           to {
+               opacity: 1;
+               transform: translateX(0);
+           }
+       }
+
+       .question-header {
+           margin-bottom: 16px;
+           flex-shrink: 0;
+       }
+
+       .question-title {
+           font-size: 1.2rem;
+           font-weight: 600;
+           color: #1e293b;
+           margin-bottom: 6px;
+           line-height: 1.2;
+       }
+
+       .question-subtitle {
+           font-size: 0.85rem;
+           color: #64748b;
+           line-height: 1.4;
+       }
+
+       .options-scroll-container {
+           flex: 1;
+           overflow-y: auto;
+           overflow-x: hidden;
+           min-height: 0;
+           -webkit-overflow-scrolling: touch;
+       }
+
+       .options-container {
+           display: flex;
+           flex-direction: column;
+           gap: 8px;
+       }
+
+       .option-card {
+           background: #ffffff;
+           border: 2px solid #e5e7eb;
+           border-radius: 10px;
+           padding: 12px 14px;
+           cursor: pointer;
+           transition: all 0.2s ease;
+           display: flex;
+           align-items: center;
+           justify-content: flex-start;
+           gap: 10px;
+           position: relative;
+           overflow: hidden;
+           text-align: left;
+           min-height: 48px;
+       }
+
+       .option-card:hover {
+           border-color: #10b981;
+           background: rgba(16, 185, 129, 0.05);
+       }
+
+       .option-card.selected {
+           border-color: #10b981;
+           background: rgba(16, 185, 129, 0.08);
+       }
+
+       .option-card input[type="radio"] {
+           accent-color: #10b981;
+           width: 18px;
+           height: 18px;
+           flex-shrink: 0;
+       }
+
+       .option-text {
+           flex: 1;
+           text-align: left;
+           font-size: 0.9rem;
+           color: #334155;
+           font-weight: 500;
+           line-height: 1.3;
+       }
+
+       .action-buttons {
+           display: flex;
+           gap: 8px;
+           padding: 12px 0 0 0;
+           flex-shrink: 0;
+       }
+
+       .btn {
+           flex: 1;
+           padding: 14px 20px;
+           border: none;
+           border-radius: 10px;
+           font-size: 0.95rem;
+           font-weight: 600;
+           cursor: pointer;
+           transition: all 0.2s ease;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 6px;
+       }
+
+       .btn-next {
+           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           color: white;
+       }
+
+       .btn-next:hover:not(:disabled) {
+           transform: translateY(-1px);
+           box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+       }
+
+       .btn-next:disabled {
+           opacity: 0.5;
+           cursor: not-allowed;
+       }
+
+       .btn-back {
+           background: white;
+           color: #64748b;
+           border: 2px solid #e5e7eb;
+           flex: 0 0 auto;
+           padding: 14px 16px;
+       }
+
+       .btn-back:hover {
+           border-color: #cbd5e1;
+           background: #f8fafc;
+       }
+
+       .landing-section {
+           display: none;
+           flex-direction: column;
+           height: 100%;
+           overflow-y: auto;
+           -webkit-overflow-scrolling: touch;
+       }
+
+       .landing-section.active {
+           display: flex;
+       }
+
+       .landing-header {
+           text-align: center;
+           margin-bottom: 24px;
+           padding-top: 20px;
+       }
+
+       .landing-title {
+           font-size: 1.6rem;
+           font-weight: 700;
+           color: #1e293b;
+           margin-bottom: 12px;
+           line-height: 1.2;
+       }
+
+       .landing-subtitle {
+           font-size: 0.95rem;
+           color: #64748b;
+           line-height: 1.5;
+           margin-bottom: 20px;
+       }
+
+       .landing-benefits {
+           background: #f8fafc;
+           border-radius: 12px;
+           padding: 16px;
+           margin-bottom: 24px;
+       }
+
+       .benefit-item {
+           display: flex;
+           align-items: flex-start;
+           gap: 10px;
+           margin-bottom: 10px;
+       }
+
+       .benefit-item:last-child {
+           margin-bottom: 0;
+       }
+
+       .benefit-icon {
+           color: #10b981;
+           font-size: 1.2rem;
+           flex-shrink: 0;
+       }
+
+       .benefit-text {
+           font-size: 0.9rem;
+           color: #334155;
+           line-height: 1.4;
+       }
+
+       .landing-cta {
+           margin-top: auto;
+           padding-bottom: 20px;
+       }
+
+       .results-wrapper {
+           display: none;
+           flex-direction: column;
+           height: 100%;
+           overflow-y: auto;
+           -webkit-overflow-scrolling: touch;
+       }
+
+       .results-wrapper.active {
+           display: flex;
+       }
+
+       .results-header {
+           text-align: center;
+           margin-bottom: 24px;
+           padding-top: 20px;
+       }
+
+       .header-title {
+           font-size: 1.4rem;
+           font-weight: 700;
+           color: #1e293b;
+           margin-bottom: 8px;
+       }
+
+       .header-subtitle {
+           font-size: 0.9rem;
+           color: #64748b;
+           line-height: 1.4;
+       }
+
+       .progress-card {
+           background: #f8fafc;
+           border-radius: 12px;
+           padding: 20px;
+           margin-bottom: 20px;
+           transition: opacity 0.3s ease;
+       }
+
+       .progress-card.hidden {
+           opacity: 0;
+       }
+
+       .progress-label {
+           font-size: 0.85rem;
+           color: #64748b;
+           margin-bottom: 8px;
+           text-align: center;
+       }
+
+       .progress-bar-container {
+           background: white;
+           height: 8px;
+           border-radius: 4px;
+           overflow: hidden;
+           margin-bottom: 4px;
+       }
+
+       .progress-bar-fill {
+           height: 100%;
+           background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+           width: 0%;
+           transition: width 0.3s ease;
+       }
+
+       .progress-percentage {
+           font-size: 0.85rem;
+           color: #059669;
+           font-weight: 600;
+           text-align: center;
+       }
+
+       .checklist {
+           margin-top: 16px;
+       }
+
+       .checklist-item {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+           padding: 8px 0;
+           opacity: 0.4;
+           transition: opacity 0.3s ease;
+       }
+
+       .checklist-item.active {
+           opacity: 1;
+       }
+
+       .checklist-icon {
+           width: 20px;
+           height: 20px;
+           border-radius: 50%;
+           border: 2px solid #cbd5e1;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           transition: all 0.3s ease;
+       }
+
+       .checklist-item.completed .checklist-icon {
+           background: #10b981;
+           border-color: #10b981;
+       }
+
+       .checklist-text {
+           font-size: 0.85rem;
+           color: #334155;
+       }
+
+       .success-card {
+           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           border-radius: 12px;
+           padding: 24px;
+           text-align: center;
+           color: white;
+           opacity: 0;
+           transform: scale(0.9);
+           transition: all 0.4s ease;
+           display: none;
+       }
+
+       .success-card.visible {
+           opacity: 1;
+           transform: scale(1);
+           display: block;
+       }
+
+       .success-icon {
+           font-size: 3rem;
+           margin-bottom: 12px;
+       }
+
+       .success-title {
+           font-size: 1.3rem;
+           font-weight: 700;
+           margin-bottom: 8px;
+       }
+
+       .success-subtitle {
+           font-size: 0.9rem;
+           opacity: 0.9;
+       }
+
+       .email-question {
+           display: none;
+           flex-direction: column;
+           gap: 16px;
+       }
+
+       .email-card {
+           background: #f8fafc;
+           border-radius: 12px;
+           padding: 20px;
+       }
+
+       .email-card-title {
+           font-size: 1.1rem;
+           font-weight: 600;
+           color: #1e293b;
+           margin-bottom: 12px;
+       }
+
+       .email-benefits-list {
+           list-style: none;
+           margin-bottom: 16px;
+       }
+
+       .email-benefits-list li {
+           display: flex;
+           align-items: flex-start;
+           gap: 8px;
+           margin-bottom: 8px;
+           font-size: 0.85rem;
+           color: #334155;
+       }
+
+       .email-benefits-list li:last-child {
+           margin-bottom: 0;
+       }
+
+       .email-input-group {
+           display: flex;
+           flex-direction: column;
+           gap: 8px;
+           margin-bottom: 12px;
+       }
+
+       .continue-button {
+           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           color: white;
+           padding: 14px 20px;
+           border: none;
+           border-radius: 10px;
+           font-size: 0.95rem;
+           font-weight: 600;
+           cursor: pointer;
+           transition: all 0.2s ease;
+           width: 100%;
+       }
+
+       .continue-button:hover {
+           transform: translateY(-1px);
+           box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+       }
+
+       #sioEmailSlot {
+           display: contents;
+       }
+
+       #sioEmailSlot form {
+           width: 100%;
+       }
+
+       #sioEmailSlot input[type="email"] {
+           width: 100%;
+           padding: 14px;
+           border: 2px solid #e5e7eb;
+           border-radius: 10px;
+           font-size: 0.95rem;
+           transition: all 0.2s ease;
+       }
+
+       #sioEmailSlot input[type="email"]:focus {
+           outline: none;
+           border-color: #10b981;
+       }
+   </style>
+</head>
+<body>
+   <div class="app-container">
+       <div class="app-header">
+           <button class="back-button" id="backBtn" onclick="goBack()">
+               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+               </svg>
+           </button>
+           <div class="app-logo">Ménoplus</div>
+           <div class="step-counter" id="stepCounter">1/12</div>
+       </div>
+       <div class="progress-bar">
+           <div class="progress-fill" id="progressFill"></div>
+       </div>
+       <div class="app-content">
+           <!-- Page d'accueil -->
+           <div class="landing-section active" id="landing">
+               <div class="landing-header">
+                   <div class="landing-title">Quel est VOTRE type métabolique hormonal ?</div>
+                   <div class="landing-subtitle">Découvrez en 2 minutes quelle hormone bloque votre perte de poids... et la méthode naturelle pour retrouver le métabolisme de vos 35 ans</div>
+               </div>
+               <div class="landing-benefits">
+                   <div class="benefit-item">
+                       <div class="benefit-icon">✅</div>
+                       <div class="benefit-text">Quel déséquilibre hormonal freine votre métabolisme</div>
+                   </div>
+                   <div class="benefit-item">
+                       <div class="benefit-icon">✅</div>
+                       <div class="benefit-text">Pourquoi les régimes traditionnels ne fonctionnent plus pour vous</div>
+                   </div>
+                   <div class="benefit-item">
+                       <div class="benefit-icon">✅</div>
+                       <div class="benefit-text">Comment la nutrition hormonale peut transformer votre corps sans régimes drastiques</div>
+                   </div>
+               </div>
+               <div class="landing-cta">
+                   <button class="btn btn-next" onclick="startQuiz()">
+                       Démarrer le quiz gratuit
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 1 -->
+           <div class="question-section" id="q1">
+               <div class="question-header">
+                   <div class="question-title">Cette année, j'ai...</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q1" value="38-43">
+                           <div class="option-text">Entre 38-43 ans et je sens les premiers changements dans mon corps</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q1" value="44-52">
+                           <div class="option-text">Entre 44-52 ans et je traverse la ménopause</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q1" value="53-60">
+                           <div class="option-text">Entre 53-60 ans et je suis en post-ménopause</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q1" value="60+">
+                           <div class="option-text">Plus de 60 ans et je souhaite retrouver ma vitalité</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 2 -->
+           <div class="question-section" id="q2">
+               <div class="question-header">
+                   <div class="question-title">Quand je pense à retrouver mon corps idéal, je m'imagine surtout...</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q2" value="energie">
+                           <div class="option-text">Retrouver mon énergie d'avant et ne plus me sentir épuisée</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q2" value="vetements">
+                           <div class="option-text">Rentrer à nouveau dans mes vêtements préférés</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q2" value="sante">
+                           <div class="option-text">Améliorer ma santé globale et mon bien-être</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q2" value="confiance">
+                           <div class="option-text">Retrouver confiance en moi et me sentir désirable</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 3 -->
+           <div class="question-section" id="q3">
+               <div class="question-header">
+                   <div class="question-title">Si je pouvais obtenir UN résultat dans les 21 prochains jours, ce serait...</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q3" value="perdre">
+                           <div class="option-text">Perdre mes premiers kilos et voir une différence visible</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q3" value="energie">
+                           <div class="option-text">Retrouver mon énergie et réduire ma fatigue chronique</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q3" value="symptomes">
+                           <div class="option-text">Diminuer les bouffées de chaleur et autres symptômes</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q3" value="plan">
+                           <div class="option-text">Avoir un plan clair que je peux suivre facilement</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q3" value="controle">
+                           <div class="option-text">Me sentir à nouveau en contrôle de mon corps</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 4 -->
+           <div class="question-section" id="q4">
+               <div class="question-header">
+                   <div class="question-title">Jusqu'à présent, j'ai essayé...</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q4" value="regimes">
+                           <div class="option-text">De suivre des régimes restrictifs (faibles en calories, sans glucides, etc.)</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q4" value="sport">
+                           <div class="option-text">D'augmenter mon activité physique</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q4" value="complements">
+                           <div class="option-text">De prendre des compléments alimentaires ou substituts de repas</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q4" value="ths">
+                           <div class="option-text">Un traitement hormonal de substitution (THS)</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q4" value="plusieurs">
+                           <div class="option-text">Plusieurs de ces options, sans résultats durables</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 5 -->
+           <div class="question-section" id="q5">
+               <div class="question-header">
+                   <div class="question-title">Actuellement, vous mangez...</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q5" value="pouce">
+                           <div class="option-text">Souvent sur le pouce ou à l'extérieur</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q5" value="cuisine">
+                           <div class="option-text">Je cuisine la plupart de mes repas</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q5" value="regime">
+                           <div class="option-text">Je suis un régime spécifique (faible en glucides, végétarien, etc.)</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q5" value="portions">
+                           <div class="option-text">Je tente de contrôler mes portions, mais c'est difficile</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q5" value="normal">
+                           <div class="option-text">Je mange normalement mais prends quand même du poids</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 6 -->
+           <div class="question-section" id="q6">
+               <div class="question-header">
+                   <div class="question-title">Parmi ces symptômes, ceux qui me concernent le plus sont...</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q6" value="bouffees">
+                           <div class="option-text">Des bouffées de chaleur et sueurs nocturnes</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q6" value="fatigue">
+                           <div class="option-text">Une fatigue persistante et un manque d'énergie</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q6" value="sommeil">
+                           <div class="option-text">Des troubles du sommeil</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q6" value="poids">
+                           <div class="option-text">Une prise de poids inexpliquée, surtout au niveau du ventre</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q6" value="humeur">
+                           <div class="option-text">Des sautes d'humeur et de l'irritabilité</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q6" value="plusieurs">
+                           <div class="option-text">Plusieurs de ces symptômes en même temps</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 7 -->
+           <div class="question-section" id="q7">
+               <div class="question-header">
+                   <div class="question-title">Malgré mes efforts, je n'arrive pas à perdre du poids parce que...</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q7" value="metabolisme">
+                           <div class="option-text">Mon métabolisme semble complètement bloqué</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q7" value="stagnation">
+                           <div class="option-text">Quand je commence un régime, ça fonctionne puis je stagne rapidement</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q7" value="stockage">
+                           <div class="option-text">Mon corps stocke les graisses beaucoup plus facilement qu'avant</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q7" value="fringales">
+                           <div class="option-text">J'ai constamment des fringales et des envies de sucre</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q7" value="fatiguee">
+                           <div class="option-text">Je me sens trop fatiguée pour maintenir mes efforts</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q7" value="plusieurs">
+                           <div class="option-text">Plusieurs de ces situations</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 8 -->
+           <div class="question-section" id="q8">
+               <div class="question-header">
+                   <div class="question-title">Ce qui me frustre le PLUS avec mon corps actuel, c'est que...</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q8" value="medecin">
+                           <div class="option-text">J'ai l'impression que mon médecin ne comprend pas ce que je traverse</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q8" value="coupable">
+                           <div class="option-text">Je me sens coupable après chaque repas ou écart</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q8" value="contre">
+                           <div class="option-text">J'ai l'impression que mon corps travaille contre moi</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q8" value="epuisee">
+                           <div class="option-text">Je suis épuisée d'essayer sans voir de résultats durables</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q8" value="miroir">
+                           <div class="option-text">Je ne me reconnais plus dans le miroir</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 9 -->
+           <div class="question-section" id="q9">
+               <div class="question-header">
+                   <div class="question-title">Ma plus grande peur concernant mon poids et ma santé est...</div>
+                   <div class="question-subtitle">La raison pour laquelle nous posons cette question est que nous devons comprendre vos préoccupations pour mieux vous aider à les surmonter.</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q9" value="jamais">
+                           <div class="option-text">J'ai peur de ne jamais retrouver mon poids et mon énergie d'avant</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q9" value="definitif">
+                           <div class="option-text">J'ai peur que ces changements soient définitifs et irréversibles</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q9" value="sante">
+                           <div class="option-text">Je m'inquiète des conséquences sur ma santé à long terme</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q9" value="activites">
+                           <div class="option-text">Je redoute de devoir renoncer à certaines activités à cause de mon poids</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q9" value="apparence">
+                           <div class="option-text">Je crains que mon apparence affecte ma vie personnelle et professionnelle</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 10 -->
+           <div class="question-section" id="q10">
+               <div class="question-header">
+                   <div class="question-title">La raison pour laquelle je n'ai pas encore résolu ce problème est...</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q10" value="methode">
+                           <div class="option-text">Je n'ai pas trouvé de méthode adaptée à mes nouveaux besoins hormonaux</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q10" value="avant">
+                           <div class="option-text">Les méthodes qui fonctionnaient avant ne marchent plus du tout</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q10" value="energie">
+                           <div class="option-text">Je manque d'énergie pour me consacrer à moi-même</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q10" value="perdue">
+                           <div class="option-text">Je suis perdue face aux informations contradictoires</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q10" value="bataille">
+                           <div class="option-text">J'ai l'impression que c'est une bataille perdue d'avance</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 11 -->
+           <div class="question-section" id="q11">
+               <div class="question-header">
+                   <div class="question-title">J'ai ce problème de poids et de fatigue depuis...</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q11" value="moins1">
+                           <div class="option-text">Moins d'un an (début de périménopause)</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q11" value="1-3">
+                           <div class="option-text">Entre 1 et 3 ans (ménopause installée)</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q11" value="3-5">
+                           <div class="option-text">Entre 3 et 5 ans (j'ai tout essayé)</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q11" value="plus5">
+                           <div class="option-text">Plus de 5 ans (je commence à perdre espoir)</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q11" value="toujours">
+                           <div class="option-text">Aussi longtemps que je m'en souvienne</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Suivant
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Question 12 -->
+           <div class="question-section" id="q12">
+               <div class="question-header">
+                   <div class="question-title">Honnêtement, je me sens...</div>
+                   <div class="question-subtitle">Cette question nous aide à personnaliser votre plan.</div>
+               </div>
+               <div class="options-scroll-container">
+                   <div class="options-container">
+                       <label class="option-card">
+                           <input type="radio" name="q12" value="frustree">
+                           <div class="option-text">Frustrée et découragée, mais prête à essayer une nouvelle approche</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q12" value="epuisee">
+                           <div class="option-text">Épuisée par tous ces efforts sans résultats, mais j'ai encore de l'espoir</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q12" value="colere">
+                           <div class="option-text">En colère contre mon corps qui ne répond plus comme avant</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q12" value="honteuse">
+                           <div class="option-text">Honteuse de ne pas arriver à contrôler mon poids</div>
+                       </label>
+                       <label class="option-card">
+                           <input type="radio" name="q12" value="perdue">
+                           <div class="option-text">Perdue et confuse, je ne sais plus quoi faire</div>
+                       </label>
+                   </div>
+               </div>
+               <div class="action-buttons">
+                   <button class="btn btn-back" onclick="goBack()">
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                       </svg>
+                   </button>
+                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
+                       Découvrir mes résultats
+                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                       </svg>
+                   </button>
+               </div>
+           </div>
+
+           <!-- Page résultats -->
+           <div class="results-wrapper" id="resultsWrapper">
+               <div class="results-header">
+                   <div class="header-title">🎯 Votre analyse est prête !</div>
+                   <div class="header-subtitle">Nous analysons vos réponses pour déterminer votre type métabolique hormonal...</div>
+               </div>
+
+               <!-- Carte de progression -->
+               <div class="progress-card" id="searchProgressCard">
+                   <div class="progress-label">Analyse en cours</div>
+                   <div class="progress-bar-container">
+                       <div class="progress-bar-fill" id="searchProgressBar"></div>
+                   </div>
+                   <div class="progress-percentage" id="searchProgressPercentage">0%</div>
+                   <div class="checklist">
+                       <div class="checklist-item">
+                           <div class="checklist-icon">⏳</div>
+                           <div class="checklist-text">Analyse de vos réponses...</div>
+                       </div>
+                       <div class="checklist-item">
+                           <div class="checklist-icon">⏳</div>
+                           <div class="checklist-text">Identification de votre profil hormonal...</div>
+                       </div>
+                       <div class="checklist-item">
+                           <div class="checklist-icon">⏳</div>
+                           <div class="checklist-text">Calcul de votre type métabolique...</div>
+                       </div>
+                       <div class="checklist-item">
+                           <div class="checklist-icon">⏳</div>
+                           <div class="checklist-text">Préparation de votre plan personnalisé...</div>
+                       </div>
+                       <div class="checklist-item">
+                           <div class="checklist-icon">⏳</div>
+                           <div class="checklist-text">Finalisation de votre profil...</div>
+                       </div>
+                   </div>
+               </div>
+
+               <!-- Carte de succès -->
+               <div class="success-card" id="searchSuccessCard">
+                   <div class="success-icon">✅</div>
+                   <div class="success-title">Analyse terminée !</div>
+                   <div class="success-subtitle">Votre profil métabolique hormonal est maintenant prêt</div>
+                   <button class="continue-button" onclick="showEmailQuestion()" style="margin-top: 16px; width: 100%;">
+                       Voir mes résultats
+                   </button>
+               </div>
+
+               <!-- Question email -->
+               <div class="email-question" id="emailQuestion">
+                   <div class="email-card">
+                       <div class="email-card-title">Entrez votre email pour recevoir instantanément :</div>
+                       <ul class="email-benefits-list">
+                           <li>✅ Votre type métabolique hormonal détaillé</li>
+                           <li>✅ Pourquoi votre corps résiste à la perte de poids</li>
+                           <li>✅ Le plan d'action personnalisé pour rééquilibrer vos hormones en 21 jours</li>
+                       </ul>
+                       <div class="email-input-group">
+                           <div id="sioEmailSlot">
+                               <div id="sioEmailLoading" style="padding: 14px; text-align: center; color: #64748b;">
+                                   Chargement du formulaire...
+                               </div>
+                           </div>
+                       </div>
+                       <button class="continue-button" id="emailSubmitBtn">Recevoir mes résultats gratuits →</button>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+
+   <script>
+       let currentStep = 0;
+       const totalSteps = 12;
+
+       function startQuiz() {
+           showSection(1);
+       }
+
+       function showSection(step) {
+           // Cacher tout
+           document.getElementById('landing').style.display = 'none';
+           document.getElementById('resultsWrapper').classList.remove('active');
+           document.querySelectorAll('.question-section').forEach(q => {
+               q.style.display = 'none';
+               q.classList.remove('active');
+           });
+
+           // Afficher la section appropriée
+           if (step === 0) {
+               document.getElementById('landing').style.display = 'flex';
+           } else if (step > totalSteps) {
+               document.getElementById('resultsWrapper').classList.add('active');
+               startSearchProgress();
+           } else {
+               const question = document.getElementById('q' + step);
+               if (question) {
+                   question.style.display = 'flex';
+                   question.classList.add('active');
+               }
+           }
+
+           currentStep = step;
+           updateProgress();
+           updateStepIndicator();
+           updateButtons();
+       }
+
+       function nextQuestion() {
+           if (currentStep <= totalSteps) {
+               showSection(currentStep + 1);
+           }
+       }
+
+       function goBack() {
+           if (currentStep > 0) {
+               showSection(currentStep - 1);
+           }
+       }
+
+       function updateProgress() {
+           const progressFill = document.getElementById('progressFill');
+           const percentage = (currentStep / totalSteps) * 100;
+           progressFill.style.width = percentage + '%';
+       }
+
+       function updateStepIndicator() {
+           const stepCounter = document.getElementById('stepCounter');
+           const backBtn = document.getElementById('backBtn');
+           
+           if (currentStep === 0) {
+               stepCounter.textContent = '';
+               backBtn.style.opacity = '0';
+               backBtn.style.pointerEvents = 'none';
+           } else if (currentStep <= totalSteps) {
+               stepCounter.textContent = currentStep + '/' + totalSteps;
+               backBtn.style.opacity = '1';
+               backBtn.style.pointerEvents = 'auto';
+           } else {
+               stepCounter.textContent = '';
+               backBtn.style.opacity = '0';
+               backBtn.style.pointerEvents = 'none';
+           }
+       }
+
+       function updateButtons() {
+           if (currentStep === 0 || currentStep > totalSteps) return;
+           
+           const question = document.getElementById('q' + currentStep);
+           if (!question) return;
+
+           const nextBtn = question.querySelector('.btn-next');
+           const radios = question.querySelectorAll('input[type="radio"]');
+           
+           const isValid = Array.from(radios).some(radio => radio.checked);
+           nextBtn.disabled = !isValid;
+       }
+
+       // Event listeners pour les cartes d'options
+       document.addEventListener('DOMContentLoaded', function() {
+           document.querySelectorAll('.option-card').forEach(card => {
+               card.addEventListener('click', function(e) {
+                   // Empêcher le double-clic sur l'input
+                   if (e.target.tagName === 'INPUT') return;
+                   
+                   const input = this.querySelector('input[type="radio"]');
+                   if (!input) return;
+                   
+                   // Déselectionner les autres options du même groupe
+                   const name = input.name;
+                   document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+                       radio.closest('.option-card').classList.remove('selected');
+                       radio.checked = false;
+                   });
+                   
+                   // Sélectionner cette option
+                   input.checked = true;
+                   this.classList.add('selected');
+                   
+                   updateButtons();
+               });
+           });
+
+           // Initialiser l'affichage
+           showSection(0);
+       });
+
+       let searchProgress = 0;
+       let currentSearchStep = 0;
+       const totalSearchSteps = 5;
+
+       function startSearchProgress() {
+           searchProgress = 0;
+           currentSearchStep = 0;
+           const bar = document.getElementById('searchProgressBar');
+           const percentage = document.getElementById('searchProgressPercentage');
+           const items = document.querySelectorAll('.checklist-item');
+           
+           bar.style.width = '0%';
+           percentage.textContent = '0%';
+           items.forEach(item => item.classList.remove('active', 'completed'));
+           
+           setTimeout(updateSearchProgress, 500);
+       }
+
+       function updateSearchProgress() {
+           const bar = document.getElementById('searchProgressBar');
+           const percentage = document.getElementById('searchProgressPercentage');
+           const items = document.querySelectorAll('.checklist-item');
+
+           searchProgress += 2;
+           if (searchProgress > 100) searchProgress = 100;
+
+           bar.style.width = searchProgress + '%';
+           percentage.textContent = Math.floor(searchProgress) + '%';
+
+           const stepProgress = Math.floor((searchProgress / 100) * totalSearchSteps);
+           if (stepProgress > currentSearchStep) {
+               for (let i = currentSearchStep; i < stepProgress && i < totalSearchSteps; i++) {
+                   setTimeout(() => {
+                       items[i].classList.add('active');
+                       setTimeout(() => {
+                           items[i].classList.add('completed');
+                       }, 200);
+                   }, i * 100);
+               }
+               currentSearchStep = stepProgress;
+           }
+
+           if (searchProgress < 100) {
+               setTimeout(updateSearchProgress, 100);
+           } else {
+               items.forEach((item, index) => {
+                   setTimeout(() => {
+                       item.classList.add('active', 'completed');
+                   }, index * 50);
+               });
+               setTimeout(showSearchSuccess, 1500);
+           }
+       }
+
+       function showSearchSuccess() {
+           const progressCard = document.getElementById('searchProgressCard');
+           const successCard = document.getElementById('searchSuccessCard');
+           const headerTitle = document.querySelector('#resultsWrapper .header-title');
+
+           progressCard.classList.add('hidden');
+           headerTitle.style.opacity = '0';
+           headerTitle.style.transform = 'translateY(-20px)';
+
+           setTimeout(() => {
+               progressCard.style.display = 'none';
+               headerTitle.style.display = 'none';
+               successCard.classList.add('visible');
+           }, 400);
+       }
+
+       function showEmailQuestion() {
+           const successCard = document.getElementById('searchSuccessCard');
+           const emailQuestion = document.getElementById('emailQuestion');
+           successCard.style.display = 'none';
+           emailQuestion.style.display = 'flex';
+       }
+   </script>
+   <script>
+   (function relocateSioEmail() {
+     const findSioEmailInput = () => {
+       const inputs = Array.from(document.querySelectorAll('input[name="email"]'));
+       return inputs.length ? inputs[inputs.length - 1] : null;
+     };
+
+    const slot = document.getElementById('sioEmailSlot');
+    if (!slot) {
+      console.warn('[relocateSioEmail] #sioEmailSlot not found');
+      return;
+    }
+
+    const attempt = () => {
+      const emailInput = findSioEmailInput();
+      if (!emailInput) {
+        return setTimeout(attempt, 300);
+      }
+
+      const form = emailInput.closest('form') || emailInput.form || emailInput;
+      
+      slot.innerHTML = '';
+      slot.appendChild(form);
+
+      try {
+        const savedEmail = localStorage.getItem('quizEmail');
+        if (savedEmail) {
+          emailInput.value = savedEmail;
+        }
+        emailInput.addEventListener('input', function (e) {
+          localStorage.setItem('quizEmail', e.target.value);
+        });
+      } catch (err) {
+        console.warn('[relocateSioEmail] localStorage unavailable', err);
+      }
+
+      const hiddenBtn =
+        form.querySelector('button[type="submit"], input[type="submit"]') ||
+        document.querySelector(
+          '[data-test-id="send-form-button"], [data-testid="send-form-button"], button[id^="button-"], [data-element="submit"], .sio-subscribe-button, .sio-submit, [data-element="cta-button"]'
+        );
+      if (hiddenBtn) {
+        hiddenBtn.style.display = 'none';
+      }
+
+      const loading = document.getElementById('sioEmailLoading');
+      if (loading) {
+        loading.remove();
+      }
+    };
+
+    attempt();
+
+    const continueBtn = document.getElementById('emailSubmitBtn');
+    if (continueBtn) {
+      continueBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const form = document.querySelector('#sioEmailSlot form');
+
+        const sioBtn =
+          (form && form.querySelector('button[type="submit"], input[type="submit"]')) ||
+          document.querySelector(
+            '[data-test-id="send-form-button"], [data-testid="send-form-button"], button[id^="button-"], [data-element="submit"], .sio-subscribe-button, .sio-submit, [data-element="cta-button"]'
+          );
+
+        if (sioBtn && typeof sioBtn.click === 'function') {
+          sioBtn.style.display = 'none';
+          sioBtn.click();
+        } else if (form) {
+          if (form.requestSubmit) form.requestSubmit(); else form.submit();
+        }
+      });
+    }
+
+  })();
+  </script>
