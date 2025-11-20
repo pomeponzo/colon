@@ -2,7 +2,7 @@
        .app-container {
            box-sizing: border-box;
            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, 'Helvetica Neue', Arial, sans-serif;
-           background: #ffffff;
+           background: linear-gradient(135deg, #fff7fb 0%, #ffe7f3 100%);
            width: 100%;
            min-height: 600px;
            height: 100vh;
@@ -30,8 +30,8 @@
            align-items: center;
            justify-content: space-between;
            padding: 12px 16px;
-           background: white;
-           border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+           background: #fff;
+           border-bottom: 1px solid rgba(236, 72, 153, 0.15);
            flex-shrink: 0;
            z-index: 10;
            height: 48px;
@@ -53,8 +53,8 @@
        }
 
        .back-button:hover {
-           background: rgba(16, 185, 129, 0.1);
-           color: #059669;
+           background: rgba(236, 72, 153, 0.1);
+           color: #ec4899;
        }
 
        .back-button svg {
@@ -63,9 +63,9 @@
        }
 
        .app-logo {
-           font-size: 1rem;
-           font-weight: 600;
-           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           font-size: 1.05rem;
+           font-weight: 700;
+           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
            -webkit-background-clip: text;
            -webkit-text-fill-color: transparent;
            background-clip: text;
@@ -92,7 +92,7 @@
 
        .progress-fill {
            height: 100%;
-           background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+           background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
            transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
        }
 
@@ -134,16 +134,16 @@
        }
 
        .question-title {
-           font-size: 1.2rem;
-           font-weight: 600;
-           color: #1e293b;
+           font-size: 1.35rem;
+           font-weight: 700;
+           color: #7f1d4b;
            margin-bottom: 6px;
            line-height: 1.2;
        }
 
        .question-subtitle {
-           font-size: 0.85rem;
-           color: #64748b;
+           font-size: 0.95rem;
+           color: #9d174d;
            line-height: 1.4;
        }
 
@@ -163,9 +163,9 @@
 
        .option-card {
            background: #ffffff;
-           border: 2px solid #e5e7eb;
-           border-radius: 10px;
-           padding: 12px 14px;
+           border: 2px solid #fbcfe8;
+           border-radius: 12px;
+           padding: 14px 16px;
            cursor: pointer;
            transition: all 0.2s ease;
            display: flex;
@@ -179,17 +179,17 @@
        }
 
        .option-card:hover {
-           border-color: #10b981;
-           background: rgba(16, 185, 129, 0.05);
+           border-color: #ec4899;
+           background: rgba(236, 72, 153, 0.05);
        }
 
        .option-card.selected {
-           border-color: #10b981;
-           background: rgba(16, 185, 129, 0.08);
+           border-color: #ec4899;
+           background: rgba(236, 72, 153, 0.1);
        }
 
        .option-card input[type="radio"] {
-           accent-color: #10b981;
+           accent-color: #ec4899;
            width: 18px;
            height: 18px;
            flex-shrink: 0;
@@ -198,10 +198,35 @@
        .option-text {
            flex: 1;
            text-align: left;
-           font-size: 0.9rem;
-           color: #334155;
-           font-weight: 500;
+           font-size: 1rem;
+           color: #4b0c2e;
+           font-weight: 600;
            line-height: 1.3;
+       }
+
+       .option-text::before {
+           content: '🌸';
+           display: inline-block;
+           margin-right: 8px;
+           font-size: 1.1rem;
+       }
+
+       .encouragement-card {
+           margin-top: 12px;
+           padding: 12px 14px;
+           background: rgba(236, 72, 153, 0.08);
+           border: 1px dashed rgba(236, 72, 153, 0.4);
+           border-radius: 12px;
+           color: #7f1d4b;
+           font-weight: 600;
+           display: flex;
+           align-items: center;
+           gap: 8px;
+           font-size: 0.95rem;
+       }
+
+       .encouragement-card .emoji {
+           font-size: 1.2rem;
        }
 
        .action-buttons {
@@ -213,11 +238,11 @@
 
        .btn {
            flex: 1;
-           padding: 14px 20px;
+           padding: 16px 22px;
            border: none;
            border-radius: 10px;
-           font-size: 0.95rem;
-           font-weight: 600;
+           font-size: 1rem;
+           font-weight: 700;
            cursor: pointer;
            transition: all 0.2s ease;
            display: flex;
@@ -227,13 +252,13 @@
        }
 
        .btn-next {
-           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
            color: white;
        }
 
        .btn-next:hover:not(:disabled) {
            transform: translateY(-1px);
-           box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+           box-shadow: 0 4px 12px rgba(236, 72, 153, 0.35);
        }
 
        .btn-next:disabled {
@@ -243,15 +268,15 @@
 
        .btn-back {
            background: white;
-           color: #64748b;
-           border: 2px solid #e5e7eb;
+           color: #9d174d;
+           border: 2px solid #fbcfe8;
            flex: 0 0 auto;
            padding: 14px 16px;
        }
 
        .btn-back:hover {
-           border-color: #cbd5e1;
-           background: #f8fafc;
+           border-color: #f9a8d4;
+           background: #fff1f7;
        }
 
        .landing-section {
@@ -306,7 +331,7 @@
        }
 
        .benefit-icon {
-           color: #10b981;
+           color: #ec4899;
            font-size: 1.2rem;
            flex-shrink: 0;
        }
@@ -382,14 +407,14 @@
 
        .progress-bar-fill {
            height: 100%;
-           background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+           background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
            width: 0%;
            transition: width 0.3s ease;
        }
 
        .progress-percentage {
            font-size: 0.85rem;
-           color: #059669;
+           color: #c0265c;
            font-weight: 600;
            text-align: center;
        }
@@ -423,8 +448,8 @@
        }
 
        .checklist-item.completed .checklist-icon {
-           background: #10b981;
-           border-color: #10b981;
+           background: #ec4899;
+           border-color: #ec4899;
        }
 
        .checklist-text {
@@ -433,7 +458,7 @@
        }
 
        .success-card {
-           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
            border-radius: 12px;
            padding: 24px;
            text-align: center;
@@ -511,7 +536,7 @@
        }
 
        .continue-button {
-           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
            color: white;
            padding: 14px 20px;
            border: none;
@@ -525,7 +550,7 @@
 
        .continue-button:hover {
            transform: translateY(-1px);
-           box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+           box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
        }
 
        #sioEmailSlot {
@@ -547,7 +572,7 @@
 
        #sioEmailSlot input[type="email"]:focus {
            outline: none;
-           border-color: #10b981;
+           border-color: #ec4899;
        }
     </style>
     
@@ -659,6 +684,10 @@
                            <div class="option-text">Retrouver confiance en moi et me sentir désirable</div>
                        </label>
                    </div>
+               </div>
+               <div class="encouragement-card">
+                   <span class="emoji">✨</span>
+                   <span>Chaque réponse nous rapproche de votre plan idéal, continuez&nbsp;!</span>
                </div>
                <div class="action-buttons">
                    <button class="btn btn-back" onclick="goBack()">
@@ -840,6 +869,10 @@
                        </label>
                    </div>
                </div>
+               <div class="encouragement-card">
+                   <span class="emoji">🌷</span>
+                   <span>Merci pour votre confiance, on avance ensemble vers plus de sérénité.</span>
+               </div>
                <div class="action-buttons">
                    <button class="btn btn-back" onclick="goBack()">
                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1020,6 +1053,10 @@
                            <div class="option-text">J'ai l'impression que c'est une bataille perdue d'avance</div>
                        </label>
                    </div>
+               </div>
+               <div class="encouragement-card">
+                   <span class="emoji">💖</span>
+                   <span>Vous faites déjà un pas fort vers votre bien-être, bravo&nbsp;!</span>
                </div>
                <div class="action-buttons">
                    <button class="btn btn-back" onclick="goBack()">
@@ -1287,24 +1324,35 @@
        document.addEventListener('DOMContentLoaded', function() {
            document.querySelectorAll('.option-card').forEach(card => {
                card.addEventListener('click', function(e) {
-                   // Empêcher le double-clic sur l'input
-                   if (e.target.tagName === 'INPUT') return;
-                   
-                   const input = this.querySelector('input[type="radio"]');
+                   const isInputClick = e.target.tagName === 'INPUT';
+                   const input = isInputClick ? e.target : this.querySelector('input[type="radio"]');
                    if (!input) return;
-                   
+
                    // Déselectionner les autres options du même groupe
                    const name = input.name;
                    document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
-                       radio.closest('.option-card').classList.remove('selected');
+                       const cardEl = radio.closest('.option-card');
+                       if (cardEl) cardEl.classList.remove('selected');
                        radio.checked = false;
                    });
-                   
+
                    // Sélectionner cette option
                    input.checked = true;
                    this.classList.add('selected');
-                   
+
                    updateButtons();
+
+                   const questionSection = this.closest('.question-section');
+                   const hasMultipleChoice = questionSection && questionSection.querySelectorAll('input[type="checkbox"]').length > 0;
+                   const stepIndex = questionSection ? parseInt(questionSection.id.replace('q', ''), 10) : null;
+
+                   if (!hasMultipleChoice && input.type === 'radio' && stepIndex && stepIndex === currentStep) {
+                       setTimeout(() => {
+                           if (currentStep === stepIndex) {
+                               nextQuestion();
+                           }
+                       }, 220);
+                   }
                });
            });
 
