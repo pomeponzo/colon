@@ -213,57 +213,6 @@
            line-height: 1.4;
        }
 
-       .action-buttons {
-           display: flex;
-           gap: 8px;
-           padding: 12px 0 0 0;
-           flex-shrink: 0;
-       }
-
-       .btn {
-           flex: 1;
-           padding: 14px 20px;
-           border: none;
-           border-radius: 10px;
-           font-size: 0.95rem;
-           font-weight: 600;
-           cursor: pointer;
-           transition: all 0.2s ease;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           gap: 6px;
-       }
-
-       .btn-next {
-           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
-           color: white;
-           box-shadow: 0 6px 18px rgba(236, 72, 153, 0.25);
-       }
-
-       .btn-next:hover:not(:disabled) {
-           transform: translateY(-1px);
-           box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
-       }
-
-       .btn-next:disabled {
-           opacity: 0.5;
-           cursor: not-allowed;
-       }
-
-       .btn-back {
-           background: white;
-           color: #a21caf;
-           border: 2px solid #f3c1d8;
-           flex: 0 0 auto;
-           padding: 14px 16px;
-       }
-
-       .btn-back:hover {
-           border-color: #ec4899;
-           background: #fff1f7;
-       }
-
        .landing-section {
            display: none;
            flex-direction: column;
@@ -566,7 +515,7 @@
            box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.16);
        }
        .encouragement-text {
-           margin-top: 10px;
+           margin: 6px 0 12px;
            font-size: 0.95rem;
            color: #a21caf;
            font-weight: 600;
@@ -609,7 +558,7 @@
                    </div>
                </div>
                <div class="landing-cta">
-                   <button class="btn btn-next" onclick="startQuiz()">
+                   <button class="continue-button" onclick="startQuiz()">
                        Démarrer le quiz gratuit
                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -643,19 +592,6 @@
                        </div>
                    </div>
                </div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
            </div>
 
            <!-- Question 2 -->
@@ -683,26 +619,14 @@
                        </div>
                    </div>
                </div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Question 3 -->
            <div class="question-section" id="q3">
                <div class="question-header">
                    <div class="question-title">Si je pouvais obtenir UN résultat dans les 21 prochains jours, ce serait...</div>
                </div>
+               <div class="encouragement-text">🌷 Vous avancez merveilleusement bien, continuez !</div>
                <div class="options-scroll-container">
                    <div class="options-container">
                        <div class="option-card" data-question="q3" data-value="perdre">
@@ -727,21 +651,7 @@
                        </div>
                    </div>
                </div>
-               <div class="encouragement-text">🌷 Vous avancez merveilleusement bien, continuez !</div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Question 4 -->
            <div class="question-section" id="q4">
@@ -772,20 +682,7 @@
                        </div>
                    </div>
                </div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Question 5 -->
            <div class="question-section" id="q5">
@@ -816,20 +713,7 @@
                        </div>
                    </div>
                </div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Question 6 -->
            <div class="question-section" id="q6">
@@ -864,26 +748,14 @@
                        </div>
                    </div>
                </div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Question 7 -->
            <div class="question-section" id="q7">
                <div class="question-header">
                    <div class="question-title">Malgré mes efforts, je n'arrive pas à perdre du poids parce que...</div>
                </div>
+               <div class="encouragement-text">✨ Courage, chaque réponse nous aide à vous créer un plan sur-mesure.</div>
                <div class="options-scroll-container">
                    <div class="options-container">
                        <div class="option-card" data-question="q7" data-value="metabolisme">
@@ -912,21 +784,7 @@
                        </div>
                    </div>
                </div>
-               <div class="encouragement-text">✨ Courage, chaque réponse nous aide à vous créer un plan sur-mesure.</div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Question 8 -->
            <div class="question-section" id="q8">
@@ -957,20 +815,7 @@
                        </div>
                    </div>
                </div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Question 9 -->
            <div class="question-section" id="q9">
@@ -1002,26 +847,14 @@
                        </div>
                    </div>
                </div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Question 10 -->
            <div class="question-section" id="q10">
                <div class="question-header">
                    <div class="question-title">La raison pour laquelle je n'ai pas encore résolu ce problème est...</div>
                </div>
+               <div class="encouragement-text">💖 Vous n'êtes pas seule, on arrive au bout du parcours !</div>
                <div class="options-scroll-container">
                    <div class="options-container">
                        <div class="option-card" data-question="q10" data-value="methode">
@@ -1046,21 +879,7 @@
                        </div>
                    </div>
                </div>
-               <div class="encouragement-text">💖 Vous n'êtes pas seule, on arrive au bout du parcours !</div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Question 11 -->
            <div class="question-section" id="q11">
@@ -1091,20 +910,7 @@
                        </div>
                    </div>
                </div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Suivant
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Question 12 -->
            <div class="question-section" id="q12">
@@ -1112,6 +918,7 @@
                    <div class="question-title">Honnêtement, je me sens...</div>
                    <div class="question-subtitle">Cette question nous aide à personnaliser votre plan.</div>
                </div>
+               <div class="encouragement-text">🌸 Plus qu'une étape avant vos résultats personnalisés !</div>
                <div class="options-scroll-container">
                    <div class="options-container">
                        <div class="option-card" data-question="q12" data-value="frustree">
@@ -1136,21 +943,7 @@
                        </div>
                    </div>
                </div>
-               <div class="encouragement-text">🌸 Plus qu'une étape avant vos résultats personnalisés !</div>
-               <div class="action-buttons">
-                   <button class="btn btn-back" onclick="goBack()">
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                       </svg>
-                   </button>
-                   <button class="btn btn-next" onclick="nextQuestion()" disabled>
-                       Découvrir mes résultats
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
+</div>
 
            <!-- Page résultats -->
            <div class="results-wrapper" id="resultsWrapper">
@@ -1305,11 +1098,13 @@
 
        function updateButtons() {
            if (currentStep === 0 || currentStep > totalSteps) return;
-           
+
            const question = document.getElementById('q' + currentStep);
            if (!question) return;
 
            const nextBtn = question.querySelector('.btn-next');
+           if (!nextBtn) return;
+
            const isValid = !!question.querySelector('.option-card.selected');
            nextBtn.disabled = !isValid;
        }
