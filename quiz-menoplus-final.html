@@ -2,7 +2,7 @@
        .app-container {
            box-sizing: border-box;
            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, 'Helvetica Neue', Arial, sans-serif;
-           background: #ffffff;
+           background: linear-gradient(180deg, #fff7fb 0%, #ffffff 60%);
            width: 100%;
            min-height: 600px;
            height: 100vh;
@@ -10,6 +10,7 @@
            display: flex;
            flex-direction: column;
            overflow: hidden;
+           font-size: 17px;
        }
        
        .app-container * {
@@ -31,10 +32,11 @@
            justify-content: space-between;
            padding: 12px 16px;
            background: white;
-           border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+           border-bottom: 1px solid rgba(236, 72, 153, 0.1);
            flex-shrink: 0;
            z-index: 10;
-           height: 48px;
+           height: 52px;
+           box-shadow: 0 4px 20px rgba(236, 72, 153, 0.08);
        }
 
        .back-button {
@@ -53,8 +55,8 @@
        }
 
        .back-button:hover {
-           background: rgba(16, 185, 129, 0.1);
-           color: #059669;
+           background: rgba(236, 72, 153, 0.1);
+           color: #db2777;
        }
 
        .back-button svg {
@@ -63,9 +65,9 @@
        }
 
        .app-logo {
-           font-size: 1rem;
-           font-weight: 600;
-           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           font-size: 1.05rem;
+           font-weight: 700;
+           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
            -webkit-background-clip: text;
            -webkit-text-fill-color: transparent;
            background-clip: text;
@@ -92,7 +94,7 @@
 
        .progress-fill {
            height: 100%;
-           background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+           background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
            transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
        }
 
@@ -134,17 +136,17 @@
        }
 
        .question-title {
-           font-size: 1.2rem;
-           font-weight: 600;
-           color: #1e293b;
-           margin-bottom: 6px;
-           line-height: 1.2;
+           font-size: 1.35rem;
+           font-weight: 700;
+           color: #1e1b4b;
+           margin-bottom: 8px;
+           line-height: 1.25;
        }
 
        .question-subtitle {
-           font-size: 0.85rem;
-           color: #64748b;
-           line-height: 1.4;
+           font-size: 0.95rem;
+           color: #7c7a92;
+           line-height: 1.5;
        }
 
        .options-scroll-container {
@@ -162,46 +164,46 @@
        }
 
        .option-card {
-           background: #ffffff;
-           border: 2px solid #e5e7eb;
-           border-radius: 10px;
-           padding: 12px 14px;
+           background: #fff;
+           border: 2px solid #f8d2e6;
+           border-radius: 12px;
+           padding: 14px 16px;
            cursor: pointer;
            transition: all 0.2s ease;
            display: flex;
            align-items: center;
            justify-content: flex-start;
-           gap: 10px;
+           gap: 12px;
            position: relative;
            overflow: hidden;
            text-align: left;
-           min-height: 48px;
+           min-height: 54px;
        }
 
        .option-card:hover {
-           border-color: #10b981;
-           background: rgba(16, 185, 129, 0.05);
+           border-color: #f472b6;
+           background: rgba(244, 114, 182, 0.05);
+           transform: translateY(-1px);
        }
 
        .option-card.selected {
-           border-color: #10b981;
-           background: rgba(16, 185, 129, 0.08);
+           border-color: #ec4899;
+           background: rgba(236, 72, 153, 0.1);
+           box-shadow: 0 6px 18px rgba(236, 72, 153, 0.14);
        }
 
-       .option-card input[type="radio"] {
-           accent-color: #10b981;
-           width: 18px;
-           height: 18px;
+       .option-emoji {
+           font-size: 1.3rem;
            flex-shrink: 0;
        }
 
        .option-text {
            flex: 1;
            text-align: left;
-           font-size: 0.9rem;
-           color: #334155;
-           font-weight: 500;
-           line-height: 1.3;
+           font-size: 1rem;
+           color: #2f2a3f;
+           font-weight: 600;
+           line-height: 1.4;
        }
 
        .action-buttons {
@@ -227,13 +229,14 @@
        }
 
        .btn-next {
-           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
            color: white;
+           box-shadow: 0 6px 18px rgba(236, 72, 153, 0.25);
        }
 
        .btn-next:hover:not(:disabled) {
            transform: translateY(-1px);
-           box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+           box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
        }
 
        .btn-next:disabled {
@@ -243,15 +246,15 @@
 
        .btn-back {
            background: white;
-           color: #64748b;
-           border: 2px solid #e5e7eb;
+           color: #a21caf;
+           border: 2px solid #f3c1d8;
            flex: 0 0 auto;
            padding: 14px 16px;
        }
 
        .btn-back:hover {
-           border-color: #cbd5e1;
-           background: #f8fafc;
+           border-color: #ec4899;
+           background: #fff1f7;
        }
 
        .landing-section {
@@ -273,25 +276,27 @@
        }
 
        .landing-title {
-           font-size: 1.6rem;
-           font-weight: 700;
-           color: #1e293b;
+           font-size: 1.7rem;
+           font-weight: 800;
+           color: #1e1b4b;
            margin-bottom: 12px;
-           line-height: 1.2;
+           line-height: 1.25;
        }
 
        .landing-subtitle {
-           font-size: 0.95rem;
-           color: #64748b;
-           line-height: 1.5;
+           font-size: 1rem;
+           color: #7c7a92;
+           line-height: 1.6;
            margin-bottom: 20px;
        }
 
        .landing-benefits {
-           background: #f8fafc;
-           border-radius: 12px;
+           background: #fff1f7;
+           border-radius: 14px;
            padding: 16px;
            margin-bottom: 24px;
+           border: 1px solid rgba(236, 72, 153, 0.12);
+           box-shadow: 0 8px 22px rgba(236, 72, 153, 0.08);
        }
 
        .benefit-item {
@@ -306,7 +311,7 @@
        }
 
        .benefit-icon {
-           color: #10b981;
+           color: #ec4899;
            font-size: 1.2rem;
            flex-shrink: 0;
        }
@@ -354,7 +359,7 @@
        }
 
        .progress-card {
-           background: #f8fafc;
+           background: #fff1f7;
            border-radius: 12px;
            padding: 20px;
            margin-bottom: 20px;
@@ -382,15 +387,15 @@
 
        .progress-bar-fill {
            height: 100%;
-           background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+           background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
            width: 0%;
            transition: width 0.3s ease;
        }
 
        .progress-percentage {
-           font-size: 0.85rem;
-           color: #059669;
-           font-weight: 600;
+           font-size: 0.9rem;
+           color: #db2777;
+           font-weight: 700;
            text-align: center;
        }
 
@@ -423,8 +428,8 @@
        }
 
        .checklist-item.completed .checklist-icon {
-           background: #10b981;
-           border-color: #10b981;
+           background: #ec4899;
+           border-color: #ec4899;
        }
 
        .checklist-text {
@@ -433,7 +438,7 @@
        }
 
        .success-card {
-           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
            border-radius: 12px;
            padding: 24px;
            text-align: center;
@@ -473,9 +478,10 @@
        }
 
        .email-card {
-           background: #f8fafc;
+           background: #fff1f7;
            border-radius: 12px;
            padding: 20px;
+           border: 1px solid rgba(236, 72, 153, 0.12);
        }
 
        .email-card-title {
@@ -511,7 +517,7 @@
        }
 
        .continue-button {
-           background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
            color: white;
            padding: 14px 20px;
            border: none;
@@ -521,11 +527,12 @@
            cursor: pointer;
            transition: all 0.2s ease;
            width: 100%;
+           box-shadow: 0 8px 24px rgba(236, 72, 153, 0.2);
        }
 
        .continue-button:hover {
            transform: translateY(-1px);
-           box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+           box-shadow: 0 6px 16px rgba(236, 72, 153, 0.26);
        }
 
        #sioEmailSlot {
@@ -539,7 +546,7 @@
        #sioEmailSlot input[type="email"] {
            width: 100%;
            padding: 14px;
-           border: 2px solid #e5e7eb;
+           border: 2px solid #f3c1d8;
            border-radius: 10px;
            font-size: 0.95rem;
            transition: all 0.2s ease;
@@ -547,7 +554,15 @@
 
        #sioEmailSlot input[type="email"]:focus {
            outline: none;
-           border-color: #10b981;
+           border-color: #ec4899;
+           box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.16);
+       }
+       .encouragement-text {
+           margin-top: 10px;
+           font-size: 0.95rem;
+           color: #a21caf;
+           font-weight: 600;
+           text-align: center;
        }
     </style>
     
@@ -602,22 +617,22 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q1" value="38-43">
+                       <div class="option-card" data-question="q1" data-value="38-43">
+                           <span class="option-emoji">🌱</span>
                            <div class="option-text">Entre 38-43 ans et je sens les premiers changements dans mon corps</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q1" value="44-52">
+                       </div>
+                       <div class="option-card" data-question="q1" data-value="44-52">
+                           <span class="option-emoji">🌸</span>
                            <div class="option-text">Entre 44-52 ans et je traverse la ménopause</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q1" value="53-60">
+                       </div>
+                       <div class="option-card" data-question="q1" data-value="53-60">
+                           <span class="option-emoji">🌷</span>
                            <div class="option-text">Entre 53-60 ans et je suis en post-ménopause</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q1" value="60+">
+                       </div>
+                       <div class="option-card" data-question="q1" data-value="60+">
+                           <span class="option-emoji">💫</span>
                            <div class="option-text">Plus de 60 ans et je souhaite retrouver ma vitalité</div>
-                       </label>
+                       </div>
                    </div>
                </div>
                <div class="action-buttons">
@@ -642,22 +657,22 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q2" value="energie">
+                       <div class="option-card" data-question="q2" data-value="energie">
+                           <span class="option-emoji">⚡</span>
                            <div class="option-text">Retrouver mon énergie d'avant et ne plus me sentir épuisée</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q2" value="vetements">
+                       </div>
+                       <div class="option-card" data-question="q2" data-value="vetements">
+                           <span class="option-emoji">👗</span>
                            <div class="option-text">Rentrer à nouveau dans mes vêtements préférés</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q2" value="sante">
+                       </div>
+                       <div class="option-card" data-question="q2" data-value="sante">
+                           <span class="option-emoji">🌿</span>
                            <div class="option-text">Améliorer ma santé globale et mon bien-être</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q2" value="confiance">
+                       </div>
+                       <div class="option-card" data-question="q2" data-value="confiance">
+                           <span class="option-emoji">💖</span>
                            <div class="option-text">Retrouver confiance en moi et me sentir désirable</div>
-                       </label>
+                       </div>
                    </div>
                </div>
                <div class="action-buttons">
@@ -682,28 +697,29 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q3" value="perdre">
+                       <div class="option-card" data-question="q3" data-value="perdre">
+                           <span class="option-emoji">📉</span>
                            <div class="option-text">Perdre mes premiers kilos et voir une différence visible</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q3" value="energie">
+                       </div>
+                       <div class="option-card" data-question="q3" data-value="energie">
+                           <span class="option-emoji">🌞</span>
                            <div class="option-text">Retrouver mon énergie et réduire ma fatigue chronique</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q3" value="symptomes">
+                       </div>
+                       <div class="option-card" data-question="q3" data-value="symptomes">
+                           <span class="option-emoji">❄️</span>
                            <div class="option-text">Diminuer les bouffées de chaleur et autres symptômes</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q3" value="plan">
+                       </div>
+                       <div class="option-card" data-question="q3" data-value="plan">
+                           <span class="option-emoji">🗺️</span>
                            <div class="option-text">Avoir un plan clair que je peux suivre facilement</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q3" value="controle">
+                       </div>
+                       <div class="option-card" data-question="q3" data-value="controle">
+                           <span class="option-emoji">🎯</span>
                            <div class="option-text">Me sentir à nouveau en contrôle de mon corps</div>
-                       </label>
+                       </div>
                    </div>
                </div>
+               <div class="encouragement-text">🌷 Vous avancez merveilleusement bien, continuez !</div>
                <div class="action-buttons">
                    <button class="btn btn-back" onclick="goBack()">
                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -726,26 +742,26 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q4" value="regimes">
+                       <div class="option-card" data-question="q4" data-value="regimes">
+                           <span class="option-emoji">🥗</span>
                            <div class="option-text">De suivre des régimes restrictifs (faibles en calories, sans glucides, etc.)</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q4" value="sport">
+                       </div>
+                       <div class="option-card" data-question="q4" data-value="sport">
+                           <span class="option-emoji">🏃‍♀️</span>
                            <div class="option-text">D'augmenter mon activité physique</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q4" value="complements">
+                       </div>
+                       <div class="option-card" data-question="q4" data-value="complements">
+                           <span class="option-emoji">💊</span>
                            <div class="option-text">De prendre des compléments alimentaires ou substituts de repas</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q4" value="ths">
+                       </div>
+                       <div class="option-card" data-question="q4" data-value="ths">
+                           <span class="option-emoji">🩺</span>
                            <div class="option-text">Un traitement hormonal de substitution (THS)</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q4" value="plusieurs">
+                       </div>
+                       <div class="option-card" data-question="q4" data-value="plusieurs">
+                           <span class="option-emoji">🔄</span>
                            <div class="option-text">Plusieurs de ces options, sans résultats durables</div>
-                       </label>
+                       </div>
                    </div>
                </div>
                <div class="action-buttons">
@@ -770,26 +786,26 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q5" value="pouce">
+                       <div class="option-card" data-question="q5" data-value="pouce">
+                           <span class="option-emoji">🍱</span>
                            <div class="option-text">Souvent sur le pouce ou à l'extérieur</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q5" value="cuisine">
+                       </div>
+                       <div class="option-card" data-question="q5" data-value="cuisine">
+                           <span class="option-emoji">🍳</span>
                            <div class="option-text">Je cuisine la plupart de mes repas</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q5" value="regime">
+                       </div>
+                       <div class="option-card" data-question="q5" data-value="regime">
+                           <span class="option-emoji">🥑</span>
                            <div class="option-text">Je suis un régime spécifique (faible en glucides, végétarien, etc.)</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q5" value="portions">
+                       </div>
+                       <div class="option-card" data-question="q5" data-value="portions">
+                           <span class="option-emoji">📏</span>
                            <div class="option-text">Je tente de contrôler mes portions, mais c'est difficile</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q5" value="normal">
+                       </div>
+                       <div class="option-card" data-question="q5" data-value="normal">
+                           <span class="option-emoji">🍽️</span>
                            <div class="option-text">Je mange normalement mais prends quand même du poids</div>
-                       </label>
+                       </div>
                    </div>
                </div>
                <div class="action-buttons">
@@ -814,30 +830,30 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q6" value="bouffees">
+                       <div class="option-card" data-question="q6" data-value="bouffees">
+                           <span class="option-emoji">🔥</span>
                            <div class="option-text">Des bouffées de chaleur et sueurs nocturnes</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q6" value="fatigue">
+                       </div>
+                       <div class="option-card" data-question="q6" data-value="fatigue">
+                           <span class="option-emoji">😮‍💨</span>
                            <div class="option-text">Une fatigue persistante et un manque d'énergie</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q6" value="sommeil">
+                       </div>
+                       <div class="option-card" data-question="q6" data-value="sommeil">
+                           <span class="option-emoji">😴</span>
                            <div class="option-text">Des troubles du sommeil</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q6" value="poids">
+                       </div>
+                       <div class="option-card" data-question="q6" data-value="poids">
+                           <span class="option-emoji">⚖️</span>
                            <div class="option-text">Une prise de poids inexpliquée, surtout au niveau du ventre</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q6" value="humeur">
+                       </div>
+                       <div class="option-card" data-question="q6" data-value="humeur">
+                           <span class="option-emoji">🌧️</span>
                            <div class="option-text">Des sautes d'humeur et de l'irritabilité</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q6" value="plusieurs">
+                       </div>
+                       <div class="option-card" data-question="q6" data-value="plusieurs">
+                           <span class="option-emoji">🌈</span>
                            <div class="option-text">Plusieurs de ces symptômes en même temps</div>
-                       </label>
+                       </div>
                    </div>
                </div>
                <div class="action-buttons">
@@ -862,32 +878,33 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q7" value="metabolisme">
+                       <div class="option-card" data-question="q7" data-value="metabolisme">
+                           <span class="option-emoji">🧊</span>
                            <div class="option-text">Mon métabolisme semble complètement bloqué</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q7" value="stagnation">
+                       </div>
+                       <div class="option-card" data-question="q7" data-value="stagnation">
+                           <span class="option-emoji">⏸️</span>
                            <div class="option-text">Quand je commence un régime, ça fonctionne puis je stagne rapidement</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q7" value="stockage">
+                       </div>
+                       <div class="option-card" data-question="q7" data-value="stockage">
+                           <span class="option-emoji">📦</span>
                            <div class="option-text">Mon corps stocke les graisses beaucoup plus facilement qu'avant</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q7" value="fringales">
+                       </div>
+                       <div class="option-card" data-question="q7" data-value="fringales">
+                           <span class="option-emoji">🍰</span>
                            <div class="option-text">J'ai constamment des fringales et des envies de sucre</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q7" value="fatiguee">
+                       </div>
+                       <div class="option-card" data-question="q7" data-value="fatiguee">
+                           <span class="option-emoji">💤</span>
                            <div class="option-text">Je me sens trop fatiguée pour maintenir mes efforts</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q7" value="plusieurs">
+                       </div>
+                       <div class="option-card" data-question="q7" data-value="plusieurs">
+                           <span class="option-emoji">🤝</span>
                            <div class="option-text">Plusieurs de ces situations</div>
-                       </label>
+                       </div>
                    </div>
                </div>
+               <div class="encouragement-text">✨ Courage, chaque réponse nous aide à vous créer un plan sur-mesure.</div>
                <div class="action-buttons">
                    <button class="btn btn-back" onclick="goBack()">
                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -910,26 +927,26 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q8" value="medecin">
+                       <div class="option-card" data-question="q8" data-value="medecin">
+                           <span class="option-emoji">🩺</span>
                            <div class="option-text">J'ai l'impression que mon médecin ne comprend pas ce que je traverse</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q8" value="coupable">
+                       </div>
+                       <div class="option-card" data-question="q8" data-value="coupable">
+                           <span class="option-emoji">😔</span>
                            <div class="option-text">Je me sens coupable après chaque repas ou écart</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q8" value="contre">
+                       </div>
+                       <div class="option-card" data-question="q8" data-value="contre">
+                           <span class="option-emoji">🤷‍♀️</span>
                            <div class="option-text">J'ai l'impression que mon corps travaille contre moi</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q8" value="epuisee">
+                       </div>
+                       <div class="option-card" data-question="q8" data-value="epuisee">
+                           <span class="option-emoji">😮‍💨</span>
                            <div class="option-text">Je suis épuisée d'essayer sans voir de résultats durables</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q8" value="miroir">
+                       </div>
+                       <div class="option-card" data-question="q8" data-value="miroir">
+                           <span class="option-emoji">🪞</span>
                            <div class="option-text">Je ne me reconnais plus dans le miroir</div>
-                       </label>
+                       </div>
                    </div>
                </div>
                <div class="action-buttons">
@@ -955,26 +972,26 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q9" value="jamais">
+                       <div class="option-card" data-question="q9" data-value="jamais">
+                           <span class="option-emoji">⏳</span>
                            <div class="option-text">J'ai peur de ne jamais retrouver mon poids et mon énergie d'avant</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q9" value="definitif">
+                       </div>
+                       <div class="option-card" data-question="q9" data-value="definitif">
+                           <span class="option-emoji">🧭</span>
                            <div class="option-text">J'ai peur que ces changements soient définitifs et irréversibles</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q9" value="sante">
+                       </div>
+                       <div class="option-card" data-question="q9" data-value="sante">
+                           <span class="option-emoji">🩺</span>
                            <div class="option-text">Je m'inquiète des conséquences sur ma santé à long terme</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q9" value="activites">
+                       </div>
+                       <div class="option-card" data-question="q9" data-value="activites">
+                           <span class="option-emoji">🚴‍♀️</span>
                            <div class="option-text">Je redoute de devoir renoncer à certaines activités à cause de mon poids</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q9" value="apparence">
+                       </div>
+                       <div class="option-card" data-question="q9" data-value="apparence">
+                           <span class="option-emoji">💬</span>
                            <div class="option-text">Je crains que mon apparence affecte ma vie personnelle et professionnelle</div>
-                       </label>
+                       </div>
                    </div>
                </div>
                <div class="action-buttons">
@@ -999,28 +1016,29 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q10" value="methode">
+                       <div class="option-card" data-question="q10" data-value="methode">
+                           <span class="option-emoji">🧪</span>
                            <div class="option-text">Je n'ai pas trouvé de méthode adaptée à mes nouveaux besoins hormonaux</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q10" value="avant">
+                       </div>
+                       <div class="option-card" data-question="q10" data-value="avant">
+                           <span class="option-emoji">⏮️</span>
                            <div class="option-text">Les méthodes qui fonctionnaient avant ne marchent plus du tout</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q10" value="energie">
+                       </div>
+                       <div class="option-card" data-question="q10" data-value="energie">
+                           <span class="option-emoji">🔋</span>
                            <div class="option-text">Je manque d'énergie pour me consacrer à moi-même</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q10" value="perdue">
+                       </div>
+                       <div class="option-card" data-question="q10" data-value="perdue">
+                           <span class="option-emoji">🧭</span>
                            <div class="option-text">Je suis perdue face aux informations contradictoires</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q10" value="bataille">
+                       </div>
+                       <div class="option-card" data-question="q10" data-value="bataille">
+                           <span class="option-emoji">🛡️</span>
                            <div class="option-text">J'ai l'impression que c'est une bataille perdue d'avance</div>
-                       </label>
+                       </div>
                    </div>
                </div>
+               <div class="encouragement-text">💖 Vous n'êtes pas seule, on arrive au bout du parcours !</div>
                <div class="action-buttons">
                    <button class="btn btn-back" onclick="goBack()">
                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1043,26 +1061,26 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q11" value="moins1">
+                       <div class="option-card" data-question="q11" data-value="moins1">
+                           <span class="option-emoji">🌟</span>
                            <div class="option-text">Moins d'un an (début de périménopause)</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q11" value="1-3">
+                       </div>
+                       <div class="option-card" data-question="q11" data-value="1-3">
+                           <span class="option-emoji">📆</span>
                            <div class="option-text">Entre 1 et 3 ans (ménopause installée)</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q11" value="3-5">
+                       </div>
+                       <div class="option-card" data-question="q11" data-value="3-5">
+                           <span class="option-emoji">🧩</span>
                            <div class="option-text">Entre 3 et 5 ans (j'ai tout essayé)</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q11" value="plus5">
+                       </div>
+                       <div class="option-card" data-question="q11" data-value="plus5">
+                           <span class="option-emoji">📈</span>
                            <div class="option-text">Plus de 5 ans (je commence à perdre espoir)</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q11" value="toujours">
+                       </div>
+                       <div class="option-card" data-question="q11" data-value="toujours">
+                           <span class="option-emoji">♾️</span>
                            <div class="option-text">Aussi longtemps que je m'en souvienne</div>
-                       </label>
+                       </div>
                    </div>
                </div>
                <div class="action-buttons">
@@ -1088,28 +1106,29 @@
                </div>
                <div class="options-scroll-container">
                    <div class="options-container">
-                       <label class="option-card">
-                           <input type="radio" name="q12" value="frustree">
+                       <div class="option-card" data-question="q12" data-value="frustree">
+                           <span class="option-emoji">💪</span>
                            <div class="option-text">Frustrée et découragée, mais prête à essayer une nouvelle approche</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q12" value="epuisee">
+                       </div>
+                       <div class="option-card" data-question="q12" data-value="epuisee">
+                           <span class="option-emoji">🫂</span>
                            <div class="option-text">Épuisée par tous ces efforts sans résultats, mais j'ai encore de l'espoir</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q12" value="colere">
+                       </div>
+                       <div class="option-card" data-question="q12" data-value="colere">
+                           <span class="option-emoji">😠</span>
                            <div class="option-text">En colère contre mon corps qui ne répond plus comme avant</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q12" value="honteuse">
+                       </div>
+                       <div class="option-card" data-question="q12" data-value="honteuse">
+                           <span class="option-emoji">🙈</span>
                            <div class="option-text">Honteuse de ne pas arriver à contrôler mon poids</div>
-                       </label>
-                       <label class="option-card">
-                           <input type="radio" name="q12" value="perdue">
+                       </div>
+                       <div class="option-card" data-question="q12" data-value="perdue">
+                           <span class="option-emoji">🌫️</span>
                            <div class="option-text">Perdue et confuse, je ne sais plus quoi faire</div>
-                       </label>
+                       </div>
                    </div>
                </div>
+               <div class="encouragement-text">🌸 Plus qu'une étape avant vos résultats personnalisés !</div>
                <div class="action-buttons">
                    <button class="btn btn-back" onclick="goBack()">
                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1199,6 +1218,7 @@
    <script>
        let currentStep = 0;
        const totalSteps = 12;
+       const selections = {};
 
        function startQuiz() {
            showSection(1);
@@ -1224,6 +1244,11 @@
                if (question) {
                    question.style.display = 'flex';
                    question.classList.add('active');
+                   const savedValue = selections['q' + step];
+                   const cards = question.querySelectorAll('.option-card');
+                   cards.forEach(card => {
+                       card.classList.toggle('selected', card.dataset.value === savedValue);
+                   });
                }
            }
 
@@ -1277,34 +1302,30 @@
            if (!question) return;
 
            const nextBtn = question.querySelector('.btn-next');
-           const radios = question.querySelectorAll('input[type="radio"]');
-           
-           const isValid = Array.from(radios).some(radio => radio.checked);
+           const isValid = !!question.querySelector('.option-card.selected');
            nextBtn.disabled = !isValid;
        }
 
        // Event listeners pour les cartes d'options
        document.addEventListener('DOMContentLoaded', function() {
            document.querySelectorAll('.option-card').forEach(card => {
-               card.addEventListener('click', function(e) {
-                   // Empêcher le double-clic sur l'input
-                   if (e.target.tagName === 'INPUT') return;
-                   
-                   const input = this.querySelector('input[type="radio"]');
-                   if (!input) return;
-                   
-                   // Déselectionner les autres options du même groupe
-                   const name = input.name;
-                   document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
-                       radio.closest('.option-card').classList.remove('selected');
-                       radio.checked = false;
-                   });
-                   
-                   // Sélectionner cette option
-                   input.checked = true;
+               card.addEventListener('click', function() {
+                   const question = this.closest('.question-section');
+                   if (!question || !question.id) return;
+
+                   const cards = question.querySelectorAll('.option-card');
+                   cards.forEach(c => c.classList.remove('selected'));
+
                    this.classList.add('selected');
-                   
+                   selections[question.id] = this.dataset.value;
+
                    updateButtons();
+
+                   setTimeout(() => {
+                       if (question.classList.contains('active')) {
+                           nextQuestion();
+                       }
+                   }, 180);
                });
            });
 
