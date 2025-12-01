@@ -289,7 +289,7 @@
     .success-card.visible{ display:block; }
     .success-inner{ display:flex; flex-direction:column; gap:clamp(18px,4vw,24px); align-items:stretch; width:100%; }
     .success-headline{
-      font-size:1.4rem;
+      font-size:clamp(1.15rem,4.2vw,1.4rem);
       font-weight:800;
       line-height:1.3;
       text-align:left;
@@ -300,7 +300,7 @@
     .success-input-card{
       background:#fff;
       border-radius:22px;
-      padding:clamp(18px,4vw,22px);
+      padding:clamp(16px,4vw,22px);
       box-shadow:0 16px 32px rgba(15,23,42,.08);
       display:flex;
       flex-direction:column;
@@ -421,6 +421,13 @@
       box-shadow:0 8px 16px rgba(4,120,87,.18);
     }
 
+    @media (max-width:480px){
+      .success-headline{ text-align:center; }
+      .success-privacy{ flex-direction:column; align-items:flex-start; }
+      .success-privacy-icon{ width:28px; height:28px; font-size:1rem; }
+      .success-input-card{ border-radius:18px; }
+    }
+
     .result-preview{
       display:none;
       flex-direction:column;
@@ -432,6 +439,23 @@
       transition:opacity .4s ease;
     }
     .result-preview.active{ display:flex; opacity:1; }
+    .warning-panel{
+      background:linear-gradient(135deg,#fef3c7 0%,#fde68a 100%);
+      border:1px solid rgba(217,119,6,.3);
+      border-radius:16px;
+      padding:clamp(12px,4vw,20px);
+      margin:clamp(12px,3vw,24px) 0;
+      width:100%;
+    }
+    .warning-panel p{
+      font-size:clamp(.83rem,2.8vw,.9rem);
+      line-height:1.55;
+      color:#78350f;
+      margin:0;
+    }
+    @media (max-width:480px){
+      .warning-panel{ border-radius:14px; }
+    }
     .gut-container{
       width:100%;
       max-width:480px;
@@ -786,8 +810,8 @@
             </div>
           </div>
 
-          <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 16px; margin: 24px 0;">
-            <p style="font-size: 0.85rem; line-height: 1.5; color: #78350f; margin: 0;">
+          <div class="warning-panel">
+            <p>
               <strong>⚠️ Information importante :</strong><br><br>
               Ce programme d'accompagnement nutritionnel et de bien-être ne constitue pas un traitement médical
               et ne se substitue pas à un avis médical.<br><br>
@@ -970,8 +994,8 @@
         </p>
         </div>
 
-        <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 16px; margin: 24px 0;">
-          <p style="font-size: 0.85rem; line-height: 1.5; color: #78350f; margin: 0;">
+        <div class="warning-panel">
+          <p>
             <strong>⚠️ Information importante :</strong><br><br>
             Ce programme d'accompagnement nutritionnel et de bien-être ne constitue pas un traitement médical
             et ne se substitue pas à un avis médical.<br><br>
@@ -991,8 +1015,8 @@
         <div class="success-inner">
           <h2 class="success-headline">Entrez votre email pour recevoir votre Programme d'Accompagnement pour le Bien-être Digestif&nbsp;!</h2>
 
-          <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 16px; margin: 24px 0;">
-            <p style="font-size: 0.85rem; line-height: 1.5; color: #78350f; margin: 0;">
+          <div class="warning-panel">
+            <p>
               <strong>⚠️ Information importante :</strong><br><br>
               Ce programme d'accompagnement nutritionnel et de bien-être ne constitue pas un traitement médical
               et ne se substitue pas à un avis médical.<br><br>
