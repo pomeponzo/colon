@@ -377,7 +377,9 @@
     .success-card #sioEmailSlot form{ width:100%; display:flex; flex-direction:column; gap:12px; }
     .success-card #sioEmailSlot input[type="email"],
     .success-card #sioEmailSlot input[name="email"],
-    .success-card #sioEmailSlot input[name*="email" i]{
+    .success-card #sioEmailSlot input[name*="email" i],
+    .success-card #sioEmailSlot input[type="tel"],
+    .success-card #sioEmailSlot input[name*="phone" i]{
       background:#fff !important;
       border:1px solid #d1d5db !important;
       border-radius:18px !important;
@@ -388,7 +390,9 @@
     }
     .success-card #sioEmailSlot input[type="email"]::placeholder,
     .success-card #sioEmailSlot input[name="email"]::placeholder,
-    .success-card #sioEmailSlot input[name*="email" i]::placeholder{
+    .success-card #sioEmailSlot input[name*="email" i]::placeholder,
+    .success-card #sioEmailSlot input[type="tel"]::placeholder,
+    .success-card #sioEmailSlot input[name*="phone" i]::placeholder{
       color:#9ca3af !important;
     }
 
@@ -665,10 +669,11 @@
     }
 
     /* Gate CSS : masque inputs SIO globaux, n’affiche que dans #sioEmailSlot */
-    input[name="first_name"], input[name="surname"], input[name="email"]{ display:none !important; }
+    input[name="first_name"], input[name="surname"], input[name="email"], input[name*="phone" i]{ display:none !important; }
     #sioEmailSlot input[name="first_name"],
     #sioEmailSlot input[name="surname"],
-    #sioEmailSlot input[name="email"]{ display:block !important; }
+    #sioEmailSlot input[name="email"],
+    #sioEmailSlot input[name*="phone" i]{ display:block !important; }
   </style>
   <div class="app-container">
     <!-- Header -->
@@ -1926,17 +1931,44 @@
       if (formInSlot){ if (formInSlot.requestSubmit) formInSlot.requestSubmit(); else formInSlot.submit(); console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Form.submit() SIO'); }
     }
 
-    function relocateSioIntoSlot(){
-      const slot = document.getElementById('sioEmailSlot');
-      if (!slot){ console.warn('[SIO][DBG] slot email introuvable'); return; }
+    function ensurePhoneField(targetForm){
+      if (!targetForm) return;
 
-      // Gate CSS (au cas où)
-      if (!document.getElementById('sioEmailGate')){
-        const css = document.createElement('style');
-        css.id = 'sioEmailGate';
-        css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"]{display:none!important;} #sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"]{display:block!important;}';
-        (document.head || document.documentElement).appendChild(css);
+      let phoneInput = targetForm.querySelector('input[type="tel"], input[name*="phone" i]');
+      if (!phoneInput){
+        phoneInput = document.createElement('input');
+        phoneInput.type = 'tel';
+        phoneInput.name = 'phone_number';
+        phoneInput.placeholder = 'Numéro de téléphone';
+        phoneInput.inputMode = 'tel';
+        phoneInput.autocomplete = 'tel';
       }
+
+      const optin = targetForm.querySelector('input[type="checkbox"], [role="checkbox"], [name*="opt" i]');
+      const submit = targetForm.querySelector('button[type="submit"], input[type="submit"], .sio-subscribe-button, .sio-submit, [data-element="cta-button"], button[id^="button-"]');
+      const referenceNode = optin || submit || targetForm.firstChild;
+
+      if (referenceNode){
+        if (referenceNode === phoneInput) return;
+        if (phoneInput.parentElement !== targetForm || phoneInput.nextSibling !== referenceNode){
+          targetForm.insertBefore(phoneInput, referenceNode);
+        }
+      }else if(!phoneInput.parentElement){
+        targetForm.appendChild(phoneInput);
+      }
+    }
+
+      function relocateSioIntoSlot(){
+        const slot = document.getElementById('sioEmailSlot');
+        if (!slot){ console.warn('[SIO][DBG] slot email introuvable'); return; }
+
+        // Gate CSS (au cas où)
+        if (!document.getElementById('sioEmailGate')){
+          const css = document.createElement('style');
+          css.id = 'sioEmailGate';
+          css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"],input[name*="phone" i]{display:none!important;} #sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"],#sioEmailSlot input[name*="phone" i]{display:block!important;}';
+          (document.head || document.documentElement).appendChild(css);
+        }
 
       // Localise le champ email SIO n’importe où
       const EMAIL_SEL = [
@@ -1982,6 +2014,11 @@
         btn.style.width = '100%';
       }
       console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Bouton SIO natif trouvé :', !!btn);
+
+      const formInSlot = slot.querySelector('form');
+      if (formInSlot){
+        ensurePhoneField(formInSlot);
+      }
 
       // Entrée => submit
       const successCardEl = document.getElementById('searchSuccessCard');
