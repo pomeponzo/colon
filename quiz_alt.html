@@ -380,7 +380,14 @@
     .success-card #sioEmailSlot form{ width:100%; display:flex; flex-direction:column; gap:12px; }
     .success-card #sioEmailSlot input[type="email"],
     .success-card #sioEmailSlot input[name="email"],
-    .success-card #sioEmailSlot input[name*="email" i]{
+    .success-card #sioEmailSlot input[name*="email" i],
+    .success-card #sioEmailSlot input[type="text"],
+    .success-card #sioEmailSlot input[name*="first" i],
+    .success-card #sioEmailSlot input[name*="prenom" i],
+    .success-card #sioEmailSlot input[name*="name" i],
+    .success-card #sioEmailSlot input[type="tel"],
+    .success-card #sioEmailSlot input[name*="phone" i],
+    .success-card #sioEmailSlot input[name*="tel" i]{
       background:#fff !important;
       border:1px solid #d1d5db !important;
       border-radius:18px !important;
@@ -391,7 +398,14 @@
     }
     .success-card #sioEmailSlot input[type="email"]::placeholder,
     .success-card #sioEmailSlot input[name="email"]::placeholder,
-    .success-card #sioEmailSlot input[name*="email" i]::placeholder{
+    .success-card #sioEmailSlot input[name*="email" i]::placeholder,
+    .success-card #sioEmailSlot input[type="text"]::placeholder,
+    .success-card #sioEmailSlot input[name*="first" i]::placeholder,
+    .success-card #sioEmailSlot input[name*="prenom" i]::placeholder,
+    .success-card #sioEmailSlot input[name*="name" i]::placeholder,
+    .success-card #sioEmailSlot input[type="tel"]::placeholder,
+    .success-card #sioEmailSlot input[name*="phone" i]::placeholder,
+    .success-card #sioEmailSlot input[name*="tel" i]::placeholder{
       color:#9ca3af !important;
     }
 
@@ -692,10 +706,14 @@
     }
 
     /* Gate CSS : masque inputs SIO globaux, n’affiche que dans #sioEmailSlot */
-    input[name="first_name"], input[name="surname"], input[name="email"]{ display:none !important; }
+    input[name="first_name"], input[name="surname"], input[name="email"],
+    input[name*="phone" i], input[name*="tel" i], input[type="tel"]{ display:none !important; }
     #sioEmailSlot input[name="first_name"],
     #sioEmailSlot input[name="surname"],
-    #sioEmailSlot input[name="email"]{ display:block !important; }
+    #sioEmailSlot input[name="email"],
+    #sioEmailSlot input[name*="phone" i],
+    #sioEmailSlot input[name*="tel" i],
+    #sioEmailSlot input[type="tel"]{ display:block !important; }
   </style>
   <div class="app-container">
     <!-- Header -->
@@ -1925,7 +1943,7 @@
       if (!document.getElementById('sioEmailGate')){
         const css = document.createElement('style');
         css.id = 'sioEmailGate';
-        css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"]{display:none!important;} #sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"]{display:block!important;}';
+        css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"],input[name*="phone" i],input[name*="tel" i],input[type="tel"]{display:none!important;} #sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"],#sioEmailSlot input[name*="phone" i],#sioEmailSlot input[name*="tel" i],#sioEmailSlot input[type="tel"]{display:block!important;}';
         (document.head || document.documentElement).appendChild(css);
       }
 
@@ -1937,6 +1955,21 @@
         'input[id*="email" i]',
         'input[placeholder*="mail" i]',
         'input[id^="field-"]'
+      ].join(', ');
+      const FIRSTNAME_SEL = [
+        'input[name="first_name"]',
+        'input[name*="first" i]',
+        'input[name*="prenom" i]',
+        'input[name*="name" i]',
+        'input[placeholder*="prénom" i]',
+        'input[placeholder*="prenom" i]'
+      ].join(', ');
+      const PHONE_SEL = [
+        'input[type="tel"]',
+        'input[name*="phone" i]',
+        'input[name*="tel" i]',
+        'input[placeholder*="téléphone" i]',
+        'input[placeholder*="telephone" i]'
       ].join(', ');
       const email = document.querySelector(EMAIL_SEL);
 
@@ -1953,6 +1986,25 @@
           console.log('%c[SIO][DBG]','color:#059669;font-weight:700','Input email SIO déplacé → #sioEmailSlot (pas de <form>)');
         }
       }
+
+      const slotForm = slot.querySelector('form');
+      const ensureFieldInSlot = (selector) => {
+        const field = document.querySelector(selector);
+        if (!field) return null;
+
+        if (slotForm && !slotForm.contains(field)){
+          slotForm.insertBefore(field, getSioSubmitButton() || null);
+        }else if(!slot.contains(field)){
+          slot.appendChild(field);
+        }
+        field.style.display = '';
+        field.style.visibility = '';
+        field.removeAttribute('hidden');
+        return field;
+      };
+
+      ensureFieldInSlot(FIRSTNAME_SEL);
+      ensureFieldInSlot(PHONE_SEL);
 
       // Trouve le bouton SIO ; s’il n’est pas dans le slot, on le déplace
       let btn = getSioSubmitButton();
@@ -1989,7 +2041,7 @@
 
       // retire le placeholder si un form ou input a été trouvé
       const loading = document.getElementById('sioEmailLoading');
-      if (loading && (slot.querySelector('form') || slot.querySelector(EMAIL_SEL))) loading.remove();
+      if (loading && (slot.querySelector('form') || slot.querySelector(EMAIL_SEL) || slot.querySelector(FIRSTNAME_SEL) || slot.querySelector(PHONE_SEL))) loading.remove();
     }
 
     const previewContinueBtn = document.getElementById('gutPreviewContinue');
