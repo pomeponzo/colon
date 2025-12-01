@@ -1020,18 +1020,6 @@
         <div class="success-inner">
           <h2 class="success-headline">Entrez votre email pour recevoir votre Programme d'Accompagnement pour le Bien-être Digestif&nbsp;!</h2>
 
-          <div class="warning-panel">
-            <p>
-              <strong>⚠️ Information importante :</strong><br><br>
-              Ce programme d'accompagnement nutritionnel et de bien-être ne constitue pas un traitement médical
-              et ne se substitue pas à un avis médical.<br><br>
-              Anne-Sophie Cortasse est naturopathe spécialisée en bien-être digestif. Elle n'est pas médecin.<br><br>
-              En cas de symptômes persistants, graves ou inquiétants, consultez un professionnel de santé.<br><br>
-              Le syndrome de l'intestin irritable nécessite un diagnostic médical préalable.<br><br>
-              Les résultats peuvent varier selon les personnes.
-            </p>
-          </div>
-
           <div class="success-input-card">
             <div class="success-form">
               <div id="sioEmailSlot" class="options-container">
@@ -1230,26 +1218,6 @@
       }
     }
 
-    function resetViewportScroll(){
-      if (typeof window.scrollTo === 'function'){
-        window.scrollTo({ top: 0, behavior: 'auto' });
-      } else {
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-      }
-    }
-
-    function resetQuestionScroll(section){
-      if (!section) return;
-      const content = section.querySelector('.question-content');
-      if (content){
-        if (typeof content.scrollTo === 'function'){
-          content.scrollTo({ top: 0, behavior: 'auto' });
-        }
-        content.scrollTop = 0;
-      }
-    }
-
     function goToStep(step){
       document.querySelectorAll('.question-section').forEach(s => s.classList.remove('active'));
       const target = document.getElementById(`q${step}`);
@@ -1257,10 +1225,6 @@
         target.classList.add('active');
         currentStep = step;
         updateUI();
-        requestAnimationFrame(() => {
-          resetQuestionScroll(target);
-          resetViewportScroll();
-        });
       }
     }
 
