@@ -387,7 +387,11 @@
     .success-card #sioEmailSlot input[name*="name" i],
     .success-card #sioEmailSlot input[type="tel"],
     .success-card #sioEmailSlot input[name*="phone" i],
-    .success-card #sioEmailSlot input[name*="tel" i]{
+    .success-card #sioEmailSlot input[name*="tel" i],
+    .success-card #sioEmailSlot select[name*="phone" i],
+    .success-card #sioEmailSlot select[name*="tel" i],
+    .success-card #sioEmailSlot select[id*="phone" i],
+    .success-card #sioEmailSlot select[id*="tel" i]{
       background:#fff !important;
       border:1px solid #d1d5db !important;
       border-radius:18px !important;
@@ -707,13 +711,18 @@
 
     /* Gate CSS : masque inputs SIO globaux, n’affiche que dans #sioEmailSlot */
     input[name="first_name"], input[name="surname"], input[name="email"],
-    input[name*="phone" i], input[name*="tel" i], input[type="tel"]{ display:none !important; }
+    input[name*="phone" i], input[name*="tel" i], input[type="tel"],
+    select[name*="phone" i], select[name*="tel" i], select[id*="phone" i], select[id*="tel" i]{ display:none !important; }
     #sioEmailSlot input[name="first_name"],
     #sioEmailSlot input[name="surname"],
     #sioEmailSlot input[name="email"],
     #sioEmailSlot input[name*="phone" i],
     #sioEmailSlot input[name*="tel" i],
-    #sioEmailSlot input[type="tel"]{ display:block !important; }
+    #sioEmailSlot input[type="tel"],
+    #sioEmailSlot select[name*="phone" i],
+    #sioEmailSlot select[name*="tel" i],
+    #sioEmailSlot select[id*="phone" i],
+    #sioEmailSlot select[id*="tel" i]{ display:block !important; }
   </style>
   <div class="app-container">
     <!-- Header -->
@@ -1943,7 +1952,7 @@
       if (!document.getElementById('sioEmailGate')){
         const css = document.createElement('style');
         css.id = 'sioEmailGate';
-        css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"],input[name*="phone" i],input[name*="tel" i],input[type="tel"]{display:none!important;} #sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"],#sioEmailSlot input[name*="phone" i],#sioEmailSlot input[name*="tel" i],#sioEmailSlot input[type="tel"]{display:block!important;}';
+        css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"],input[name*="phone" i],input[name*="tel" i],input[type="tel"],select[name*="phone" i],select[name*="tel" i],select[id*="phone" i],select[id*="tel" i]{display:none!important;} #sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"],#sioEmailSlot input[name*="phone" i],#sioEmailSlot input[name*="tel" i],#sioEmailSlot input[type="tel"],#sioEmailSlot select[name*="phone" i],#sioEmailSlot select[name*="tel" i],#sioEmailSlot select[id*="phone" i],#sioEmailSlot select[id*="tel" i]{display:block!important;}';
         (document.head || document.documentElement).appendChild(css);
       }
 
@@ -1954,6 +1963,7 @@
         'input[name*="email" i]',
         'input[id*="email" i]',
         'input[placeholder*="mail" i]',
+        'input[placeholder*="courriel" i]',
         'input[id^="field-"]'
       ].join(', ');
       const FIRSTNAME_SEL = [
@@ -1970,6 +1980,14 @@
         'input[name*="tel" i]',
         'input[placeholder*="téléphone" i]',
         'input[placeholder*="telephone" i]'
+      ].join(', ');
+      const PHONE_CODE_SEL = [
+        'select[name*="phone" i]',
+        'select[name*="tel" i]',
+        'select[id*="phone" i]',
+        'select[id*="tel" i]',
+        'select[aria-label*="indicatif" i]',
+        'select[aria-label*="code" i]'
       ].join(', ');
       const email = document.querySelector(EMAIL_SEL);
 
@@ -2003,8 +2021,10 @@
         return field;
       };
 
+      ensureFieldInSlot(EMAIL_SEL);
       ensureFieldInSlot(FIRSTNAME_SEL);
       ensureFieldInSlot(PHONE_SEL);
+      ensureFieldInSlot(PHONE_CODE_SEL);
 
       // Trouve le bouton SIO ; s’il n’est pas dans le slot, on le déplace
       let btn = getSioSubmitButton();
