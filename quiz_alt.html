@@ -23,14 +23,10 @@
     .progress-fill{ height:100%; background:linear-gradient(90deg,#8b5cf6 0%,#7c3aed 100%); transition:width .5s cubic-bezier(.4,0,.2,1); }
 
     body.overlay-active .app-header,
-    body.overlay-active .progress-bar{
-      display:none;
-    }
-    body.overlay-active.showing-email .app-header{
-      display:flex;
-    }
+    body.overlay-active .progress-bar,
+    body.overlay-active.showing-email .app-header,
     body.overlay-active.showing-email .progress-bar{
-      display:block;
+      display:none;
     }
 
     .app-content{ flex:1; display:flex; flex-direction:column; overflow:hidden; padding:calc(16px + 48px + 2px) 16px 120px; min-height:0; padding:calc(16px + 48px + 2px) 16px calc(120px + env(safe-area-inset-bottom)); }
@@ -232,8 +228,8 @@
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      padding:24px 16px 140px;
-      padding:24px 16px calc(140px + env(safe-area-inset-bottom));
+      padding:clamp(32px,5vw,56px) 16px 140px;
+      padding:clamp(32px,5vw,56px) 16px calc(140px + env(safe-area-inset-bottom));
       overflow-y:auto;
       position:fixed; inset:0; z-index:30;
     }
