@@ -83,10 +83,10 @@
     body.overlay-active .app-content .continue-button{ display:none; }
 
     .quiz-status-card{
-      position:sticky;
-      left:0;
-      right:0;
-      bottom:calc(88px + env(safe-area-inset-bottom));
+      position:relative;
+      left:auto;
+      right:auto;
+      bottom:auto;
       transform:none;
       display:none;
       align-items:center;
@@ -99,10 +99,10 @@
       color:#1e293b;
       font-size:.95rem;
       line-height:1.25;
-      z-index:50;
+      z-index:1;
       width:min(420px,calc(100% - 32px));
       pointer-events:none;
-      margin:0 auto;
+      margin:12px auto 0;
     }
     .quiz-status-card .quiz-status-icon{
       display:flex;
