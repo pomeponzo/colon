@@ -1,1199 +1,1182 @@
-   <style>
-       html, body {
-           margin: 0;
-           padding: 0;
-           width: 100%;
-           height: auto;
-           min-height: 100%;
-           overflow-x: hidden;
-           overflow-y: auto;
-       }
+<style>
+   html, body {
+       margin: 0;
+       padding: 0;
+       width: 100%;
+       height: auto;
+       min-height: 100%;
+       overflow-x: hidden;
+       overflow-y: auto;
+   }
 
+   .app-container {
+       box-sizing: border-box;
+       font-family: inherit;
+       background: linear-gradient(180deg, #fff7fb 0%, #ffffff 60%);
+       width: 100%;
+       height: 100vh;
+       max-height: 100vh;
+       display: flex;
+       flex-direction: column;
+       overflow: hidden;
+       font-size: 17px;
+   }
+
+   .app-container * {
+       margin: 0;
+       padding: 0;
+       box-sizing: border-box;
+   }
+
+   @media (min-width: 600px) {
        .app-container {
-           box-sizing: border-box;
-           font-family: inherit;
-           background: linear-gradient(180deg, #fff7fb 0%, #ffffff 60%);
-           width: 100%;
-           height: 100vh;
-           max-height: 100vh;
-           display: flex;
-           flex-direction: column;
-           overflow: hidden;
-           font-size: 17px;
+           max-width: 500px;
+           margin: 0 auto;
        }
+   }
 
-       .app-container * {
-           margin: 0;
-           padding: 0;
-           box-sizing: border-box;
+   @media (max-width: 600px) {
+       .app-container {
+           font-size: 15px;
        }
+   }
 
-       @media (min-width: 600px) {
-           .app-container {
-               max-width: 500px;
-               margin: 0 auto;
-           }
-       }
+   .app-header {
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       padding: 12px 16px;
+       background: white;
+       border-bottom: 1px solid rgba(236, 72, 153, 0.1);
+       flex-shrink: 0;
+       z-index: 10;
+       height: 52px;
+       box-shadow: 0 4px 20px rgba(236, 72, 153, 0.08);
+   }
 
-       @media (max-width: 600px) {
-           .app-container {
-               font-size: 15px;
-           }
-       }
+   .back-button {
+       background: none;
+       border: none;
+       color: #64748b;
+       cursor: pointer;
+       padding: 6px;
+       border-radius: 8px;
+       transition: all 0.2s ease;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       width: 32px;
+       height: 32px;
+   }
 
-       .app-header {
-           display: flex;
-           align-items: center;
-           justify-content: space-between;
-           padding: 12px 16px;
-           background: white;
-           border-bottom: 1px solid rgba(236, 72, 153, 0.1);
-           flex-shrink: 0;
-           z-index: 10;
-           height: 52px;
-           box-shadow: 0 4px 20px rgba(236, 72, 153, 0.08);
-       }
+   .back-button:hover {
+       background: rgba(236, 72, 153, 0.1);
+       color: #db2777;
+   }
 
-       .back-button {
-           background: none;
-           border: none;
-           color: #64748b;
-           cursor: pointer;
-           padding: 6px;
-           border-radius: 8px;
-           transition: all 0.2s ease;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           width: 32px;
-           height: 32px;
-       }
+   .back-button svg {
+       width: 18px;
+       height: 18px;
+   }
 
-       .back-button:hover {
-           background: rgba(236, 72, 153, 0.1);
-           color: #db2777;
-       }
+   .step-counter {
+       font-size: 0.8rem;
+       color: #64748b;
+       font-weight: 500;
+       width: 32px;
+       text-align: right;
+   }
 
-       .back-button svg {
-           width: 18px;
-           height: 18px;
-       }
+   .progress-bar {
+       height: 2px;
+       background: rgba(0, 0, 0, 0.05);
+       position: relative;
+       overflow: hidden;
+       flex-shrink: 0;
+   }
 
-       .step-counter {
-           font-size: 0.8rem;
-           color: #64748b;
-           font-weight: 500;
-           width: 32px;
-           text-align: right;
-       }
+   .progress-fill {
+       height: 100%;
+       background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
+       transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+   }
 
-       .progress-bar {
-           height: 2px;
-           background: rgba(0, 0, 0, 0.05);
-           position: relative;
-           overflow: hidden;
-           flex-shrink: 0;
-       }
+   .app-content {
+       flex: 1;
+       display: flex;
+       flex-direction: column;
+       overflow: hidden;
+       padding: 16px;
+       min-height: 0;
+   }
 
-       .progress-fill {
-           height: 100%;
-           background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
-           transition: width 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
-       }
+   .question-section {
+       display: none;
+       flex: 1;
+       flex-direction: column;
+       animation: slideIn 0.3s ease;
+       overflow: hidden;
+   }
 
-       .app-content {
-           flex: 1;
-           display: flex;
-           flex-direction: column;
-           overflow: hidden;
-           padding: 16px;
-           min-height: 0;
-       }
+   .question-section.active {
+       display: flex;
+   }
 
-       .question-section {
-           display: none;
-           flex: 1;
-           flex-direction: column;
-           animation: slideIn 0.3s ease;
-           overflow: hidden;
-       }
-
-       .question-section.active {
-           display: flex;
-       }
-
-       @keyframes slideIn {
-           from {
-               opacity: 0;
-               transform: translateX(20px);
-           }
-           to {
-               opacity: 1;
-               transform: translateX(0);
-           }
-       }
-
-       .question-header {
-           margin-bottom: 16px;
-           flex-shrink: 0;
-       }
-
-       .question-title {
-           font-size: 1.35rem;
-           font-weight: 700;
-           color: #1e1b4b;
-           margin-bottom: 8px;
-           line-height: 1.25;
-       }
-
-       .question-subtitle {
-           font-size: 0.95rem;
-           color: #7c7a92;
-           line-height: 1.5;
-       }
-
-       .options-scroll-container {
-           flex: 1;
-           overflow-y: auto;
-           overflow-x: hidden;
-           min-height: 0;
-           -webkit-overflow-scrolling: touch;
-       }
-
-       .options-container {
-           display: flex;
-           flex-direction: column;
-           gap: 8px;
-       }
-
-       .option-card {
-           background: #fff;
-           border: 2px solid #f8d2e6;
-           border-radius: 12px;
-           padding: 14px 16px;
-           cursor: pointer;
-           transition: all 0.2s ease;
-           display: flex;
-           align-items: center;
-           justify-content: flex-start;
-           gap: 12px;
-           position: relative;
-           overflow: hidden;
-           text-align: left;
-           min-height: 54px;
-       }
-
-       .option-card:hover {
-           border-color: #f472b6;
-           background: rgba(244, 114, 182, 0.05);
-           transform: translateY(-1px);
-       }
-
-       .option-card.selected {
-           border-color: #ec4899;
-           background: rgba(236, 72, 153, 0.1);
-           box-shadow: 0 6px 18px rgba(236, 72, 153, 0.14);
-       }
-
-       .option-emoji {
-           font-size: 1.3rem;
-           flex-shrink: 0;
-       }
-
-       .option-text {
-           flex: 1;
-           text-align: left;
-           font-size: 1rem;
-           color: #2f2a3f;
-           font-weight: 600;
-           line-height: 1.4;
-       }
-
-       .action-buttons {
-           display: flex;
-           gap: 8px;
-           padding: 12px 0 0 0;
-           flex-shrink: 0;
-       }
-
-       .btn {
-           flex: 1;
-           padding: 14px 20px;
-           border: none;
-           border-radius: 10px;
-           font-size: 0.95rem;
-           font-weight: 600;
-           cursor: pointer;
-           transition: all 0.2s ease;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           gap: 6px;
-       }
-
-       .btn-next {
-           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
-           color: white;
-           box-shadow: 0 6px 18px rgba(236, 72, 153, 0.25);
-       }
-
-       .btn-next:hover:not(:disabled) {
-           transform: translateY(-1px);
-           box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
-       }
-
-       .btn-next:disabled {
-           opacity: 0.5;
-           cursor: not-allowed;
-       }
-
-       .btn-back {
-           background: white;
-           color: #a21caf;
-           border: 2px solid #f3c1d8;
-           flex: 0 0 auto;
-           padding: 14px 16px;
-       }
-
-       .btn-back:hover {
-           border-color: #ec4899;
-           background: #fff1f7;
-       }
-
-       .landing-section {
-           display: none;
-           flex-direction: column;
-           height: 100%;
-           overflow-y: auto;
-           -webkit-overflow-scrolling: touch;
-       }
-
-       .landing-section.active {
-           display: flex;
-       }
-
-       .landing-header {
-           text-align: center;
-           margin-bottom: 24px;
-           padding-top: 20px;
-       }
-
-       .landing-title {
-           font-size: 1.7rem;
-           font-weight: 800;
-           color: #1e1b4b;
-           margin-bottom: 12px;
-           line-height: 1.25;
-       }
-
-       .landing-subtitle {
-           font-size: 1rem;
-           color: #7c7a92;
-           line-height: 1.6;
-           margin-bottom: 20px;
-       }
-
-       .landing-benefits {
-           background: #fff1f7;
-           border-radius: 14px;
-           padding: 16px;
-           margin-bottom: 24px;
-           border: 1px solid rgba(236, 72, 153, 0.12);
-           box-shadow: 0 8px 22px rgba(236, 72, 153, 0.08);
-           text-align: left;
-       }
-
-       .benefit-item {
-           display: flex;
-           align-items: flex-start;
-           gap: 10px;
-           margin-bottom: 10px;
-       }
-
-       .benefit-item:last-child {
-           margin-bottom: 0;
-       }
-
-       .benefit-icon {
-           color: #ec4899;
-           font-size: 1.2rem;
-           flex-shrink: 0;
-       }
-
-       .benefit-text {
-           font-size: 0.9rem;
-           color: #334155;
-           line-height: 1.4;
-       }
-
-       .landing-cta {
-           margin-top: auto;
-           padding-bottom: 20px;
-       }
-
-       .results-wrapper {
-           display: none;
-           flex-direction: column;
-           height: 100%;
-           overflow-y: auto;
-           -webkit-overflow-scrolling: touch;
-       }
-
-       .results-wrapper.active {
-           display: flex;
-       }
-
-       .results-header {
-           text-align: center;
-           margin-bottom: 24px;
-           padding-top: 20px;
-       }
-
-       .header-title {
-           font-size: 1.4rem;
-           font-weight: 700;
-           color: #1e293b;
-           margin-bottom: 8px;
-       }
-
-       .header-subtitle {
-           font-size: 0.9rem;
-           color: #64748b;
-           line-height: 1.4;
-       }
-
-       .progress-card {
-           background: #fff1f7;
-           border-radius: 12px;
-           padding: 20px;
-           margin-bottom: 20px;
-           transition: opacity 0.3s ease;
-       }
-
-       .progress-card.hidden {
+   @keyframes slideIn {
+       from {
            opacity: 0;
+           transform: translateX(20px);
        }
-
-       .progress-label {
-           font-size: 0.85rem;
-           color: #64748b;
-           margin-bottom: 8px;
-           text-align: center;
-       }
-
-       .progress-bar-container {
-           background: white;
-           height: 8px;
-           border-radius: 4px;
-           overflow: hidden;
-           margin-bottom: 4px;
-       }
-
-       .progress-bar-fill {
-           height: 100%;
-           background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
-           width: 0%;
-           transition: width 0.3s ease;
-       }
-
-       .progress-percentage {
-           font-size: 0.9rem;
-           color: #db2777;
-           font-weight: 700;
-           text-align: center;
-       }
-
-       .checklist {
-           margin-top: 16px;
-       }
-
-       .checklist-item {
-           display: flex;
-           align-items: center;
-           gap: 10px;
-           padding: 8px 0;
-           opacity: 0.4;
-           transition: opacity 0.3s ease;
-       }
-
-       .checklist-item.active {
+       to {
            opacity: 1;
+           transform: translateX(0);
        }
+   }
 
-       .checklist-icon {
-           width: 20px;
-           height: 20px;
-           border-radius: 50%;
-           border: 2px solid #cbd5e1;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           transition: all 0.3s ease;
-       }
+   .question-header {
+       margin-bottom: 16px;
+       flex-shrink: 0;
+   }
 
-       .checklist-item.completed .checklist-icon {
-           background: #ec4899;
-           border-color: #ec4899;
-       }
+   .question-title {
+       font-size: 1.35rem;
+       font-weight: 700;
+       color: #1e1b4b;
+       margin-bottom: 8px;
+       line-height: 1.25;
+   }
 
-       .checklist-text {
-           font-size: 0.85rem;
-           color: #334155;
-       }
+   .question-subtitle {
+       font-size: 0.95rem;
+       color: #7c7a92;
+       line-height: 1.5;
+   }
 
-       .success-card {
-           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
-           border-radius: 12px;
-           padding: 24px;
-           text-align: center;
-           color: white;
-           opacity: 0;
-           transform: scale(0.9);
-           transition: all 0.4s ease;
-           display: none;
-       }
+   .options-scroll-container {
+       flex: 1;
+       overflow-y: auto;
+       overflow-x: hidden;
+       min-height: 0;
+       -webkit-overflow-scrolling: touch;
+   }
 
-       .success-card.visible {
-           opacity: 1;
-           transform: scale(1);
-           display: block;
-       }
+   .options-container {
+       display: flex;
+       flex-direction: column;
+       gap: 8px;
+   }
 
-       .success-icon {
-           font-size: 3rem;
-           margin-bottom: 12px;
-       }
+   .option-card {
+       background: #fff;
+       border: 2px solid #f8d2e6;
+       border-radius: 12px;
+       padding: 14px 16px;
+       cursor: pointer;
+       transition: all 0.2s ease;
+       display: flex;
+       align-items: center;
+       justify-content: flex-start;
+       gap: 12px;
+       position: relative;
+       overflow: hidden;
+       text-align: left;
+       min-height: 54px;
+   }
 
-       .success-title {
-           font-size: 1.3rem;
-           font-weight: 700;
-           margin-bottom: 8px;
-       }
+   .option-card:hover {
+       border-color: #f472b6;
+       background: rgba(244, 114, 182, 0.05);
+       transform: translateY(-1px);
+   }
 
-       .success-subtitle {
-           font-size: 0.9rem;
-           opacity: 0.9;
-       }
+   .option-card.selected {
+       border-color: #ec4899;
+       background: rgba(236, 72, 153, 0.1);
+       box-shadow: 0 6px 18px rgba(236, 72, 153, 0.14);
+   }
 
-       .email-question {
-           display: none;
-           flex-direction: column;
-           gap: 16px;
-       }
+   .option-emoji {
+       font-size: 1.3rem;
+       flex-shrink: 0;
+   }
 
-       .email-card {
-           background: #fff1f7;
-           border-radius: 12px;
-           padding: 20px;
-           border: 1px solid rgba(236, 72, 153, 0.12);
-       }
+   .option-text {
+       flex: 1;
+       text-align: left;
+       font-size: 1rem;
+       color: #2f2a3f;
+       font-weight: 600;
+       line-height: 1.4;
+   }
 
-       .email-card-title {
-           font-size: 1.1rem;
-           font-weight: 600;
-           color: #1e293b;
-           margin-bottom: 12px;
-       }
+   .action-buttons {
+       display: flex;
+       gap: 8px;
+       padding: 12px 0 0 0;
+       flex-shrink: 0;
+   }
 
-       .email-benefits-list {
-           list-style: none;
-           margin-bottom: 16px;
-       }
+   .btn {
+       flex: 1;
+       padding: 14px 20px;
+       border: none;
+       border-radius: 10px;
+       font-size: 0.95rem;
+       font-weight: 600;
+       cursor: pointer;
+       transition: all 0.2s ease;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       gap: 6px;
+   }
 
-       .email-benefits-list li {
-           display: flex;
-           align-items: flex-start;
-           gap: 8px;
-           margin-bottom: 8px;
-           font-size: 0.85rem;
-           color: #334155;
-       }
+   .btn-next {
+       background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+       color: white;
+       box-shadow: 0 6px 18px rgba(236, 72, 153, 0.25);
+   }
 
-       .email-benefits-list li:last-child {
-           margin-bottom: 0;
-       }
+   .btn-next:hover:not(:disabled) {
+       transform: translateY(-1px);
+       box-shadow: 0 6px 16px rgba(236, 72, 153, 0.3);
+   }
 
-       .email-input-group {
-           display: flex;
-           flex-direction: column;
-           gap: 8px;
-           margin-bottom: 12px;
-       }
+   .btn-next:disabled {
+       opacity: 0.5;
+       cursor: not-allowed;
+   }
 
-       .continue-button {
-           background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
-           color: white;
-           padding: 14px 20px;
-           border: none;
-           border-radius: 10px;
-           font-size: 0.95rem;
-           font-weight: 600;
-           cursor: pointer;
-           transition: all 0.2s ease;
-           width: 100%;
-           box-shadow: 0 8px 24px rgba(236, 72, 153, 0.2);
-       }
+   .btn-back {
+       background: white;
+       color: #a21caf;
+       border: 2px solid #f3c1d8;
+       flex: 0 0 auto;
+       padding: 14px 16px;
+   }
 
-       .continue-button:hover {
-           transform: translateY(-1px);
-           box-shadow: 0 6px 16px rgba(236, 72, 153, 0.26);
-       }
+   .btn-back:hover {
+       border-color: #ec4899;
+       background: #fff1f7;
+   }
 
-      #sioEmailSlot {
-          display: contents;
-      }
+   .landing-section {
+       display: none;
+       flex-direction: column;
+       height: 100%;
+       overflow-y: auto;
+       -webkit-overflow-scrolling: touch;
+   }
 
-      #sioEmailSlot form {
-          width: 100%;
-      }
+   .landing-section.active {
+       display: flex;
+   }
 
-      /* Gate CSS : masque les champs SIO partout sauf dans le slot */
-      input[name="first_name"], input[name="surname"], input[name="email"],
-      input[name*="phone" i], input[name*="tel" i], input[type="tel"],
-      select[name*="phone" i], select[name*="tel" i],
-      select[id*="phone" i], select[id*="tel" i],
-      select[aria-label*="indicatif" i], select[aria-label*="code" i]{
-          display: none !important;
-      }
+   .landing-header {
+       text-align: center;
+       margin-bottom: 24px;
+       padding-top: 20px;
+   }
 
-      #sioEmailSlot input[name="first_name"],
-      #sioEmailSlot input[name="surname"],
-      #sioEmailSlot input[name="email"] {
-          display: block !important;
-      }
+   .landing-title {
+       font-size: 1.7rem;
+       font-weight: 800;
+       color: #1e1b4b;
+       margin-bottom: 12px;
+       line-height: 1.25;
+   }
 
-      /* Prénom + Email : même épaisseur / même style */
-      #sioEmailSlot input[type="email"],
-      #sioEmailSlot input[type="text"],
-      #sioEmailSlot input[name*="first" i],
-      #sioEmailSlot input[name*="prenom" i] {
-          width: 100%;
-          padding: 14px;
-          border: 2px solid #f3c1d8;
-          border-radius: 10px;
-          font-size: 0.95rem;
-          transition: all 0.2s ease;
-      }
+   .landing-subtitle {
+       font-size: 1rem;
+       color: #7c7a92;
+       line-height: 1.6;
+       margin-bottom: 20px;
+   }
 
-      #sioEmailSlot input[type="email"]:focus,
-      #sioEmailSlot input[type="text"]:focus,
-      #sioEmailSlot input[name*="first" i]:focus,
-      #sioEmailSlot input[name*="prenom" i]:focus {
-          outline: none;
-          border-color: #ec4899;
-          box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.16);
-      }
-       .encouragement-text {
-           margin-top: 4px;
-           font-size: 0.95rem;
-           color: #a21caf;
-           font-weight: 600;
-           text-align: center;
-       }
-    </style>
-    
-    <div class="app-container">
-       <div class="app-header">
-           <button class="back-button" id="backBtn" onclick="goBack()">
-               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-               </svg>
-           </button>
-           <div class="step-counter" id="stepCounter">1/12</div>
+   .landing-benefits {
+       background: #fff1f7;
+       border-radius: 14px;
+       padding: 16px;
+       margin-bottom: 24px;
+       border: 1px solid rgba(236, 72, 153, 0.12);
+       box-shadow: 0 8px 22px rgba(236, 72, 153, 0.08);
+       text-align: left;
+   }
+
+   .benefit-item {
+       display: flex;
+       align-items: flex-start;
+       gap: 10px;
+       margin-bottom: 10px;
+   }
+
+   .benefit-item:last-child {
+       margin-bottom: 0;
+   }
+
+   .benefit-icon {
+       color: #ec4899;
+       font-size: 1.2rem;
+       flex-shrink: 0;
+   }
+
+   .benefit-text {
+       font-size: 0.9rem;
+       color: #334155;
+       line-height: 1.4;
+   }
+
+   .landing-cta {
+       margin-top: auto;
+       padding-bottom: 20px;
+   }
+
+   .results-wrapper {
+       display: none;
+       flex-direction: column;
+       height: 100%;
+       overflow-y: auto;
+       -webkit-overflow-scrolling: touch;
+   }
+
+   .results-wrapper.active {
+       display: flex;
+   }
+
+   .results-header {
+       text-align: center;
+       margin-bottom: 24px;
+       padding-top: 20px;
+   }
+
+   .header-title {
+       font-size: 1.4rem;
+       font-weight: 700;
+       color: #1e293b;
+       margin-bottom: 8px;
+   }
+
+   .header-subtitle {
+       font-size: 0.9rem;
+       color: #64748b;
+       line-height: 1.4;
+   }
+
+   .progress-card {
+       background: #fff1f7;
+       border-radius: 12px;
+       padding: 20px;
+       margin-bottom: 20px;
+       transition: opacity 0.3s ease;
+   }
+
+   .progress-card.hidden {
+       opacity: 0;
+   }
+
+   .progress-label {
+       font-size: 0.85rem;
+       color: #64748b;
+       margin-bottom: 8px;
+       text-align: center;
+   }
+
+   .progress-bar-container {
+       background: white;
+       height: 8px;
+       border-radius: 4px;
+       overflow: hidden;
+       margin-bottom: 4px;
+   }
+
+   .progress-bar-fill {
+       height: 100%;
+       background: linear-gradient(90deg, #ec4899 0%, #f472b6 100%);
+       width: 0%;
+       transition: width 0.3s ease;
+   }
+
+   .progress-percentage {
+       font-size: 0.9rem;
+       color: #db2777;
+       font-weight: 700;
+       text-align: center;
+   }
+
+   .checklist {
+       margin-top: 16px;
+   }
+
+   .checklist-item {
+       display: flex;
+       align-items: center;
+       gap: 10px;
+       padding: 8px 0;
+       opacity: 0.4;
+       transition: opacity 0.3s ease;
+   }
+
+   .checklist-item.active {
+       opacity: 1;
+   }
+
+   .checklist-icon {
+       width: 20px;
+       height: 20px;
+       border-radius: 50%;
+       border: 2px solid #cbd5e1;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       transition: all 0.3s ease;
+   }
+
+   .checklist-item.completed .checklist-icon {
+       background: #ec4899;
+       border-color: #ec4899;
+   }
+
+   .checklist-text {
+       font-size: 0.85rem;
+       color: #334155;
+   }
+
+   .success-card {
+       background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+       border-radius: 12px;
+       padding: 24px;
+       text-align: center;
+       color: white;
+       opacity: 0;
+       transform: scale(0.9);
+       transition: all 0.4s ease;
+       display: none;
+   }
+
+   .success-card.visible {
+       opacity: 1;
+       transform: scale(1);
+       display: block;
+   }
+
+   .success-icon {
+       font-size: 3rem;
+       margin-bottom: 12px;
+   }
+
+   .success-title {
+       font-size: 1.3rem;
+       font-weight: 700;
+       margin-bottom: 8px;
+   }
+
+   .success-subtitle {
+       font-size: 0.9rem;
+       opacity: 0.9;
+   }
+
+   .email-question {
+       display: none;
+       flex-direction: column;
+       gap: 16px;
+   }
+
+   .email-card {
+       background: #fff1f7;
+       border-radius: 12px;
+       padding: 20px;
+       border: 1px solid rgba(236, 72, 153, 0.12);
+   }
+
+   .email-card-title {
+       font-size: 1.1rem;
+       font-weight: 600;
+       color: #1e293b;
+       margin-bottom: 12px;
+   }
+
+   .email-benefits-list {
+       list-style: none;
+       margin-bottom: 16px;
+   }
+
+   .email-benefits-list li {
+       display: flex;
+       align-items: flex-start;
+       gap: 8px;
+       margin-bottom: 8px;
+       font-size: 0.85rem;
+       color: #334155;
+   }
+
+   .email-benefits-list li:last-child {
+       margin-bottom: 0;
+   }
+
+   .email-input-group {
+       display: flex;
+       flex-direction: column;
+       gap: 8px;
+       margin-bottom: 12px;
+   }
+
+   .continue-button {
+       background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+       color: white;
+       padding: 14px 20px;
+       border: none;
+       border-radius: 10px;
+       font-size: 0.95rem;
+       font-weight: 600;
+       cursor: pointer;
+       transition: all 0.2s ease;
+       width: 100%;
+       box-shadow: 0 8px 24px rgba(236, 72, 153, 0.2);
+   }
+
+   .continue-button:hover {
+       transform: translateY(-1px);
+       box-shadow: 0 6px 16px rgba(236, 72, 153, 0.26);
+   }
+
+   #sioEmailSlot {
+       display: contents;
+   }
+
+   #sioEmailSlot form {
+       width: 100%;
+   }
+
+   /* Prénom + Email : même épaisseur / même style */
+   #sioEmailSlot input[type="email"],
+   #sioEmailSlot input[type="text"],
+   #sioEmailSlot input[name*="first" i],
+   #sioEmailSlot input[name*="prenom" i] {
+       width: 100%;
+       padding: 14px;
+       border: 2px solid #f3c1d8;
+       border-radius: 10px;
+       font-size: 0.95rem;
+       transition: all 0.2s ease;
+   }
+
+   #sioEmailSlot input[type="email"]:focus,
+   #sioEmailSlot input[type="text"]:focus,
+   #sioEmailSlot input[name*="first" i]:focus,
+   #sioEmailSlot input[name*="prenom" i]:focus {
+       outline: none;
+       border-color: #ec4899;
+       box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.16);
+   }
+
+   .encouragement-text {
+       margin-top: 4px;
+       font-size: 0.95rem;
+       color: #a21caf;
+       font-weight: 600;
+       text-align: center;
+   }
+</style>
+
+<div class="app-container">
+   <div class="app-header">
+       <button class="back-button" id="backBtn" onclick="goBack()">
+           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+           </svg>
+       </button>
+       <div class="step-counter" id="stepCounter">1/12</div>
+   </div>
+   <div class="progress-bar">
+       <div class="progress-fill" id="progressFill"></div>
+   </div>
+   <div class="app-content">
+       <!-- Page d'accueil -->
+       <div class="landing-section active" id="landing">
+           <div class="landing-header">
+              <div class="landing-title">Quel est VOTRE type métabolique hormonal ?</div>
+              <div class="landing-subtitle">Découvrez en 2 minutes quelle hormone pourrait freiner votre perte de poids... et la méthode naturelle pour peut-être retrouver le métabolisme de vos 35 ans</div>
+           </div>
+           <div class="landing-benefits">
+               <div class="benefit-item">
+                  <div class="benefit-icon">✅</div>
+                  <div class="benefit-text">Quel déséquilibre hormonal a probablement ralenti votre métabolisme ces dernières années</div>
+              </div>
+              <div class="benefit-item">
+                  <div class="benefit-icon">✅</div>
+                  <div class="benefit-text">Pourquoi les régimes traditionnels ne sont plus adaptés</div>
+              </div>
+               <div class="benefit-item">
+                   <div class="benefit-icon">✅</div>
+                   <div class="benefit-text">Comment la nutrition hormonale peut transformer votre corps sans régimes drastiques</div>
+               </div>
+           </div>
+           <div class="landing-cta">
+               <button class="btn btn-next" onclick="startQuiz()">
+                   Démarrer le quiz gratuit
+                   <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                   </svg>
+               </button>
+           </div>
        </div>
-       <div class="progress-bar">
-           <div class="progress-fill" id="progressFill"></div>
+
+       <!-- Question 1 -->
+       <div class="question-section" id="q1">
+           <div class="question-header">
+               <div class="question-title">Cette année, j'ai...</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q1" data-value="38-43">
+                       <span class="option-emoji">🌱</span>
+                       <div class="option-text">Entre 38-43 ans et je sens les premiers changements dans mon corps</div>
+                   </div>
+                   <div class="option-card" data-question="q1" data-value="44-52">
+                       <span class="option-emoji">🌸</span>
+                       <div class="option-text">Entre 44-52 ans et je traverse la ménopause</div>
+                   </div>
+                   <div class="option-card" data-question="q1" data-value="53-60">
+                       <span class="option-emoji">🌷</span>
+                       <div class="option-text">Entre 53-60 ans et je suis en post-ménopause</div>
+                   </div>
+                   <div class="option-card" data-question="q1" data-value="60+">
+                       <span class="option-emoji">💫</span>
+                       <div class="option-text">Plus de 60 ans et je souhaite retrouver ma vitalité</div>
+                   </div>
+               </div>
+           </div>
        </div>
-       <div class="app-content">
-           <!-- Page d'accueil -->
-           <div class="landing-section active" id="landing">
-               <div class="landing-header">
-                  <div class="landing-title">Quel est VOTRE type métabolique hormonal ?</div>
-                  <div class="landing-subtitle">Découvrez en 2 minutes quelle hormone pourrait freiner votre perte de poids... et la méthode naturelle pour peut-être retrouver le métabolisme de vos 35 ans</div>
-               </div>
-               <div class="landing-benefits">
-                   <div class="benefit-item">
-                      <div class="benefit-icon">✅</div>
-                      <div class="benefit-text">Quel déséquilibre hormonal a probablement ralenti votre métabolisme ces dernières années</div>
-                  </div>
-                  <div class="benefit-item">
-                      <div class="benefit-icon">✅</div>
-                      <div class="benefit-text">Pourquoi les régimes traditionnels ne sont plus adaptés</div>
-                  </div>
-                   <div class="benefit-item">
-                       <div class="benefit-icon">✅</div>
-                       <div class="benefit-text">Comment la nutrition hormonale peut transformer votre corps sans régimes drastiques</div>
-                   </div>
-               </div>
-               <div class="landing-cta">
-                   <button class="btn btn-next" onclick="startQuiz()">
-                       Démarrer le quiz gratuit
-                       <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                       </svg>
-                   </button>
-               </div>
-           </div>
 
-           <!-- Question 1 -->
-           <div class="question-section" id="q1">
-               <div class="question-header">
-                   <div class="question-title">Cette année, j'ai...</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q1" data-value="38-43">
-                           <span class="option-emoji">🌱</span>
-                           <div class="option-text">Entre 38-43 ans et je sens les premiers changements dans mon corps</div>
-                       </div>
-                       <div class="option-card" data-question="q1" data-value="44-52">
-                           <span class="option-emoji">🌸</span>
-                           <div class="option-text">Entre 44-52 ans et je traverse la ménopause</div>
-                       </div>
-                       <div class="option-card" data-question="q1" data-value="53-60">
-                           <span class="option-emoji">🌷</span>
-                           <div class="option-text">Entre 53-60 ans et je suis en post-ménopause</div>
-                       </div>
-                       <div class="option-card" data-question="q1" data-value="60+">
-                           <span class="option-emoji">💫</span>
-                           <div class="option-text">Plus de 60 ans et je souhaite retrouver ma vitalité</div>
-                       </div>
+       <!-- Question 2 -->
+       <div class="question-section" id="q2">
+           <div class="question-header">
+               <div class="question-title">Quand je pense à retrouver mon corps idéal, je m'imagine surtout...</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q2" data-value="energie">
+                       <span class="option-emoji">⚡</span>
+                       <div class="option-text">Retrouver mon énergie d'avant et ne plus me sentir épuisée</div>
+                   </div>
+                   <div class="option-card" data-question="q2" data-value="vetements">
+                       <span class="option-emoji">👗</span>
+                       <div class="option-text">Rentrer à nouveau dans mes vêtements préférés</div>
+                   </div>
+                   <div class="option-card" data-question="q2" data-value="sante">
+                       <span class="option-emoji">🌿</span>
+                       <div class="option-text">Améliorer ma santé globale et mon bien-être</div>
+                   </div>
+                   <div class="option-card" data-question="q2" data-value="confiance">
+                       <span class="option-emoji">💖</span>
+                       <div class="option-text">Retrouver confiance en moi et me sentir désirable</div>
                    </div>
                </div>
            </div>
+       </div>
 
-           <!-- Question 2 -->
-           <div class="question-section" id="q2">
-               <div class="question-header">
-                   <div class="question-title">Quand je pense à retrouver mon corps idéal, je m'imagine surtout...</div>
+       <!-- Question 3 -->
+       <div class="question-section" id="q3">
+           <div class="question-header">
+               <div class="question-title">Si je pouvais obtenir UN résultat dans les 21 prochains jours, ce serait...</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q3" data-value="perdre">
+                       <span class="option-emoji">📉</span>
+                       <div class="option-text">Perdre mes premiers kilos et voir une différence visible</div>
+                   </div>
+                   <div class="option-card" data-question="q3" data-value="energie">
+                       <span class="option-emoji">🌞</span>
+                       <div class="option-text">Retrouver mon énergie et réduire ma fatigue chronique</div>
+                   </div>
+                   <div class="option-card" data-question="q3" data-value="symptomes">
+                       <span class="option-emoji">❄️</span>
+                       <div class="option-text">Diminuer les bouffées de chaleur et autres symptômes</div>
+                   </div>
+                   <div class="option-card" data-question="q3" data-value="plan">
+                       <span class="option-emoji">🗺️</span>
+                       <div class="option-text">Avoir un plan clair que je peux suivre facilement</div>
+                   </div>
+                   <div class="option-card" data-question="q3" data-value="controle">
+                       <span class="option-emoji">🎯</span>
+                       <div class="option-text">Me sentir à nouveau en contrôle de mon corps</div>
+                   </div>
                </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q2" data-value="energie">
-                           <span class="option-emoji">⚡</span>
-                           <div class="option-text">Retrouver mon énergie d'avant et ne plus me sentir épuisée</div>
-                       </div>
-                       <div class="option-card" data-question="q2" data-value="vetements">
-                           <span class="option-emoji">👗</span>
-                           <div class="option-text">Rentrer à nouveau dans mes vêtements préférés</div>
-                       </div>
-                       <div class="option-card" data-question="q2" data-value="sante">
-                           <span class="option-emoji">🌿</span>
-                           <div class="option-text">Améliorer ma santé globale et mon bien-être</div>
-                       </div>
-                       <div class="option-card" data-question="q2" data-value="confiance">
-                           <span class="option-emoji">💖</span>
-                           <div class="option-text">Retrouver confiance en moi et me sentir désirable</div>
-                       </div>
+           </div>
+           <div class="encouragement-text">🌷 Vous avancez merveilleusement bien, continuez !</div>
+       </div>
+
+       <!-- Question 4 -->
+       <div class="question-section" id="q4">
+           <div class="question-header">
+               <div class="question-title">Jusqu'à présent, j'ai essayé...</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q4" data-value="regimes">
+                       <span class="option-emoji">🥗</span>
+                       <div class="option-text">De suivre des régimes restrictifs (faibles en calories, sans glucides, etc.)</div>
+                   </div>
+                   <div class="option-card" data-question="q4" data-value="sport">
+                       <span class="option-emoji">🏃‍♀️</span>
+                       <div class="option-text">D'augmenter mon activité physique</div>
+                   </div>
+                   <div class="option-card" data-question="q4" data-value="complements">
+                       <span class="option-emoji">💊</span>
+                       <div class="option-text">De prendre des compléments alimentaires ou substituts de repas</div>
+                   </div>
+                   <div class="option-card" data-question="q4" data-value="ths">
+                       <span class="option-emoji">🩺</span>
+                       <div class="option-text">Un traitement hormonal de substitution (THS)</div>
+                   </div>
+                   <div class="option-card" data-question="q4" data-value="plusieurs">
+                       <span class="option-emoji">🔄</span>
+                       <div class="option-text">Plusieurs de ces options, sans résultats durables</div>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <!-- Question 5 -->
+       <div class="question-section" id="q5">
+           <div class="question-header">
+               <div class="question-title">Actuellement, vous mangez...</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q5" data-value="pouce">
+                       <span class="option-emoji">🍱</span>
+                       <div class="option-text">Souvent sur le pouce ou à l'extérieur</div>
+                   </div>
+                   <div class="option-card" data-question="q5" data-value="cuisine">
+                       <span class="option-emoji">🍳</span>
+                       <div class="option-text">Je cuisine la plupart de mes repas</div>
+                   </div>
+                   <div class="option-card" data-question="q5" data-value="regime">
+                       <span class="option-emoji">🥑</span>
+                       <div class="option-text">Je suis un régime spécifique (faible en glucides, végétarien, etc.)</div>
+                   </div>
+                   <div class="option-card" data-question="q5" data-value="portions">
+                       <span class="option-emoji">📏</span>
+                       <div class="option-text">Je tente de contrôler mes portions, mais c'est difficile</div>
+                   </div>
+                   <div class="option-card" data-question="q5" data-value="normal">
+                       <span class="option-emoji">🍽️</span>
+                       <div class="option-text">Je mange normalement mais prends quand même du poids</div>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <!-- Question 6 -->
+       <div class="question-section" id="q6">
+           <div class="question-header">
+               <div class="question-title">Parmi ces symptômes, ceux qui me concernent le plus sont...</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q6" data-value="bouffees">
+                       <span class="option-emoji">🔥</span>
+                       <div class="option-text">Des bouffées de chaleur et sueurs nocturnes</div>
+                   </div>
+                   <div class="option-card" data-question="q6" data-value="fatigue">
+                       <span class="option-emoji">😮‍💨</span>
+                       <div class="option-text">Une fatigue persistante et un manque d'énergie</div>
+                   </div>
+                   <div class="option-card" data-question="q6" data-value="sommeil">
+                       <span class="option-emoji">😴</span>
+                       <div class="option-text">Des troubles du sommeil</div>
+                   </div>
+                   <div class="option-card" data-question="q6" data-value="poids">
+                       <span class="option-emoji">⚖️</span>
+                       <div class="option-text">Une prise de poids inexpliquée, surtout au niveau du ventre</div>
+                   </div>
+                   <div class="option-card" data-question="q6" data-value="humeur">
+                       <span class="option-emoji">🌧️</span>
+                       <div class="option-text">Des sautes d'humeur et de l'irritabilité</div>
+                   </div>
+                   <div class="option-card" data-question="q6" data-value="plusieurs">
+                       <span class="option-emoji">🌈</span>
+                       <div class="option-text">Plusieurs de ces symptômes en même temps</div>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <!-- Question 7 -->
+       <div class="question-section" id="q7">
+           <div class="question-header">
+               <div class="question-title">Malgré mes efforts, je n'arrive pas à perdre du poids parce que...</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q7" data-value="metabolisme">
+                       <span class="option-emoji">🧊</span>
+                       <div class="option-text">Mon métabolisme semble complètement bloqué</div>
+                   </div>
+                   <div class="option-card" data-question="q7" data-value="stagnation">
+                       <span class="option-emoji">⏸️</span>
+                       <div class="option-text">Quand je commence un régime, ça fonctionne puis je stagne rapidement</div>
+                   </div>
+                   <div class="option-card" data-question="q7" data-value="stockage">
+                       <span class="option-emoji">📦</span>
+                       <div class="option-text">Mon corps stocke les graisses beaucoup plus facilement qu'avant</div>
+                   </div>
+                   <div class="option-card" data-question="q7" data-value="fringales">
+                       <span class="option-emoji">🍰</span>
+                       <div class="option-text">J'ai constamment des fringales et des envies de sucre</div>
+                   </div>
+                   <div class="option-card" data-question="q7" data-value="fatiguee">
+                       <span class="option-emoji">💤</span>
+                       <div class="option-text">Je me sens trop fatiguée pour maintenir mes efforts</div>
+                   </div>
+                   <div class="option-card" data-question="q7" data-value="plusieurs">
+                       <span class="option-emoji">🤝</span>
+                       <div class="option-text">Plusieurs de ces situations</div>
+                   </div>
+               </div>
+           </div>
+           <div class="encouragement-text">✨ Courage, chaque réponse nous aide à vous créer un plan sur-mesure.</div>
+       </div>
+
+       <!-- Question 8 -->
+       <div class="question-section" id="q8">
+           <div class="question-header">
+               <div class="question-title">Ce qui me frustre le PLUS avec mon corps actuel, c'est que...</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q8" data-value="medecin">
+                       <span class="option-emoji">🩺</span>
+                       <div class="option-text">J'ai l'impression que mon médecin ne comprend pas ce que je traverse</div>
+                   </div>
+                   <div class="option-card" data-question="q8" data-value="coupable">
+                       <span class="option-emoji">😔</span>
+                       <div class="option-text">Je me sens coupable après chaque repas ou écart</div>
+                   </div>
+                   <div class="option-card" data-question="q8" data-value="contre">
+                       <span class="option-emoji">🤷‍♀️</span>
+                       <div class="option-text">J'ai l'impression que mon corps travaille contre moi</div>
+                   </div>
+                   <div class="option-card" data-question="q8" data-value="epuisee">
+                       <span class="option-emoji">😮‍💨</span>
+                       <div class="option-text">Je suis épuisée d'essayer sans voir de résultats durables</div>
+                   </div>
+                   <div class="option-card" data-question="q8" data-value="miroir">
+                       <span class="option-emoji">🪞</span>
+                       <div class="option-text">Je ne me reconnais plus dans le miroir</div>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <!-- Question 9 -->
+       <div class="question-section" id="q9">
+           <div class="question-header">
+               <div class="question-title">Ma plus grande peur concernant mon poids et ma santé est...</div>
+               <div class="question-subtitle">La raison pour laquelle nous posons cette question est que nous devons comprendre vos préoccupations pour mieux vous aider à les surmonter.</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q9" data-value="jamais">
+                       <span class="option-emoji">⏳</span>
+                       <div class="option-text">J'ai peur de ne jamais retrouver mon poids et mon énergie d'avant</div>
+                   </div>
+                   <div class="option-card" data-question="q9" data-value="definitif">
+                       <span class="option-emoji">🧭</span>
+                       <div class="option-text">J'ai peur que ces changements soient définitifs et irréversibles</div>
+                   </div>
+                   <div class="option-card" data-question="q9" data-value="sante">
+                       <span class="option-emoji">🩺</span>
+                       <div class="option-text">Je m'inquiète des conséquences sur ma santé à long terme</div>
+                   </div>
+                   <div class="option-card" data-question="q9" data-value="activites">
+                       <span class="option-emoji">🚴‍♀️</span>
+                       <div class="option-text">Je redoute de devoir renoncer à certaines activités à cause de mon poids</div>
+                   </div>
+                   <div class="option-card" data-question="q9" data-value="apparence">
+                       <span class="option-emoji">💬</span>
+                       <div class="option-text">Je crains que mon apparence affecte ma vie personnelle et professionnelle</div>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <!-- Question 10 -->
+       <div class="question-section" id="q10">
+           <div class="question-header">
+               <div class="question-title">La raison pour laquelle je n'ai pas encore résolu ce problème est...</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q10" data-value="methode">
+                       <span class="option-emoji">🧪</span>
+                       <div class="option-text">Je n'ai pas trouvé de méthode adaptée à mes nouveaux besoins hormonaux</div>
+                   </div>
+                   <div class="option-card" data-question="q10" data-value="avant">
+                       <span class="option-emoji">⏮️</span>
+                       <div class="option-text">Les méthodes qui fonctionnaient avant ne marchent plus du tout</div>
+                   </div>
+                   <div class="option-card" data-question="q10" data-value="energie">
+                       <span class="option-emoji">🔋</span>
+                       <div class="option-text">Je manque d'énergie pour me consacrer à moi-même</div>
+                   </div>
+                   <div class="option-card" data-question="q10" data-value="perdue">
+                       <span class="option-emoji">🧭</span>
+                       <div class="option-text">Je suis perdue face aux informations contradictoires</div>
+                   </div>
+                   <div class="option-card" data-question="q10" data-value="bataille">
+                       <span class="option-emoji">🛡️</span>
+                       <div class="option-text">J'ai l'impression que c'est une bataille perdue d'avance</div>
+                   </div>
+               </div>
+           </div>
+           <div class="encouragement-text">💖 Vous n'êtes pas seule, on arrive au bout du parcours !</div>
+       </div>
+
+       <!-- Question 11 -->
+       <div class="question-section" id="q11">
+           <div class="question-header">
+               <div class="question-title">J'ai ce problème de poids et de fatigue depuis...</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q11" data-value="moins1">
+                       <span class="option-emoji">🌟</span>
+                       <div class="option-text">Moins d'un an (début de périménopause)</div>
+                   </div>
+                   <div class="option-card" data-question="q11" data-value="1-3">
+                       <span class="option-emoji">📆</span>
+                       <div class="option-text">Entre 1 et 3 ans (ménopause installée)</div>
+                   </div>
+                   <div class="option-card" data-question="q11" data-value="3-5">
+                       <span class="option-emoji">🧩</span>
+                       <div class="option-text">Entre 3 et 5 ans (j'ai tout essayé)</div>
+                   </div>
+                   <div class="option-card" data-question="q11" data-value="plus5">
+                       <span class="option-emoji">📈</span>
+                       <div class="option-text">Plus de 5 ans (je commence à perdre espoir)</div>
+                   </div>
+                   <div class="option-card" data-question="q11" data-value="toujours">
+                       <span class="option-emoji">♾️</span>
+                       <div class="option-text">Aussi longtemps que je m'en souvienne</div>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <!-- Question 12 -->
+       <div class="question-section" id="q12">
+           <div class="question-header">
+               <div class="question-title">Honnêtement, je me sens...</div>
+               <div class="question-subtitle">Cette question nous aide à personnaliser votre plan.</div>
+           </div>
+           <div class="options-scroll-container">
+               <div class="options-container">
+                   <div class="option-card" data-question="q12" data-value="frustree">
+                       <span class="option-emoji">💪</span>
+                       <div class="option-text">Frustrée et découragée, mais prête à essayer une nouvelle approche</div>
+                   </div>
+                   <div class="option-card" data-question="q12" data-value="epuisee">
+                       <span class="option-emoji">🫂</span>
+                       <div class="option-text">Épuisée par tous ces efforts sans résultats, mais j'ai encore de l'espoir</div>
+                   </div>
+                   <div class="option-card" data-question="q12" data-value="colere">
+                       <span class="option-emoji">😠</span>
+                       <div class="option-text">En colère contre mon corps qui ne répond plus comme avant</div>
+                   </div>
+                   <div class="option-card" data-question="q12" data-value="honteuse">
+                       <span class="option-emoji">🙈</span>
+                       <div class="option-text">Honteuse de ne pas arriver à contrôler mon poids</div>
+                   </div>
+                   <div class="option-card" data-question="q12" data-value="perdue">
+                       <span class="option-emoji">🌫️</span>
+                       <div class="option-text">Perdue et confuse, je ne sais plus quoi faire</div>
+                   </div>
+               </div>
+           </div>
+           <div class="encouragement-text">🌸 Plus qu'une étape avant vos résultats personnalisés !</div>
+       </div>
+
+       <!-- Page résultats -->
+       <div class="results-wrapper" id="resultsWrapper">
+           <div class="results-header">
+               <div class="header-title">🎯 Votre analyse est prête !</div>
+               <div class="header-subtitle">Nous analysons vos réponses pour déterminer votre type métabolique hormonal...</div>
+           </div>
+
+           <!-- Carte de progression -->
+           <div class="progress-card" id="searchProgressCard">
+               <div class="progress-label">Analyse en cours</div>
+               <div class="progress-bar-container">
+                   <div class="progress-bar-fill" id="searchProgressBar"></div>
+               </div>
+               <div class="progress-percentage" id="searchProgressPercentage">0%</div>
+               <div class="checklist">
+                   <div class="checklist-item">
+                       <div class="checklist-icon">⏳</div>
+                       <div class="checklist-text">Analyse de vos réponses...</div>
+                   </div>
+                   <div class="checklist-item">
+                       <div class="checklist-icon">⏳</div>
+                       <div class="checklist-text">Identification de votre profil hormonal...</div>
+                   </div>
+                   <div class="checklist-item">
+                       <div class="checklist-icon">⏳</div>
+                       <div class="checklist-text">Calcul de votre type métabolique...</div>
+                   </div>
+                   <div class="checklist-item">
+                       <div class="checklist-icon">⏳</div>
+                       <div class="checklist-text">Préparation de votre plan personnalisé...</div>
+                   </div>
+                   <div class="checklist-item">
+                       <div class="checklist-icon">⏳</div>
+                       <div class="checklist-text">Finalisation de votre profil...</div>
                    </div>
                </div>
            </div>
 
-           <!-- Question 3 -->
-           <div class="question-section" id="q3">
-               <div class="question-header">
-                   <div class="question-title">Si je pouvais obtenir UN résultat dans les 21 prochains jours, ce serait...</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q3" data-value="perdre">
-                           <span class="option-emoji">📉</span>
-                           <div class="option-text">Perdre mes premiers kilos et voir une différence visible</div>
-                       </div>
-                       <div class="option-card" data-question="q3" data-value="energie">
-                           <span class="option-emoji">🌞</span>
-                           <div class="option-text">Retrouver mon énergie et réduire ma fatigue chronique</div>
-                       </div>
-                       <div class="option-card" data-question="q3" data-value="symptomes">
-                           <span class="option-emoji">❄️</span>
-                           <div class="option-text">Diminuer les bouffées de chaleur et autres symptômes</div>
-                       </div>
-                       <div class="option-card" data-question="q3" data-value="plan">
-                           <span class="option-emoji">🗺️</span>
-                           <div class="option-text">Avoir un plan clair que je peux suivre facilement</div>
-                       </div>
-                       <div class="option-card" data-question="q3" data-value="controle">
-                           <span class="option-emoji">🎯</span>
-                           <div class="option-text">Me sentir à nouveau en contrôle de mon corps</div>
-                       </div>
-                   </div>
-               </div>
-               <div class="encouragement-text">🌷 Vous avancez merveilleusement bien, continuez !</div>
+           <!-- Carte de succès -->
+           <div class="success-card" id="searchSuccessCard">
+               <div class="success-icon">✅</div>
+               <div class="success-title">Analyse terminée !</div>
+               <div class="success-subtitle">Votre profil métabolique hormonal est maintenant prêt</div>
+               <button class="continue-button" onclick="showEmailQuestion()" style="margin-top: 16px; width: 100%;">
+                   Voir mes résultats
+               </button>
            </div>
 
-           <!-- Question 4 -->
-           <div class="question-section" id="q4">
-               <div class="question-header">
-                   <div class="question-title">Jusqu'à présent, j'ai essayé...</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q4" data-value="regimes">
-                           <span class="option-emoji">🥗</span>
-                           <div class="option-text">De suivre des régimes restrictifs (faibles en calories, sans glucides, etc.)</div>
-                       </div>
-                       <div class="option-card" data-question="q4" data-value="sport">
-                           <span class="option-emoji">🏃‍♀️</span>
-                           <div class="option-text">D'augmenter mon activité physique</div>
-                       </div>
-                       <div class="option-card" data-question="q4" data-value="complements">
-                           <span class="option-emoji">💊</span>
-                           <div class="option-text">De prendre des compléments alimentaires ou substituts de repas</div>
-                       </div>
-                       <div class="option-card" data-question="q4" data-value="ths">
-                           <span class="option-emoji">🩺</span>
-                           <div class="option-text">Un traitement hormonal de substitution (THS)</div>
-                       </div>
-                       <div class="option-card" data-question="q4" data-value="plusieurs">
-                           <span class="option-emoji">🔄</span>
-                           <div class="option-text">Plusieurs de ces options, sans résultats durables</div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-
-           <!-- Question 5 -->
-           <div class="question-section" id="q5">
-               <div class="question-header">
-                   <div class="question-title">Actuellement, vous mangez...</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q5" data-value="pouce">
-                           <span class="option-emoji">🍱</span>
-                           <div class="option-text">Souvent sur le pouce ou à l'extérieur</div>
-                       </div>
-                       <div class="option-card" data-question="q5" data-value="cuisine">
-                           <span class="option-emoji">🍳</span>
-                           <div class="option-text">Je cuisine la plupart de mes repas</div>
-                       </div>
-                       <div class="option-card" data-question="q5" data-value="regime">
-                           <span class="option-emoji">🥑</span>
-                           <div class="option-text">Je suis un régime spécifique (faible en glucides, végétarien, etc.)</div>
-                       </div>
-                       <div class="option-card" data-question="q5" data-value="portions">
-                           <span class="option-emoji">📏</span>
-                           <div class="option-text">Je tente de contrôler mes portions, mais c'est difficile</div>
-                       </div>
-                       <div class="option-card" data-question="q5" data-value="normal">
-                           <span class="option-emoji">🍽️</span>
-                           <div class="option-text">Je mange normalement mais prends quand même du poids</div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-
-           <!-- Question 6 -->
-           <div class="question-section" id="q6">
-               <div class="question-header">
-                   <div class="question-title">Parmi ces symptômes, ceux qui me concernent le plus sont...</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q6" data-value="bouffees">
-                           <span class="option-emoji">🔥</span>
-                           <div class="option-text">Des bouffées de chaleur et sueurs nocturnes</div>
-                       </div>
-                       <div class="option-card" data-question="q6" data-value="fatigue">
-                           <span class="option-emoji">😮‍💨</span>
-                           <div class="option-text">Une fatigue persistante et un manque d'énergie</div>
-                       </div>
-                       <div class="option-card" data-question="q6" data-value="sommeil">
-                           <span class="option-emoji">😴</span>
-                           <div class="option-text">Des troubles du sommeil</div>
-                       </div>
-                       <div class="option-card" data-question="q6" data-value="poids">
-                           <span class="option-emoji">⚖️</span>
-                           <div class="option-text">Une prise de poids inexpliquée, surtout au niveau du ventre</div>
-                       </div>
-                       <div class="option-card" data-question="q6" data-value="humeur">
-                           <span class="option-emoji">🌧️</span>
-                           <div class="option-text">Des sautes d'humeur et de l'irritabilité</div>
-                       </div>
-                       <div class="option-card" data-question="q6" data-value="plusieurs">
-                           <span class="option-emoji">🌈</span>
-                           <div class="option-text">Plusieurs de ces symptômes en même temps</div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-
-           <!-- Question 7 -->
-           <div class="question-section" id="q7">
-               <div class="question-header">
-                   <div class="question-title">Malgré mes efforts, je n'arrive pas à perdre du poids parce que...</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q7" data-value="metabolisme">
-                           <span class="option-emoji">🧊</span>
-                           <div class="option-text">Mon métabolisme semble complètement bloqué</div>
-                       </div>
-                       <div class="option-card" data-question="q7" data-value="stagnation">
-                           <span class="option-emoji">⏸️</span>
-                           <div class="option-text">Quand je commence un régime, ça fonctionne puis je stagne rapidement</div>
-                       </div>
-                       <div class="option-card" data-question="q7" data-value="stockage">
-                           <span class="option-emoji">📦</span>
-                           <div class="option-text">Mon corps stocke les graisses beaucoup plus facilement qu'avant</div>
-                       </div>
-                       <div class="option-card" data-question="q7" data-value="fringales">
-                           <span class="option-emoji">🍰</span>
-                           <div class="option-text">J'ai constamment des fringales et des envies de sucre</div>
-                       </div>
-                       <div class="option-card" data-question="q7" data-value="fatiguee">
-                           <span class="option-emoji">💤</span>
-                           <div class="option-text">Je me sens trop fatiguée pour maintenir mes efforts</div>
-                       </div>
-                       <div class="option-card" data-question="q7" data-value="plusieurs">
-                           <span class="option-emoji">🤝</span>
-                           <div class="option-text">Plusieurs de ces situations</div>
-                       </div>
-                   </div>
-               </div>
-               <div class="encouragement-text">✨ Courage, chaque réponse nous aide à vous créer un plan sur-mesure.</div>
-           </div>
-
-           <!-- Question 8 -->
-           <div class="question-section" id="q8">
-               <div class="question-header">
-                   <div class="question-title">Ce qui me frustre le PLUS avec mon corps actuel, c'est que...</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q8" data-value="medecin">
-                           <span class="option-emoji">🩺</span>
-                           <div class="option-text">J'ai l'impression que mon médecin ne comprend pas ce que je traverse</div>
-                       </div>
-                       <div class="option-card" data-question="q8" data-value="coupable">
-                           <span class="option-emoji">😔</span>
-                           <div class="option-text">Je me sens coupable après chaque repas ou écart</div>
-                       </div>
-                       <div class="option-card" data-question="q8" data-value="contre">
-                           <span class="option-emoji">🤷‍♀️</span>
-                           <div class="option-text">J'ai l'impression que mon corps travaille contre moi</div>
-                       </div>
-                       <div class="option-card" data-question="q8" data-value="epuisee">
-                           <span class="option-emoji">😮‍💨</span>
-                           <div class="option-text">Je suis épuisée d'essayer sans voir de résultats durables</div>
-                       </div>
-                       <div class="option-card" data-question="q8" data-value="miroir">
-                           <span class="option-emoji">🪞</span>
-                           <div class="option-text">Je ne me reconnais plus dans le miroir</div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-
-           <!-- Question 9 -->
-           <div class="question-section" id="q9">
-               <div class="question-header">
-                   <div class="question-title">Ma plus grande peur concernant mon poids et ma santé est...</div>
-                   <div class="question-subtitle">La raison pour laquelle nous posons cette question est que nous devons comprendre vos préoccupations pour mieux vous aider à les surmonter.</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q9" data-value="jamais">
-                           <span class="option-emoji">⏳</span>
-                           <div class="option-text">J'ai peur de ne jamais retrouver mon poids et mon énergie d'avant</div>
-                       </div>
-                       <div class="option-card" data-question="q9" data-value="definitif">
-                           <span class="option-emoji">🧭</span>
-                           <div class="option-text">J'ai peur que ces changements soient définitifs et irréversibles</div>
-                       </div>
-                       <div class="option-card" data-question="q9" data-value="sante">
-                           <span class="option-emoji">🩺</span>
-                           <div class="option-text">Je m'inquiète des conséquences sur ma santé à long terme</div>
-                       </div>
-                       <div class="option-card" data-question="q9" data-value="activites">
-                           <span class="option-emoji">🚴‍♀️</span>
-                           <div class="option-text">Je redoute de devoir renoncer à certaines activités à cause de mon poids</div>
-                       </div>
-                       <div class="option-card" data-question="q9" data-value="apparence">
-                           <span class="option-emoji">💬</span>
-                           <div class="option-text">Je crains que mon apparence affecte ma vie personnelle et professionnelle</div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-
-           <!-- Question 10 -->
-           <div class="question-section" id="q10">
-               <div class="question-header">
-                   <div class="question-title">La raison pour laquelle je n'ai pas encore résolu ce problème est...</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q10" data-value="methode">
-                           <span class="option-emoji">🧪</span>
-                           <div class="option-text">Je n'ai pas trouvé de méthode adaptée à mes nouveaux besoins hormonaux</div>
-                       </div>
-                       <div class="option-card" data-question="q10" data-value="avant">
-                           <span class="option-emoji">⏮️</span>
-                           <div class="option-text">Les méthodes qui fonctionnaient avant ne marchent plus du tout</div>
-                       </div>
-                       <div class="option-card" data-question="q10" data-value="energie">
-                           <span class="option-emoji">🔋</span>
-                           <div class="option-text">Je manque d'énergie pour me consacrer à moi-même</div>
-                       </div>
-                       <div class="option-card" data-question="q10" data-value="perdue">
-                           <span class="option-emoji">🧭</span>
-                           <div class="option-text">Je suis perdue face aux informations contradictoires</div>
-                       </div>
-                       <div class="option-card" data-question="q10" data-value="bataille">
-                           <span class="option-emoji">🛡️</span>
-                           <div class="option-text">J'ai l'impression que c'est une bataille perdue d'avance</div>
-                       </div>
-                   </div>
-               </div>
-               <div class="encouragement-text">💖 Vous n'êtes pas seule, on arrive au bout du parcours !</div>
-           </div>
-
-           <!-- Question 11 -->
-           <div class="question-section" id="q11">
-               <div class="question-header">
-                   <div class="question-title">J'ai ce problème de poids et de fatigue depuis...</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q11" data-value="moins1">
-                           <span class="option-emoji">🌟</span>
-                           <div class="option-text">Moins d'un an (début de périménopause)</div>
-                       </div>
-                       <div class="option-card" data-question="q11" data-value="1-3">
-                           <span class="option-emoji">📆</span>
-                           <div class="option-text">Entre 1 et 3 ans (ménopause installée)</div>
-                       </div>
-                       <div class="option-card" data-question="q11" data-value="3-5">
-                           <span class="option-emoji">🧩</span>
-                           <div class="option-text">Entre 3 et 5 ans (j'ai tout essayé)</div>
-                       </div>
-                       <div class="option-card" data-question="q11" data-value="plus5">
-                           <span class="option-emoji">📈</span>
-                           <div class="option-text">Plus de 5 ans (je commence à perdre espoir)</div>
-                       </div>
-                       <div class="option-card" data-question="q11" data-value="toujours">
-                           <span class="option-emoji">♾️</span>
-                           <div class="option-text">Aussi longtemps que je m'en souvienne</div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-
-           <!-- Question 12 -->
-           <div class="question-section" id="q12">
-               <div class="question-header">
-                   <div class="question-title">Honnêtement, je me sens...</div>
-                   <div class="question-subtitle">Cette question nous aide à personnaliser votre plan.</div>
-               </div>
-               <div class="options-scroll-container">
-                   <div class="options-container">
-                       <div class="option-card" data-question="q12" data-value="frustree">
-                           <span class="option-emoji">💪</span>
-                           <div class="option-text">Frustrée et découragée, mais prête à essayer une nouvelle approche</div>
-                       </div>
-                       <div class="option-card" data-question="q12" data-value="epuisee">
-                           <span class="option-emoji">🫂</span>
-                           <div class="option-text">Épuisée par tous ces efforts sans résultats, mais j'ai encore de l'espoir</div>
-                       </div>
-                       <div class="option-card" data-question="q12" data-value="colere">
-                           <span class="option-emoji">😠</span>
-                           <div class="option-text">En colère contre mon corps qui ne répond plus comme avant</div>
-                       </div>
-                       <div class="option-card" data-question="q12" data-value="honteuse">
-                           <span class="option-emoji">🙈</span>
-                           <div class="option-text">Honteuse de ne pas arriver à contrôler mon poids</div>
-                       </div>
-                       <div class="option-card" data-question="q12" data-value="perdue">
-                           <span class="option-emoji">🌫️</span>
-                           <div class="option-text">Perdue et confuse, je ne sais plus quoi faire</div>
-                       </div>
-                   </div>
-               </div>
-               <div class="encouragement-text">🌸 Plus qu'une étape avant vos résultats personnalisés !</div>
-           </div>
-
-           <!-- Page résultats -->
-           <div class="results-wrapper" id="resultsWrapper">
-               <div class="results-header">
-                   <div class="header-title">🎯 Votre analyse est prête !</div>
-                   <div class="header-subtitle">Nous analysons vos réponses pour déterminer votre type métabolique hormonal...</div>
-               </div>
-
-               <!-- Carte de progression -->
-               <div class="progress-card" id="searchProgressCard">
-                   <div class="progress-label">Analyse en cours</div>
-                   <div class="progress-bar-container">
-                       <div class="progress-bar-fill" id="searchProgressBar"></div>
-                   </div>
-                   <div class="progress-percentage" id="searchProgressPercentage">0%</div>
-                   <div class="checklist">
-                       <div class="checklist-item">
-                           <div class="checklist-icon">⏳</div>
-                           <div class="checklist-text">Analyse de vos réponses...</div>
-                       </div>
-                       <div class="checklist-item">
-                           <div class="checklist-icon">⏳</div>
-                           <div class="checklist-text">Identification de votre profil hormonal...</div>
-                       </div>
-                       <div class="checklist-item">
-                           <div class="checklist-icon">⏳</div>
-                           <div class="checklist-text">Calcul de votre type métabolique...</div>
-                       </div>
-                       <div class="checklist-item">
-                           <div class="checklist-icon">⏳</div>
-                           <div class="checklist-text">Préparation de votre plan personnalisé...</div>
-                       </div>
-                       <div class="checklist-item">
-                           <div class="checklist-icon">⏳</div>
-                           <div class="checklist-text">Finalisation de votre profil...</div>
-                       </div>
-                   </div>
-               </div>
-
-               <!-- Carte de succès -->
-               <div class="success-card" id="searchSuccessCard">
-                   <div class="success-icon">✅</div>
-                   <div class="success-title">Analyse terminée !</div>
-                   <div class="success-subtitle">Votre profil métabolique hormonal est maintenant prêt</div>
-                   <button class="continue-button" onclick="showEmailQuestion()" style="margin-top: 16px; width: 100%;">
-                       Voir mes résultats
-                   </button>
-               </div>
-
-               <!-- Question email -->
-               <div class="email-question" id="emailQuestion">
-                   <div class="email-card">
-                       <div class="email-card-title">Entrez votre email pour recevoir instantanément :</div>
-                       <ul class="email-benefits-list">
-                           <li>✅ Votre type métabolique hormonal détaillé</li>
-                           <li>✅ Pourquoi votre corps résiste à la perte de poids</li>
-                           <li>✅ Le plan d'action personnalisé pour rééquilibrer vos hormones en 21 jours</li>
-                       </ul>
-                       <div class="email-input-group">
-                           <div id="sioEmailSlot">
-                               <div id="sioEmailLoading" style="padding: 14px; text-align: center; color: #64748b;">
-                                   Chargement du formulaire...
-                               </div>
+           <!-- Question email -->
+           <div class="email-question" id="emailQuestion">
+               <div class="email-card">
+                   <div class="email-card-title">Entrez votre email pour recevoir instantanément :</div>
+                   <ul class="email-benefits-list">
+                       <li>✅ Votre type métabolique hormonal détaillé</li>
+                       <li>✅ Pourquoi votre corps résiste à la perte de poids</li>
+                       <li>✅ Le plan d'action personnalisé pour rééquilibrer vos hormones en 21 jours</li>
+                   </ul>
+                   <div class="email-input-group">
+                       <div id="sioEmailSlot">
+                           <div id="sioEmailLoading" style="padding: 14px; text-align: center; color: #64748b;">
+                               Chargement du formulaire...
                            </div>
                        </div>
                    </div>
+                   <button class="continue-button" id="emailSubmitBtn">
+                       Recevoir mes résultats gratuits →
+                   </button>
                </div>
            </div>
        </div>
    </div>
+</div>
 
-   <script>
-       let currentStep = 0;
-       const totalSteps = 12;
-       const selections = {};
+<script>
+   let currentStep = 0;
+   const totalSteps = 12;
+   const selections = {};
 
-       function startQuiz() {
-           showSection(1);
-       }
+   function startQuiz() {
+       showSection(1);
+   }
 
-       function showSection(step) {
-           // Cacher tout
-           document.getElementById('landing').style.display = 'none';
-           document.getElementById('resultsWrapper').classList.remove('active');
-           document.querySelectorAll('.question-section').forEach(q => {
-               q.style.display = 'none';
-               q.classList.remove('active');
-           });
+   function showSection(step) {
+       // Cacher tout
+       document.getElementById('landing').style.display = 'none';
+       document.getElementById('resultsWrapper').classList.remove('active');
+       document.querySelectorAll('.question-section').forEach(q => {
+           q.style.display = 'none';
+           q.classList.remove('active');
+       });
 
-           // Afficher la section appropriée
-           if (step === 0) {
-               document.getElementById('landing').style.display = 'flex';
-           } else if (step > totalSteps) {
-               document.getElementById('resultsWrapper').classList.add('active');
-               startSearchProgress();
-           } else {
-               const question = document.getElementById('q' + step);
-               if (question) {
-                   question.style.display = 'flex';
-                   question.classList.add('active');
-                   const savedValue = selections['q' + step];
-                   const cards = question.querySelectorAll('.option-card');
-                   cards.forEach(card => {
-                       card.classList.toggle('selected', card.dataset.value === savedValue);
-                   });
-               }
-           }
-
-           currentStep = step;
-           updateProgress();
-           updateStepIndicator();
-           updateButtons();
-       }
-
-       function nextQuestion() {
-           if (currentStep <= totalSteps) {
-               showSection(currentStep + 1);
+       // Afficher la section appropriée
+       if (step === 0) {
+           document.getElementById('landing').style.display = 'flex';
+       } else if (step > totalSteps) {
+           document.getElementById('resultsWrapper').classList.add('active');
+           startSearchProgress();
+       } else {
+           const question = document.getElementById('q' + step);
+           if (question) {
+               question.style.display = 'flex';
+               question.classList.add('active');
+               const savedValue = selections['q' + step];
+               const cards = question.querySelectorAll('.option-card');
+               cards.forEach(card => {
+                   card.classList.toggle('selected', card.dataset.value === savedValue);
+               });
            }
        }
 
-       function goBack() {
-           if (currentStep > 0) {
-               showSection(currentStep - 1);
-           }
+       currentStep = step;
+       updateProgress();
+       updateStepIndicator();
+       updateButtons();
+   }
+
+   function nextQuestion() {
+       if (currentStep <= totalSteps) {
+           showSection(currentStep + 1);
        }
+   }
 
-       function updateProgress() {
-           const progressFill = document.getElementById('progressFill');
-           const percentage = (currentStep / totalSteps) * 100;
-           progressFill.style.width = percentage + '%';
+   function goBack() {
+       if (currentStep > 0) {
+           showSection(currentStep - 1);
        }
+   }
 
-       function updateStepIndicator() {
-           const stepCounter = document.getElementById('stepCounter');
-           const backBtn = document.getElementById('backBtn');
-           
-           if (currentStep === 0) {
-               stepCounter.textContent = '';
-               backBtn.style.opacity = '0';
-               backBtn.style.pointerEvents = 'none';
-           } else if (currentStep <= totalSteps) {
-               stepCounter.textContent = currentStep + '/' + totalSteps;
-               backBtn.style.opacity = '1';
-               backBtn.style.pointerEvents = 'auto';
-           } else {
-               stepCounter.textContent = '';
-               backBtn.style.opacity = '0';
-               backBtn.style.pointerEvents = 'none';
-           }
+   function updateProgress() {
+       const progressFill = document.getElementById('progressFill');
+       const percentage = (currentStep / totalSteps) * 100;
+       progressFill.style.width = percentage + '%';
+   }
+
+   function updateStepIndicator() {
+       const stepCounter = document.getElementById('stepCounter');
+       const backBtn = document.getElementById('backBtn');
+       
+       if (currentStep === 0) {
+           stepCounter.textContent = '';
+           backBtn.style.opacity = '0';
+           backBtn.style.pointerEvents = 'none';
+       } else if (currentStep <= totalSteps) {
+           stepCounter.textContent = currentStep + '/' + totalSteps;
+           backBtn.style.opacity = '1';
+           backBtn.style.pointerEvents = 'auto';
+       } else {
+           stepCounter.textContent = '';
+           backBtn.style.opacity = '0';
+           backBtn.style.pointerEvents = 'none';
        }
+   }
 
-       function updateButtons() {
-           if (currentStep === 0 || currentStep > totalSteps) return;
-           
-           const question = document.getElementById('q' + currentStep);
-           if (!question) return;
+   function updateButtons() {
+       if (currentStep === 0 || currentStep > totalSteps) return;
+       
+       const question = document.getElementById('q' + currentStep);
+       if (!question) return;
 
-           const nextBtn = question.querySelector('.btn-next');
-           if (!nextBtn) return;
+       const nextBtn = question.querySelector('.btn-next');
+       if (!nextBtn) return;
 
-           const isValid = !!question.querySelector('.option-card.selected');
-           nextBtn.disabled = !isValid;
-       }
+       const isValid = !!question.querySelector('.option-card.selected');
+       nextBtn.disabled = !isValid;
+   }
 
-       let quizInitialized = false;
-
-       function bindQuizInteractions() {
-           if (quizInitialized) return;
-           quizInitialized = true;
-
-           document.body.addEventListener('click', function(event) {
-               const card = event.target.closest('.option-card');
-               if (!card) return;
-
-               const question = card.closest('.question-section');
+   // Event listeners pour les cartes d'options
+   document.addEventListener('DOMContentLoaded', function() {
+       document.querySelectorAll('.option-card').forEach(card => {
+           card.addEventListener('click', function() {
+               const question = this.closest('.question-section');
                if (!question || !question.id) return;
 
                const cards = question.querySelectorAll('.option-card');
                cards.forEach(c => c.classList.remove('selected'));
 
-               card.classList.add('selected');
-               selections[question.id] = card.dataset.value;
+               this.classList.add('selected');
+               selections[question.id] = this.dataset.value;
 
                updateButtons();
 
@@ -1203,310 +1186,198 @@
                    }
                }, 180);
            });
+       });
 
-           showSection(0);
+       // Initialiser l'affichage
+       showSection(0);
+   });
+
+   let searchProgress = 0;
+   let currentSearchStep = 0;
+   const totalSearchSteps = 5;
+
+   function startSearchProgress() {
+       searchProgress = 0;
+       currentSearchStep = 0;
+       const bar = document.getElementById('searchProgressBar');
+       const percentage = document.getElementById('searchProgressPercentage');
+       const items = document.querySelectorAll('.checklist-item');
+       
+       bar.style.width = '0%';
+       percentage.textContent = '0%';
+       items.forEach(item => item.classList.remove('active', 'completed'));
+       
+       setTimeout(updateSearchProgress, 500);
+   }
+
+   function updateSearchProgress() {
+       const bar = document.getElementById('searchProgressBar');
+       const percentage = document.getElementById('searchProgressPercentage');
+       const items = document.querySelectorAll('.checklist-item');
+
+       searchProgress += 2;
+       if (searchProgress > 100) searchProgress = 100;
+
+       bar.style.width = searchProgress + '%';
+       percentage.textContent = Math.floor(searchProgress) + '%';
+
+       const stepProgress = Math.floor((searchProgress / 100) * totalSearchSteps);
+       if (stepProgress > currentSearchStep) {
+           for (let i = currentSearchStep; i < stepProgress && i < totalSearchSteps; i++) {
+               setTimeout(() => {
+                   items[i].classList.add('active');
+                   setTimeout(() => {
+                       items[i].classList.add('completed');
+                   }, 200);
+               }, i * 100);
+           }
+           currentSearchStep = stepProgress;
        }
 
-       if (document.readyState === 'loading') {
-           document.addEventListener('DOMContentLoaded', bindQuizInteractions, { once: true });
+       if (searchProgress < 100) {
+           setTimeout(updateSearchProgress, 100);
        } else {
-           bindQuizInteractions();
+           items.forEach((item, index) => {
+               setTimeout(() => {
+                   item.classList.add('active', 'completed');
+               }, index * 50);
+           });
+           setTimeout(showSearchSuccess, 1500);
        }
+   }
 
-       let searchProgress = 0;
-       let currentSearchStep = 0;
-       const totalSearchSteps = 5;
+   function showSearchSuccess() {
+       const progressCard = document.getElementById('searchProgressCard');
+       const successCard = document.getElementById('searchSuccessCard');
+       const headerTitle = document.querySelector('#resultsWrapper .header-title');
 
-       function startSearchProgress() {
-           searchProgress = 0;
-           currentSearchStep = 0;
-           const bar = document.getElementById('searchProgressBar');
-           const percentage = document.getElementById('searchProgressPercentage');
-           const items = document.querySelectorAll('.checklist-item');
-           
-           bar.style.width = '0%';
-           percentage.textContent = '0%';
-           items.forEach(item => item.classList.remove('active', 'completed'));
-           
-           setTimeout(updateSearchProgress, 500);
-       }
+       progressCard.classList.add('hidden');
+       headerTitle.style.opacity = '0';
+       headerTitle.style.transform = 'translateY(-20px)';
 
-       function updateSearchProgress() {
-           const bar = document.getElementById('searchProgressBar');
-           const percentage = document.getElementById('searchProgressPercentage');
-           const items = document.querySelectorAll('.checklist-item');
+       setTimeout(() => {
+           progressCard.style.display = 'none';
+           headerTitle.style.display = 'none';
+           successCard.classList.add('visible');
+       }, 400);
+   }
 
-           searchProgress += 2;
-           if (searchProgress > 100) searchProgress = 100;
+   function showEmailQuestion() {
+       const successCard = document.getElementById('searchSuccessCard');
+       const emailQuestion = document.getElementById('emailQuestion');
+       successCard.style.display = 'none';
+       emailQuestion.style.display = 'flex';
+   }
+</script>
 
-           bar.style.width = searchProgress + '%';
-           percentage.textContent = Math.floor(searchProgress) + '%';
+<script>
+(function () {
+  // IDs EXACTS de ton formulaire Systeme.io
+  const SIO_FIRST_ID  = 'field-bd53abd1';   // Prénom
+  const SIO_EMAIL_ID  = 'field-dcb233d5';   // Email
+  const SIO_BUTTON_ID = 'button-3588826c';  // Bouton "Click here"
 
-           const stepProgress = Math.floor((searchProgress / 100) * totalSearchSteps);
-           if (stepProgress > currentSearchStep) {
-               for (let i = currentSearchStep; i < stepProgress && i < totalSearchSteps; i++) {
-                   setTimeout(() => {
-                       items[i].classList.add('active');
-                       setTimeout(() => {
-                           items[i].classList.add('completed');
-                       }, 200);
-                   }, i * 100);
-               }
-               currentSearchStep = stepProgress;
-           }
+  const MAX_TRIES = 40;
 
-           if (searchProgress < 100) {
-               setTimeout(updateSearchProgress, 100);
-           } else {
-               items.forEach((item, index) => {
-                   setTimeout(() => {
-                       item.classList.add('active', 'completed');
-                   }, index * 50);
-               });
-               setTimeout(showSearchSuccess, 1500);
-           }
-       }
+  function setupOnce() {
+    const slot      = document.getElementById('sioEmailSlot');
+    const quizBtn   = document.getElementById('emailSubmitBtn');
+    const realFirst = document.getElementById(SIO_FIRST_ID);
+    const realEmail = document.getElementById(SIO_EMAIL_ID);
+    const realBtn   = document.getElementById(SIO_BUTTON_ID);
 
-       function showSearchSuccess() {
-           const progressCard = document.getElementById('searchProgressCard');
-           const successCard = document.getElementById('searchSuccessCard');
-           const headerTitle = document.querySelector('#resultsWrapper .header-title');
+    // Si tout n'est pas encore chargé, on laisse la main au polling
+    if (!slot || !quizBtn || !realFirst || !realEmail || !realBtn) {
+      return false;
+    }
 
-           progressCard.classList.add('hidden');
-           headerTitle.style.opacity = '0';
-           headerTitle.style.transform = 'translateY(-20px)';
+    // (Optionnel) cacher la section Systeme.io "Click here" si tu veux
+    // Elle a l'id section-741e52a1
+    const sioSection = document.getElementById('section-741e52a1');
+    if (sioSection) {
+      sioSection.style.maxHeight     = '0';
+      sioSection.style.overflow      = 'hidden';
+      sioSection.style.opacity       = '0';
+      sioSection.style.pointerEvents = 'none';
+    }
 
-           setTimeout(() => {
-               progressCard.style.display = 'none';
-               headerTitle.style.display = 'none';
-               successCard.classList.add('visible');
-           }, 400);
-       }
+    // Crée les champs visibles dans le quiz (dans #sioEmailSlot)
+    slot.innerHTML = '';
 
-       function showEmailQuestion() {
-           const successCard = document.getElementById('searchSuccessCard');
-           const emailQuestion = document.getElementById('emailQuestion');
-           successCard.style.display = 'none';
-           emailQuestion.style.display = 'flex';
-           prepareSioEmailSlot();
-       }
-   </script>
-   <script>
-    /* =========================
-       Formulaire email (SIO)
-       ========================= */
-    let sioMutationObserver = null;
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'flex';
+    wrapper.style.flexDirection = 'column';
+    wrapper.style.gap = '8px';
 
-    function getSioSubmitButton(){
-      const slot = document.getElementById('sioEmailSlot');
-      const form = slot ? slot.querySelector('form') : null;
+    const firstInput = document.createElement('input');
+    firstInput.type = 'text';
+    firstInput.name = 'quiz-first-name';
+    firstInput.placeholder = 'Prénom';
+    firstInput.required = true;
 
-      const targetedBtn = document.getElementById('button-3588826c');
-      if (targetedBtn) return targetedBtn;
+    const emailInput = document.createElement('input');
+    emailInput.type = 'email';
+    emailInput.name = 'quiz-email';
+    emailInput.placeholder = 'Votre email';
+    emailInput.required = true;
 
-      if (form){
-        const primaryBtn = form.querySelector('button[type="submit"], input[type="submit"]');
-        if (primaryBtn) return primaryBtn;
+    wrapper.appendChild(firstInput);
+    wrapper.appendChild(emailInput);
+    slot.appendChild(wrapper);
+
+    function copyValuesToSysteme() {
+      realFirst.value = firstInput.value;
+      realEmail.value = emailInput.value;
+    }
+
+    quizBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      // mini validation
+      if (!firstInput.value.trim()) {
+        firstInput.focus();
+        return;
       }
-
-      const fallbackSelector = [
-        '[data-test-id="send-form-button"]',
-        '[data-testid="send-form-button"]',
-        '.sio-subscribe-button',
-        '.sio-submit',
-        '[data-element="submit"]'
-      ].join(', ');
-
-      if (form){
-        const scopedBtn = form.querySelector(fallbackSelector);
-        if (scopedBtn) return scopedBtn;
-      }
-
-      return document.querySelector(fallbackSelector);
-    }
-
-    function clickSioSubmit(){
-      const slot = document.getElementById('sioEmailSlot');
-      const formInSlot = slot ? slot.querySelector('form') : null;
-      const btn = getSioSubmitButton();
-
-      if (btn && typeof btn.click === 'function'){ btn.click(); return; }
-      if (formInSlot){ if (formInSlot.requestSubmit) formInSlot.requestSubmit(); else formInSlot.submit(); }
-    }
-
-    function prepareSioEmailSlot(){
-      if (sioMutationObserver){ sioMutationObserver.disconnect(); sioMutationObserver = null; }
-
-      setTimeout(() => {
-        relocateSioIntoSlot();
-        sioMutationObserver = new MutationObserver(() => relocateSioIntoSlot());
-        sioMutationObserver.observe(document.body, { childList:true, subtree:true });
-        setTimeout(() => {
-          if (sioMutationObserver){ sioMutationObserver.disconnect(); sioMutationObserver = null; }
-        }, 10000);
-      }, 0);
-    }
-
-    function relocateSioIntoSlot(){
-      const slot = document.getElementById('sioEmailSlot');
-      if (!slot){
-        console.warn('[SIO][DBG] slot email introuvable');
+      if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
+        emailInput.focus();
+        if (emailInput.reportValidity) emailInput.reportValidity();
         return;
       }
 
-      if (!document.getElementById('sioEmailGate')){
-        const css = document.createElement('style');
-        css.id = 'sioEmailGate';
-        css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"],' +
-          'input[name*="phone" i],input[name*="tel" i],input[type="tel"],' +
-          'select[name*="phone" i],select[name*="tel" i],select[id*="phone" i],select[id*="tel" i],select[aria-label*="indicatif" i],select[aria-label*="code" i]{display:none!important;}' +
-          '#sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"],#sioEmailSlot button,#sioEmailSlot input[type="submit"],#sioEmailSlot [data-test-id="send-form-button"],#sioEmailSlot [data-testid="send-form-button"],#sioEmailSlot .sio-subscribe-button,#sioEmailSlot .sio-submit,#sioEmailSlot [data-element="submit"]{display:block!important;}';
-        document.head.appendChild(css);
+      copyValuesToSysteme();
+
+      // On déclenche VRAIMENT le formulaire Systeme.io
+      const realForm = realEmail.closest('form') || realEmail.form || null;
+
+      if (typeof realBtn.click === 'function') {
+        realBtn.click();
+      } else if (realForm) {
+        if (realForm.requestSubmit) realForm.requestSubmit();
+        else realForm.submit();
       }
+    });
 
-      const EMAIL_SEL = [
-        'input[type="email"]',
-        'input[name="email"]',
-        'input[name*="email" i]',
-        'input[id*="email" i]',
-        'input[placeholder*="mail" i]',
-        'input[placeholder*="courriel" i]'
-      ].join(', ');
+    return true;
+  }
 
-      const FIRSTNAME_SEL = [
-        'input[name="first_name"]',
-        'input[name*="first" i]',
-        'input[name*="prenom" i]',
-        'input[name*="name" i]',
-        'input[placeholder*="prénom" i]',
-        'input[placeholder*="prenom" i]'
-      ].join(', ');
-
-      const allForms = Array.from(document.querySelectorAll('form'));
-      let chosenForm = null;
-
-      for (const form of allForms){
-        const hasEmail = !!form.querySelector(EMAIL_SEL);
-        const hasFirst = !!form.querySelector(FIRSTNAME_SEL);
-
-        if (hasEmail && hasFirst){
-          chosenForm = form;
-          break;
-        }
-        if (!chosenForm && hasEmail){
-          chosenForm = form;
-        }
-      }
-
-      if (chosenForm && !slot.contains(chosenForm)){
-        slot.innerHTML = '';
-        slot.appendChild(chosenForm);
-        console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Formulaire SIO déplacé → #sioEmailSlot');
-      } else if (!chosenForm){
-        const email = document.querySelector(EMAIL_SEL);
-        if (email){
-          const form = email.closest('form') || email.form;
-          if (form && !slot.contains(form)){
-            slot.innerHTML = '';
-            slot.appendChild(form);
-            console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Formulaire SIO (fallback email) déplacé → #sioEmailSlot');
-          } else if (!form && !slot.contains(email)){
-            slot.innerHTML = '';
-            slot.appendChild(email);
-            console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Input email SIO déplacé → #sioEmailSlot');
-          }
-        }
-      }
-
-      const slotForm = slot.querySelector('form');
-
-      const ensureFieldInSlot = (selector) => {
-        if (!selector) return null;
-        const field = document.querySelector(selector);
-        if (!field) return null;
-
-        if (slotForm && !slotForm.contains(field)){
-          slotForm.insertBefore(field, getSioSubmitButton() || null);
-        } else if (!slot.contains(field)){
-          slot.appendChild(field);
-        }
-
-        field.style.display = '';
-        field.style.visibility = '';
-        field.removeAttribute('hidden');
-        return field;
-      };
-
-      ensureFieldInSlot(EMAIL_SEL);
-      ensureFieldInSlot(FIRSTNAME_SEL);
-
-      let btn = getSioSubmitButton();
-      if (btn && !slot.contains(btn)){
-        const ref = slotForm || slot;
-        try{
-          ref.appendChild(btn);
-          console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Bouton SIO déplacé → #sioEmailSlot');
-        }catch(_){ }
-      }
-
-      btn = getSioSubmitButton();
-      if (btn){
-        btn.disabled = false;
-        btn.style.display = 'block';
-        btn.style.visibility = 'visible';
-        btn.style.width = '100%';
-        btn.classList.add('continue-button');
-        const fallback = document.getElementById('sioFallbackButton');
-        if (fallback) fallback.remove();
+  function waitForSysteme() {
+    let tries = 0;
+    const interval = setInterval(function () {
+      if (setupOnce()) {
+        clearInterval(interval);
       } else {
-        let fallback = document.getElementById('sioFallbackButton');
-        if (!fallback){
-          fallback = document.createElement('button');
-          fallback.id = 'sioFallbackButton';
-          fallback.type = 'button';
-          fallback.className = 'continue-button';
-          fallback.textContent = 'Valider mon résultat';
-          fallback.addEventListener('click', clickSioSubmit);
-          slot.appendChild(fallback);
+        tries++;
+        if (tries >= MAX_TRIES) {
+          clearInterval(interval);
         }
-        fallback.disabled = false;
-        fallback.style.display = 'block';
       }
+    }, 300);
+  }
 
-      const loading = document.getElementById('sioEmailLoading');
-      if (loading && (
-        slot.querySelector('form') ||
-        slot.querySelector(EMAIL_SEL) ||
-        slot.querySelector(FIRSTNAME_SEL)
-      )){
-        loading.remove();
-      }
-
-      const sioSection = document.getElementById('section-741e52a1');
-      if (sioSection) {
-        sioSection.style.maxHeight     = '0';
-        sioSection.style.overflow      = 'hidden';
-        sioSection.style.opacity       = '0';
-        sioSection.style.pointerEvents = 'none';
-      }
-
-      const successCardEl = document.getElementById('emailQuestion');
-      if (successCardEl && !successCardEl.dataset.enterBound){
-        successCardEl.dataset.enterBound = '1';
-        successCardEl.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter'){
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-            clickSioSubmit();
-          }
-        }, { capture:true });
-      }
-    }
-
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', prepareSioEmailSlot);
-    } else {
-      prepareSioEmailSlot();
-    }
-   </script>
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitForSysteme);
+  } else {
+    waitForSysteme();
+  }
+})();
+</script>
