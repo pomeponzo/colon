@@ -1267,138 +1267,104 @@
        }
    </script>
    <script>
-  (function relocateSioEmail() {
-    const SIO_EMAIL_ID = 'field-dcb233d5';     // Champ email Systeme.io
-    const SIO_FIRSTNAME_ID = 'field-bd53abd1'; // Champ prénom Systeme.io
-    const SIO_SUBMIT_ID = 'button-3588826c';   // Bouton "Click here" Systeme.io
+(function connectQuizToSio() {
+  // IDs EXACTS des champs Systeme.io (tirés de ton code)
+  const SIO_FIRSTNAME_ID = 'field-bd53abd1';
+  const SIO_EMAIL_ID = 'field-dcb233d5';
+  const SIO_SUBMIT_ID = 'button-3588826c';
 
-    const MAX_TRIES = 60;
-    let tries = 0;
-    let initialized = false;
+  const MAX_TRIES = 40;
+  let tries = 0;
 
-    function attempt() {
-      if (initialized) return;
+  function init() {
+    const slot = document.getElementById('sioEmailSlot');
+    const quizBtn = document.getElementById('emailSubmitBtn');
+    const realFirst = document.getElementById(SIO_FIRSTNAME_ID);
+    const realEmail = document.getElementById(SIO_EMAIL_ID);
+    const realSubmit = document.getElementById(SIO_SUBMIT_ID);
 
-      const slot = document.getElementById('sioEmailSlot');
-      if (!slot) {
-        console.warn('[relocateSioEmail] #sioEmailSlot not found');
-        return;
-      }
-
-      // Champs "vrais" de Systeme.io
-      const realEmail =
-        document.getElementById(SIO_EMAIL_ID) ||
-        document.querySelector('input[type="email"], input[name="email"], input[name*="email" i]');
-
-      const realFirst =
-        document.getElementById(SIO_FIRSTNAME_ID) ||
-        document.querySelector('input[name="first_name"], input[placeholder*="prénom" i], input[placeholder*="prenom" i]');
-
-      const realSubmit =
-        document.getElementById(SIO_SUBMIT_ID) ||
-        document.querySelector(
-          '[data-test-id="send-form-button"], [data-testid="send-form-button"], button[id^="button-"], [data-element="submit"], .sio-subscribe-button, .sio-submit, [data-element="cta-button"]'
-        );
-
-      // On attend que Systeme.io ait créé le formulaire
-      if (!realEmail || !realSubmit) {
+    // Si tout n'est pas encore chargé, on réessaie
+    if (!slot || !quizBtn || !realFirst || !realEmail || !realSubmit) {
+      if (tries < MAX_TRIES) {
         tries++;
-        if (tries < MAX_TRIES) {
-          setTimeout(attempt, 300);
-        } else {
-          console.warn('[relocateSioEmail] email or submit button not found');
-        }
-        return;
+        setTimeout(init, 300);
       }
-
-      initialized = true;
-
-      // On "cache" discrètement les champs d'origine + le bouton "Click here"
-      [realEmail, realFirst, realSubmit].forEach((el) => {
-        if (!el) return;
-        el.style.position = 'absolute';
-        el.style.opacity = '0';
-        el.style.pointerEvents = 'none';
-        el.style.height = '0';
-        el.style.margin = '0';
-      });
-
-      // On crée le mini-formulaire dans la carte du quiz
-      const wrapperForm = document.createElement('form');
-      wrapperForm.setAttribute('data-quiz-email-form', 'true');
-      wrapperForm.style.width = '100%';
-
-      // Champ PRÉNOM visible dans le quiz
-      const firstInput = document.createElement('input');
-      firstInput.type = 'text';
-      firstInput.name = (realFirst && realFirst.getAttribute('name')) || 'first_name';
-      firstInput.placeholder = (realFirst && realFirst.getAttribute('placeholder')) || 'Prénom';
-      firstInput.autocomplete = 'given-name';
-      wrapperForm.appendChild(firstInput);
-
-      // Champ EMAIL visible dans le quiz
-      const emailInput = document.createElement('input');
-      emailInput.type = 'email';
-      emailInput.name = realEmail.getAttribute('name') || 'email';
-      emailInput.placeholder = realEmail.getAttribute('placeholder') || 'Email';
-      emailInput.autocomplete = 'email';
-      wrapperForm.appendChild(emailInput);
-
-      // On remplace le texte "Chargement du formulaire..."
-      slot.innerHTML = '';
-      slot.appendChild(wrapperForm);
-
-      // Style & focus sont déjà gérés par ton CSS :
-      // #sioEmailSlot input[type="email"], #sioEmailSlot input[type="text"], etc.
-
-      // Sauvegarde de l'email dans le localStorage (comme avant)
-      try {
-        const saved = localStorage.getItem('quizEmail');
-        if (saved) emailInput.value = saved;
-        emailInput.addEventListener('input', function (e) {
-          localStorage.setItem('quizEmail', e.target.value);
-        });
-      } catch (err) {
-        console.warn('[relocateSioEmail] localStorage unavailable', err);
-      }
-
-      // On copie les valeurs vers les VRAIS champs Systeme.io (cachés)
-      if (realFirst) {
-        firstInput.addEventListener('input', function (e) {
-          realFirst.value = e.target.value;
-        });
-      }
-      emailInput.addEventListener('input', function (e) {
-        realEmail.value = e.target.value;
-      });
-
-      // Quand on clique sur "Recevoir mes résultats gratuits →"
-      const continueBtn = document.getElementById('emailSubmitBtn');
-      if (continueBtn) {
-        continueBtn.addEventListener('click', function (e) {
-          e.preventDefault();
-
-          // synchro finale avant envoi
-          if (realFirst) {
-            realFirst.value = firstInput.value;
-          }
-          realEmail.value = emailInput.value;
-
-          // On déclenche le bouton Systeme.io (logique de soumission native)
-          if (typeof realSubmit.click === 'function') {
-            realSubmit.click();
-          } else {
-            const form = realEmail.form || realEmail.closest('form');
-            if (form) {
-              if (form.requestSubmit) form.requestSubmit();
-              else form.submit();
-            }
-          }
-        });
-      }
+      return;
     }
 
-    // Lancement
-    attempt();
-  })();
-  </script>
+    // On cache le vrai formulaire SIO (mais il reste dans la page)
+    const realForm = realEmail.closest('form') || realEmail.form;
+    if (realForm) {
+      realForm.style.position = 'absolute';
+      realForm.style.left = '-9999px';
+      realForm.style.top = 'auto';
+      realForm.style.opacity = '0';
+      realForm.style.pointerEvents = 'none';
+    }
+
+    // On crée les champs visibles dans le quiz
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'flex';
+    wrapper.style.flexDirection = 'column';
+    wrapper.style.gap = '8px';
+
+    const firstInput = document.createElement('input');
+    firstInput.type = 'text';
+    firstInput.placeholder = 'Prénom';
+    firstInput.required = true;
+    firstInput.style.padding = '14px';
+    firstInput.style.borderRadius = '10px';
+    firstInput.style.border = '2px solid #f3c1d8';
+    firstInput.style.fontSize = '0.95rem';
+
+    const emailInput = document.createElement('input');
+    emailInput.type = 'email';
+    emailInput.placeholder = 'Votre email';
+    emailInput.required = true;
+    emailInput.style.padding = '14px';
+    emailInput.style.borderRadius = '10px';
+    emailInput.style.border = '2px solid #f3c1d8';
+    emailInput.style.fontSize = '0.95rem';
+
+    // Si SIO a déjà quelque chose, on le reflète
+    firstInput.value = realFirst.value || '';
+    emailInput.value = realEmail.value || '';
+
+    slot.innerHTML = '';
+    wrapper.appendChild(firstInput);
+    wrapper.appendChild(emailInput);
+    slot.appendChild(wrapper);
+
+    function syncToSio() {
+      realFirst.value = firstInput.value;
+      realEmail.value = emailInput.value;
+    }
+
+    quizBtn.addEventListener('click', function (e) {
+      e.preventDefault();
+
+      // mini validation email
+      if (!emailInput.value || !emailInput.value.includes('@')) {
+        emailInput.focus();
+        if (emailInput.reportValidity) emailInput.reportValidity();
+        return;
+      }
+
+      syncToSio();
+      // On déclenche le vrai submit Systeme.io
+      if (typeof realSubmit.click === 'function') {
+        realSubmit.click();
+      } else if (realForm) {
+        if (realForm.requestSubmit) realForm.requestSubmit();
+        else realForm.submit();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+   </script>
