@@ -1176,32 +1176,42 @@
            nextBtn.disabled = !isValid;
        }
 
-       // Event listeners pour les cartes d'options
-       document.addEventListener('DOMContentLoaded', function() {
-           document.querySelectorAll('.option-card').forEach(card => {
-               card.addEventListener('click', function() {
-                   const question = this.closest('.question-section');
-                   if (!question || !question.id) return;
+       let quizInitialized = false;
 
-                   const cards = question.querySelectorAll('.option-card');
-                   cards.forEach(c => c.classList.remove('selected'));
+       function bindQuizInteractions() {
+           if (quizInitialized) return;
+           quizInitialized = true;
 
-                   this.classList.add('selected');
-                   selections[question.id] = this.dataset.value;
+           document.body.addEventListener('click', function(event) {
+               const card = event.target.closest('.option-card');
+               if (!card) return;
 
-                   updateButtons();
+               const question = card.closest('.question-section');
+               if (!question || !question.id) return;
 
-                   setTimeout(() => {
-                       if (question.classList.contains('active')) {
-                           nextQuestion();
-                       }
-                   }, 180);
-               });
+               const cards = question.querySelectorAll('.option-card');
+               cards.forEach(c => c.classList.remove('selected'));
+
+               card.classList.add('selected');
+               selections[question.id] = card.dataset.value;
+
+               updateButtons();
+
+               setTimeout(() => {
+                   if (question.classList.contains('active')) {
+                       nextQuestion();
+                   }
+               }, 180);
            });
 
-           // Initialiser l'affichage
            showSection(0);
-       });
+       }
+
+       if (document.readyState === 'loading') {
+           document.addEventListener('DOMContentLoaded', bindQuizInteractions, { once: true });
+       } else {
+           bindQuizInteractions();
+       }
 
        let searchProgress = 0;
        let currentSearchStep = 0;
