@@ -1445,6 +1445,21 @@
         btn.style.visibility = 'visible';
         btn.style.width = '100%';
         btn.classList.add('continue-button');
+        const fallback = document.getElementById('sioFallbackButton');
+        if (fallback) fallback.remove();
+      } else {
+        let fallback = document.getElementById('sioFallbackButton');
+        if (!fallback){
+          fallback = document.createElement('button');
+          fallback.id = 'sioFallbackButton';
+          fallback.type = 'button';
+          fallback.className = 'continue-button';
+          fallback.textContent = 'Valider mon résultat';
+          fallback.addEventListener('click', clickSioSubmit);
+          slot.appendChild(fallback);
+        }
+        fallback.disabled = false;
+        fallback.style.display = 'block';
       }
 
       const loading = document.getElementById('sioEmailLoading');
