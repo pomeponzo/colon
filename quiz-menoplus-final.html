@@ -1062,7 +1062,6 @@
                                </div>
                            </div>
                        </div>
-                       <button class="continue-button" id="emailSubmitBtn">Recevoir mes résultats gratuits →</button>
                    </div>
                </div>
            </div>
@@ -1268,27 +1267,30 @@
    </script>
    <script>
 (function () {
-  // IDs EXACTS de ton formulaire Systeme.io
-  const SIO_FIRST_ID  = 'field-bd53abd1';   // Prénom
-  const SIO_EMAIL_ID  = 'field-dcb233d5';   // Email
-  const SIO_BUTTON_ID = 'button-3588826c';  // Bouton "Click here"
+  // ID du champ email Systeme.io (à vérifier dans l’éditeur)
+  const SIO_EMAIL_ID = 'field-dcb233d5';  // champ email Systeme.io
+  const MAX_TRIES = 40; // ~12 secondes de patience pour que Systeme.io charge son formulaire
 
-  const MAX_TRIES = 40;
+  function moveSystemeFormIntoQuiz() {
+    const slot = document.getElementById('sioEmailSlot');
+    const emailField = document.getElementById(SIO_EMAIL_ID);
 
-  function setupOnce() {
-    const slot      = document.getElementById('sioEmailSlot');
-    const quizBtn   = document.getElementById('emailSubmitBtn');
-    const realFirst = document.getElementById(SIO_FIRST_ID);
-    const realEmail = document.getElementById(SIO_EMAIL_ID);
-    const realBtn   = document.getElementById(SIO_BUTTON_ID);
-
-    // Si tout n'est pas encore chargé, on laisse la main au polling
-    if (!slot || !quizBtn || !realFirst || !realEmail || !realBtn) {
+    // Si le slot du quiz ou le champ email n'existent pas encore, on réessaie plus tard
+    if (!slot || !emailField) {
       return false;
     }
 
-    // (Optionnel) cacher la section Systeme.io "Click here" si tu veux
-    // Elle a l'id section-741e52a1
+    // On récupère le vrai <form> Systeme.io
+    const realForm = emailField.closest('form') || emailField.form;
+    if (!realForm) {
+      return false;
+    }
+
+    // On vide le slot ("Chargement du formulaire...") et on y met le vrai formulaire Systeme.io
+    slot.innerHTML = '';
+    slot.appendChild(realForm);
+
+    // On masque l'ancienne section Systeme.io qui contenait le formulaire (pour éviter le doublon)
     const sioSection = document.getElementById('section-741e52a1');
     if (sioSection) {
       sioSection.style.maxHeight     = '0';
@@ -1297,64 +1299,11 @@
       sioSection.style.pointerEvents = 'none';
     }
 
-    // Crée les champs visibles dans le quiz (dans #sioEmailSlot)
-    slot.innerHTML = '';
-
-    const wrapper = document.createElement('div');
-    wrapper.style.display = 'flex';
-    wrapper.style.flexDirection = 'column';
-    wrapper.style.gap = '8px';
-
-    const firstInput = document.createElement('input');
-    firstInput.type = 'text';
-    firstInput.name = 'quiz-first-name';
-    firstInput.placeholder = 'Prénom';
-    firstInput.required = true;
-
-    const emailInput = document.createElement('input');
-    emailInput.type = 'email';
-    emailInput.name = 'quiz-email';
-    emailInput.placeholder = 'Votre email';
-    emailInput.required = true;
-
-    wrapper.appendChild(firstInput);
-    wrapper.appendChild(emailInput);
-    slot.appendChild(wrapper);
-
-    // Les styles sont déjà gérés plus haut par :
-    // #sioEmailSlot input[type="email"], #sioEmailSlot input[type="text"], ...
-
-    function copyValuesToSysteme() {
-      realFirst.value = firstInput.value;
-      realEmail.value = emailInput.value;
+    // On donne le style du gros bouton rose au bouton Systeme.io
+    const submitBtn = realForm.querySelector('button, input[type="submit"]');
+    if (submitBtn) {
+      submitBtn.classList.add('continue-button');
     }
-
-    quizBtn.addEventListener('click', function (e) {
-      e.preventDefault();
-
-      // mini validation
-      if (!firstInput.value.trim()) {
-        firstInput.focus();
-        return;
-      }
-      if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
-        emailInput.focus();
-        if (emailInput.reportValidity) emailInput.reportValidity();
-        return;
-      }
-
-      copyValuesToSysteme();
-
-      // On déclenche VRAIMENT le formulaire Systeme.io
-      const realForm = realEmail.closest('form') || realEmail.form || null;
-
-      if (typeof realBtn.click === 'function') {
-        realBtn.click();
-      } else if (realForm) {
-        if (realForm.requestSubmit) realForm.requestSubmit();
-        else realForm.submit();
-      }
-    });
 
     return true;
   }
@@ -1362,12 +1311,21 @@
   function waitForSysteme() {
     let tries = 0;
     const interval = setInterval(function () {
-      if (setupOnce()) {
+      if (moveSystemeFormIntoQuiz()) {
         clearInterval(interval);
       } else {
         tries++;
         if (tries >= MAX_TRIES) {
           clearInterval(interval);
+          const slot = document.getElementById('sioEmailSlot');
+          if (slot) {
+            slot.innerHTML =
+              '<div style="padding:14px; color:#b91c1c; font-size:0.9rem;">' +
+              'Impossible de trouver le formulaire Systeme.io.<br>' +
+              'Vérifie que le formulaire (Prénom + Email + bouton) est bien présent sur la page ' +
+              'et que le champ email a pour ID <strong>field-dcb233d5</strong>.' +
+              '</div>';
+          }
         }
       }
     }, 300);
