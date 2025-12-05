@@ -1268,7 +1268,7 @@
    </script>
    <script>
   (function relocateSioEmail() {
-    // Sélecteur robuste pour le champ email Systeme.io
+    // Sélecteurs robustes pour les champs Systeme.io
     const EMAIL_SEL = [
       'input[type="email"]',
       'input[name="email"]',
@@ -1279,9 +1279,31 @@
       'input[id^="field-"]'
     ].join(', ');
 
+    const FIRSTNAME_SEL = [
+      'input[name="first_name"]',
+      'input[name*="first" i]',
+      'input[name*="prenom" i]',
+      'input[name*="name" i]',
+      'input[placeholder*="prénom" i]',
+      'input[placeholder*="prenom" i]'
+    ].join(', ');
+
+    // On cherche en priorité un email dans un form qui contient aussi le prénom
     const findSioEmailInput = () => {
-      const inputs = Array.from(document.querySelectorAll(EMAIL_SEL));
-      return inputs.length ? inputs[inputs.length - 1] : null;
+      const emails = Array.from(document.querySelectorAll(EMAIL_SEL));
+      if (!emails.length) return null;
+
+      // On parcourt à l'envers pour privilégier les derniers champs (souvent le bon formulaire)
+      for (let i = emails.length - 1; i >= 0; i--) {
+        const email = emails[i];
+        const form = email.closest('form') || email.form;
+        if (form && form.querySelector(FIRSTNAME_SEL)) {
+          return email;
+        }
+      }
+
+      // Si on ne trouve pas ce combo, on garde le comportement d'avant (dernier email)
+      return emails[emails.length - 1];
     };
 
    const slot = document.getElementById('sioEmailSlot');
@@ -1300,6 +1322,17 @@
       
       slot.innerHTML = '';
       slot.appendChild(form);
+
+      // S'assurer que le champ "Prénom" est bien dans le même formulaire
+      let firstNameInput = form.querySelector(FIRSTNAME_SEL);
+      if (!firstNameInput) {
+        // Si un champ prénom existe ailleurs sur la page, on le ramène dans ce form
+        const externalFirst = document.querySelector(FIRSTNAME_SEL);
+        if (externalFirst && !form.contains(externalFirst)) {
+          firstNameInput = externalFirst;
+          form.insertBefore(firstNameInput, emailInput);
+        }
+      }
 
       try {
         const savedEmail = localStorage.getItem('quizEmail');
