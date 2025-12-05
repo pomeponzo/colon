@@ -1288,12 +1288,14 @@
       'input[placeholder*="prenom" i]'
     ].join(', ');
 
+    const MAX_TRIES = 40;
+    let tries = 0;
+
     // On cherche en priorité un email dans un form qui contient aussi le prénom
-    const findSioEmailInput = () => {
+    function findSioEmailInput() {
       const emails = Array.from(document.querySelectorAll(EMAIL_SEL));
       if (!emails.length) return null;
 
-      // On parcourt à l'envers pour privilégier les derniers champs (souvent le bon formulaire)
       for (let i = emails.length - 1; i >= 0; i--) {
         const email = emails[i];
         const form = email.closest('form') || email.form;
@@ -1302,35 +1304,44 @@
         }
       }
 
-      // Si on ne trouve pas ce combo, on garde le comportement d'avant (dernier email)
+      // Sinon on garde l'ancien comportement : dernier champ email trouvé
       return emails[emails.length - 1];
-    };
-
-   const slot = document.getElementById('sioEmailSlot');
-    if (!slot) {
-      console.warn('[relocateSioEmail] #sioEmailSlot not found');
-      return;
     }
 
-    const attempt = () => {
+    function attempt() {
+      const slot = document.getElementById('sioEmailSlot');
+      if (!slot) {
+        console.warn('[relocateSioEmail] #sioEmailSlot not found');
+        return;
+      }
+
       const emailInput = findSioEmailInput();
-      if (!emailInput) {
-        return setTimeout(attempt, 300);
+      const anyFirst = document.querySelector(FIRSTNAME_SEL);
+
+      // Tant qu'on n'a pas au moins l'email (et si possible le prénom), on retente
+      if (!emailInput || (!anyFirst && tries < MAX_TRIES)) {
+        tries++;
+        setTimeout(attempt, 300);
+        return;
       }
 
       const form = emailInput.closest('form') || emailInput.form || emailInput;
-      
-      slot.innerHTML = '';
-      slot.appendChild(form);
 
-      // S'assurer que le champ "Prénom" est bien dans le même formulaire
+      if (!slot.contains(form)) {
+        slot.innerHTML = '';
+        slot.appendChild(form);
+      }
+
+      // Force le champ prénom à l'intérieur du form et juste avant l'email
       let firstNameInput = form.querySelector(FIRSTNAME_SEL);
-      if (!firstNameInput) {
-        // Si un champ prénom existe ailleurs sur la page, on le ramène dans ce form
-        const externalFirst = document.querySelector(FIRSTNAME_SEL);
-        if (externalFirst && !form.contains(externalFirst)) {
-          firstNameInput = externalFirst;
-          form.insertBefore(firstNameInput, emailInput);
+      if (!firstNameInput && anyFirst) {
+        if (!form.contains(anyFirst)) {
+          firstNameInput = anyFirst;
+          try {
+            form.insertBefore(firstNameInput, emailInput);
+          } catch (e) {}
+        } else {
+          firstNameInput = anyFirst;
         }
       }
 
@@ -1359,10 +1370,12 @@
       if (loading) {
         loading.remove();
       }
-    };
+    }
 
+    // Lancement
     attempt();
 
+    // Quand on clique sur ton gros bouton rose, on soumet le formulaire SIO
     const continueBtn = document.getElementById('emailSubmitBtn');
     if (continueBtn) {
       continueBtn.addEventListener('click', function (e) {
@@ -1380,10 +1393,10 @@
           sioBtn.style.display = 'none';
           sioBtn.click();
         } else if (form) {
-          if (form.requestSubmit) form.requestSubmit(); else form.submit();
+          if (form.requestSubmit) form.requestSubmit();
+          else form.submit();
         }
       });
     }
-
   })();
   </script>
