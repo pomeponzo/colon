@@ -547,6 +547,21 @@
           width: 100%;
       }
 
+      /* Gate CSS : masque les champs SIO partout sauf dans le slot */
+      input[name="first_name"], input[name="surname"], input[name="email"],
+      input[name*="phone" i], input[name*="tel" i], input[type="tel"],
+      select[name*="phone" i], select[name*="tel" i],
+      select[id*="phone" i], select[id*="tel" i],
+      select[aria-label*="indicatif" i], select[aria-label*="code" i]{
+          display: none !important;
+      }
+
+      #sioEmailSlot input[name="first_name"],
+      #sioEmailSlot input[name="surname"],
+      #sioEmailSlot input[name="email"] {
+          display: block !important;
+      }
+
       /* Prénom + Email : même épaisseur / même style */
       #sioEmailSlot input[type="email"],
       #sioEmailSlot input[type="text"],
@@ -1263,78 +1278,199 @@
            const emailQuestion = document.getElementById('emailQuestion');
            successCard.style.display = 'none';
            emailQuestion.style.display = 'flex';
+           prepareSioEmailSlot();
        }
    </script>
    <script>
-(function () {
-  // ID du champ email Systeme.io (à vérifier dans l’éditeur)
-  const SIO_EMAIL_ID = 'field-dcb233d5';  // champ email Systeme.io
-  const MAX_TRIES = 40; // ~12 secondes de patience pour que Systeme.io charge son formulaire
+    /* =========================
+       Formulaire email (SIO)
+       ========================= */
+    let sioMutationObserver = null;
 
-  function moveSystemeFormIntoQuiz() {
-    const slot = document.getElementById('sioEmailSlot');
-    const emailField = document.getElementById(SIO_EMAIL_ID);
-
-    // Si le slot du quiz ou le champ email n'existent pas encore, on réessaie plus tard
-    if (!slot || !emailField) {
-      return false;
+    function getSioSubmitButton(){
+      const sel = [
+        'button[type="submit"]',
+        'input[type="submit"]',
+        '.sio-subscribe-button',
+        '.sio-submit',
+        '[data-element="cta-button"]',
+        '[data-test-id="send-form-button"]',
+        '[data-testid="send-form-button"]',
+        'button[id^="button-"]'
+      ].join(', ');
+      const slot = document.getElementById('sioEmailSlot');
+      let btn = slot ? slot.querySelector(sel) : null;
+      if (!btn) btn = document.querySelector(sel);
+      return btn || null;
     }
 
-    // On récupère le vrai <form> Systeme.io
-    const realForm = emailField.closest('form') || emailField.form;
-    if (!realForm) {
-      return false;
+    function clickSioSubmit(){
+      const slot = document.getElementById('sioEmailSlot');
+      const formInSlot = slot ? slot.querySelector('form') : null;
+      const btn = getSioSubmitButton();
+
+      if (btn && typeof btn.click === 'function'){ btn.click(); return; }
+      if (formInSlot){ if (formInSlot.requestSubmit) formInSlot.requestSubmit(); else formInSlot.submit(); }
     }
 
-    // On vide le slot ("Chargement du formulaire...") et on y met le vrai formulaire Systeme.io
-    slot.innerHTML = '';
-    slot.appendChild(realForm);
+    function prepareSioEmailSlot(){
+      if (sioMutationObserver){ sioMutationObserver.disconnect(); sioMutationObserver = null; }
 
-    // On masque l'ancienne section Systeme.io qui contenait le formulaire (pour éviter le doublon)
-    const sioSection = document.getElementById('section-741e52a1');
-    if (sioSection) {
-      sioSection.style.maxHeight     = '0';
-      sioSection.style.overflow      = 'hidden';
-      sioSection.style.opacity       = '0';
-      sioSection.style.pointerEvents = 'none';
+      setTimeout(() => {
+        relocateSioIntoSlot();
+        sioMutationObserver = new MutationObserver(() => relocateSioIntoSlot());
+        sioMutationObserver.observe(document.body, { childList:true, subtree:true });
+        setTimeout(() => {
+          if (sioMutationObserver){ sioMutationObserver.disconnect(); sioMutationObserver = null; }
+        }, 10000);
+      }, 0);
     }
 
-    // On donne le style du gros bouton rose au bouton Systeme.io
-    const submitBtn = realForm.querySelector('button, input[type="submit"]');
-    if (submitBtn) {
-      submitBtn.classList.add('continue-button');
-    }
+    function relocateSioIntoSlot(){
+      const slot = document.getElementById('sioEmailSlot');
+      if (!slot){
+        console.warn('[SIO][DBG] slot email introuvable');
+        return;
+      }
 
-    return true;
-  }
+      if (!document.getElementById('sioEmailGate')){
+        const css = document.createElement('style');
+        css.id = 'sioEmailGate';
+        css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"],' +
+          'input[name*="phone" i],input[name*="tel" i],input[type="tel"],' +
+          'select[name*="phone" i],select[name*="tel" i],select[id*="phone" i],select[id*="tel" i],select[aria-label*="indicatif" i],select[aria-label*="code" i]{display:none!important;}' +
+          '#sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"],#sioEmailSlot button,#sioEmailSlot input[type="submit"],#sioEmailSlot [data-test-id="send-form-button"],#sioEmailSlot [data-testid="send-form-button"],#sioEmailSlot .sio-subscribe-button,#sioEmailSlot .sio-submit,#sioEmailSlot [data-element="cta-button"],#sioEmailSlot button[id^="button-"]{display:block!important;}';
+        document.head.appendChild(css);
+      }
 
-  function waitForSysteme() {
-    let tries = 0;
-    const interval = setInterval(function () {
-      if (moveSystemeFormIntoQuiz()) {
-        clearInterval(interval);
-      } else {
-        tries++;
-        if (tries >= MAX_TRIES) {
-          clearInterval(interval);
-          const slot = document.getElementById('sioEmailSlot');
-          if (slot) {
-            slot.innerHTML =
-              '<div style="padding:14px; color:#b91c1c; font-size:0.9rem;">' +
-              'Impossible de trouver le formulaire Systeme.io.<br>' +
-              'Vérifie que le formulaire (Prénom + Email + bouton) est bien présent sur la page ' +
-              'et que le champ email a pour ID <strong>field-dcb233d5</strong>.' +
-              '</div>';
+      const EMAIL_SEL = [
+        'input[type="email"]',
+        'input[name="email"]',
+        'input[name*="email" i]',
+        'input[id*="email" i]',
+        'input[placeholder*="mail" i]',
+        'input[placeholder*="courriel" i]'
+      ].join(', ');
+
+      const FIRSTNAME_SEL = [
+        'input[name="first_name"]',
+        'input[name*="first" i]',
+        'input[name*="prenom" i]',
+        'input[name*="name" i]',
+        'input[placeholder*="prénom" i]',
+        'input[placeholder*="prenom" i]'
+      ].join(', ');
+
+      const allForms = Array.from(document.querySelectorAll('form'));
+      let chosenForm = null;
+
+      for (const form of allForms){
+        const hasEmail = !!form.querySelector(EMAIL_SEL);
+        const hasFirst = !!form.querySelector(FIRSTNAME_SEL);
+
+        if (hasEmail && hasFirst){
+          chosenForm = form;
+          break;
+        }
+        if (!chosenForm && hasEmail){
+          chosenForm = form;
+        }
+      }
+
+      if (chosenForm && !slot.contains(chosenForm)){
+        slot.innerHTML = '';
+        slot.appendChild(chosenForm);
+        console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Formulaire SIO déplacé → #sioEmailSlot');
+      } else if (!chosenForm){
+        const email = document.querySelector(EMAIL_SEL);
+        if (email){
+          const form = email.closest('form') || email.form;
+          if (form && !slot.contains(form)){
+            slot.innerHTML = '';
+            slot.appendChild(form);
+            console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Formulaire SIO (fallback email) déplacé → #sioEmailSlot');
+          } else if (!form && !slot.contains(email)){
+            slot.innerHTML = '';
+            slot.appendChild(email);
+            console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Input email SIO déplacé → #sioEmailSlot');
           }
         }
       }
-    }, 300);
-  }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', waitForSysteme);
-  } else {
-    waitForSysteme();
-  }
-})();
+      const slotForm = slot.querySelector('form');
+
+      const ensureFieldInSlot = (selector) => {
+        if (!selector) return null;
+        const field = document.querySelector(selector);
+        if (!field) return null;
+
+        if (slotForm && !slotForm.contains(field)){
+          slotForm.insertBefore(field, getSioSubmitButton() || null);
+        } else if (!slot.contains(field)){
+          slot.appendChild(field);
+        }
+
+        field.style.display = '';
+        field.style.visibility = '';
+        field.removeAttribute('hidden');
+        return field;
+      };
+
+      ensureFieldInSlot(EMAIL_SEL);
+      ensureFieldInSlot(FIRSTNAME_SEL);
+
+      let btn = getSioSubmitButton();
+      if (btn && !slot.contains(btn)){
+        const ref = slotForm || slot;
+        try{
+          ref.appendChild(btn);
+          console.log('%c[SIO][DBG]', 'color:#059669;font-weight:700', 'Bouton SIO déplacé → #sioEmailSlot');
+        }catch(_){ }
+      }
+
+      btn = getSioSubmitButton();
+      if (btn){
+        btn.disabled = false;
+        btn.style.display = 'block';
+        btn.style.visibility = 'visible';
+        btn.style.width = '100%';
+        btn.classList.add('continue-button');
+      }
+
+      const loading = document.getElementById('sioEmailLoading');
+      if (loading && (
+        slot.querySelector('form') ||
+        slot.querySelector(EMAIL_SEL) ||
+        slot.querySelector(FIRSTNAME_SEL)
+      )){
+        loading.remove();
+      }
+
+      const sioSection = document.getElementById('section-741e52a1');
+      if (sioSection) {
+        sioSection.style.maxHeight     = '0';
+        sioSection.style.overflow      = 'hidden';
+        sioSection.style.opacity       = '0';
+        sioSection.style.pointerEvents = 'none';
+      }
+
+      const successCardEl = document.getElementById('emailQuestion');
+      if (successCardEl && !successCardEl.dataset.enterBound){
+        successCardEl.dataset.enterBound = '1';
+        successCardEl.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter'){
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            clickSioSubmit();
+          }
+        }, { capture:true });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', prepareSioEmailSlot);
+    } else {
+      prepareSioEmailSlot();
+    }
    </script>
