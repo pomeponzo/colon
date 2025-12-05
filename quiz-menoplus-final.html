@@ -1298,20 +1298,31 @@
     let sioMutationObserver = null;
 
     function getSioSubmitButton(){
-      const sel = [
-        'button[type="submit"]',
-        'input[type="submit"]',
-        '.sio-subscribe-button',
-        '.sio-submit',
-        '[data-element="cta-button"]',
+      const slot = document.getElementById('sioEmailSlot');
+      const form = slot ? slot.querySelector('form') : null;
+
+      const targetedBtn = document.getElementById('button-3588826c');
+      if (targetedBtn) return targetedBtn;
+
+      if (form){
+        const primaryBtn = form.querySelector('button[type="submit"], input[type="submit"]');
+        if (primaryBtn) return primaryBtn;
+      }
+
+      const fallbackSelector = [
         '[data-test-id="send-form-button"]',
         '[data-testid="send-form-button"]',
-        'button[id^="button-"]'
+        '.sio-subscribe-button',
+        '.sio-submit',
+        '[data-element="submit"]'
       ].join(', ');
-      const slot = document.getElementById('sioEmailSlot');
-      let btn = slot ? slot.querySelector(sel) : null;
-      if (!btn) btn = document.querySelector(sel);
-      return btn || null;
+
+      if (form){
+        const scopedBtn = form.querySelector(fallbackSelector);
+        if (scopedBtn) return scopedBtn;
+      }
+
+      return document.querySelector(fallbackSelector);
     }
 
     function clickSioSubmit(){
@@ -1349,7 +1360,7 @@
         css.textContent = 'input[name="first_name"],input[name="surname"],input[name="email"],' +
           'input[name*="phone" i],input[name*="tel" i],input[type="tel"],' +
           'select[name*="phone" i],select[name*="tel" i],select[id*="phone" i],select[id*="tel" i],select[aria-label*="indicatif" i],select[aria-label*="code" i]{display:none!important;}' +
-          '#sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"],#sioEmailSlot button,#sioEmailSlot input[type="submit"],#sioEmailSlot [data-test-id="send-form-button"],#sioEmailSlot [data-testid="send-form-button"],#sioEmailSlot .sio-subscribe-button,#sioEmailSlot .sio-submit,#sioEmailSlot [data-element="cta-button"],#sioEmailSlot button[id^="button-"]{display:block!important;}';
+          '#sioEmailSlot input[name="first_name"],#sioEmailSlot input[name="surname"],#sioEmailSlot input[name="email"],#sioEmailSlot button,#sioEmailSlot input[type="submit"],#sioEmailSlot [data-test-id="send-form-button"],#sioEmailSlot [data-testid="send-form-button"],#sioEmailSlot .sio-subscribe-button,#sioEmailSlot .sio-submit,#sioEmailSlot [data-element="submit"]{display:block!important;}';
         document.head.appendChild(css);
       }
 
