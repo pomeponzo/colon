@@ -1381,3 +1381,137 @@
   }
 })();
 </script>
+
+<script>
+(function () {
+  // Petit helper pour tout loguer proprement
+  function dbg() {
+    const args = Array.prototype.slice.call(arguments);
+    args.unshift('%c[QUIZ DEBUG]', 'color:#10b981;font-weight:bold');
+    console.log.apply(console, args);
+  }
+
+  // IDs du formulaire SIO sur ta page Menoplus
+  const SIO_FIRST_ID  = 'field-bd53abd1';   // Prénom
+  const SIO_EMAIL_ID  = 'field-dcb233d5';   // Email
+  const SIO_BUTTON_ID = 'button-3588826c';  // Bouton "Click here" Systeme.io
+
+  function logInitialState() {
+    const slot      = document.getElementById('sioEmailSlot');
+    const quizBtn   = document.getElementById('emailSubmitBtn');
+    const realFirst = document.getElementById(SIO_FIRST_ID);
+    const realEmail = document.getElementById(SIO_EMAIL_ID);
+    const realBtn   = document.getElementById(SIO_BUTTON_ID);
+
+    dbg('ÉTAT INITIAL', {
+      sioEmailSlot: !!slot,
+      emailSubmitBtn: !!quizBtn,
+      realFirstInput: !!realFirst,
+      realEmailInput: !!realEmail,
+      realSioButton: !!realBtn
+    });
+
+    if (slot)   dbg('#sioEmailSlot innerHTML =', slot.innerHTML.slice(0, 300) + '...');
+    if (realFirst) dbg('realFirst.closest("form") id =', (realFirst.closest('form') || {}).id || null);
+    if (realEmail) dbg('realEmail.closest("form") id =', (realEmail.closest('form') || {}).id || null);
+  }
+
+  // Patch de showEmailQuestion pour voir s’il est bien appelé
+  function patchShowEmailQuestion() {
+    if (typeof window.showEmailQuestion === 'function') {
+      const original = window.showEmailQuestion;
+      window.showEmailQuestion = function () {
+        dbg('showEmailQuestion() APPELÉ');
+        try {
+          return original.apply(this, arguments);
+        } catch (e) {
+          dbg('ERREUR dans showEmailQuestion()', e);
+          throw e;
+        }
+      };
+      dbg('showEmailQuestion() patché pour debug');
+    } else {
+      dbg('showEmailQuestion() PAS trouvé au moment du patch');
+    }
+  }
+
+  // Log de tous les submit de formulaire (pour voir si SIO reçoit quelque chose)
+  document.addEventListener('submit', function (e) {
+    const form = e.target;
+    const hasEmail = !!form.querySelector('input[type="email"], input[name*="email" i]');
+    dbg('EVENT submit capté', {
+      formId: form.id || null,
+      hasEmailField: hasEmail,
+      action: form.getAttribute('action') || null
+    });
+  }, true);
+
+  // Log de tous les clics sur le bouton d’optin du quiz
+  document.addEventListener('click', function (e) {
+    const quizBtn = document.getElementById('emailSubmitBtn');
+    if (!quizBtn) return;
+
+    if (e.target === quizBtn || quizBtn.contains(e.target)) {
+      const slot = document.getElementById('sioEmailSlot') || document;
+      const firstInSlot = slot.querySelector(
+        'input[name="quiz-first-name"], ' +
+        '#sioEmailSlot input[type="text"], ' +
+        '#sioEmailSlot input[name*="first" i], ' +
+        '#sioEmailSlot input[name*="prenom" i]'
+      );
+      const emailInSlot = slot.querySelector(
+        'input[name="quiz-email"], ' +
+        '#sioEmailSlot input[type="email"], ' +
+        '#sioEmailSlot input[name*="email" i]'
+      );
+
+      const realFirst = document.getElementById(SIO_FIRST_ID);
+      const realEmail = document.getElementById(SIO_EMAIL_ID);
+      const realBtn   = document.getElementById(SIO_BUTTON_ID);
+      const realForm  = (realEmail && (realEmail.closest('form') || realEmail.form)) ||
+                        (realFirst && (realFirst.closest('form') || realFirst.form)) || null;
+
+      dbg('CLICK sur emailSubmitBtn', {
+        firstInSlotExists: !!firstInSlot,
+        emailInSlotExists: !!emailInSlot,
+        firstInSlotValue: firstInSlot && firstInSlot.value,
+        emailInSlotValue: emailInSlot && emailInSlot.value,
+        realFirstExists: !!realFirst,
+        realEmailExists: !!realEmail,
+        realBtnExists: !!realBtn,
+        realFormExists: !!realForm,
+        realFormId: realForm ? realForm.id || null : null
+      });
+
+      if (realFirst) dbg('realFirst.value AVANT copie =', realFirst.value);
+      if (realEmail) dbg('realEmail.value AVANT copie =', realEmail.value);
+    }
+  }, true);
+
+  // Log si on clique sur le bouton SIO natif (au cas où)
+  document.addEventListener('click', function (e) {
+    const realBtn = document.getElementById(SIO_BUTTON_ID);
+    if (!realBtn) return;
+    if (e.target === realBtn || realBtn.contains(e.target)) {
+      dbg('CLICK sur bouton Systeme.io natif', {
+        buttonId: SIO_BUTTON_ID
+      });
+    }
+  }, true);
+
+  // Lancement après chargement DOM
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      dbg('DOMContentLoaded');
+      logInitialState();
+      patchShowEmailQuestion();
+    });
+  } else {
+    dbg('DOM déjà prêt');
+    logInitialState();
+    patchShowEmailQuestion();
+  }
+})();
+</script>
+</body>
+</html>
