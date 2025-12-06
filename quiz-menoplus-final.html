@@ -1272,50 +1272,89 @@
 
 <script>
 (function () {
-  // IDs EXACTS de ton formulaire Systeme.io
-  const SIO_FIRST_ID  = 'field-bd53abd1';   // Prénom
-  const SIO_EMAIL_ID  = 'field-dcb233d5';   // Email
-  const SIO_BUTTON_ID = 'button-3588826c';  // Bouton "Click here"
+  // --- LOG UTILITAIRE ---
+  function dbg() {
+    if (!window.console) return;
+    var args = Array.prototype.slice.call(arguments);
+    args.unshift('%c[QUIZ]', 'color:#10b981;font-weight:bold');
+    console.log.apply(console, args);
+  }
 
-  const MAX_TRIES = 40;
+  var MAX_TRIES = 40;   // 40 * 300ms ≈ 12s max d’attente
+  var TRY_DELAY = 300;
 
-  function setupOnce() {
-    const slot      = document.getElementById('sioEmailSlot');
-    const quizBtn   = document.getElementById('emailSubmitBtn');
-    const realFirst = document.getElementById(SIO_FIRST_ID);
-    const realEmail = document.getElementById(SIO_EMAIL_ID);
-    const realBtn   = document.getElementById(SIO_BUTTON_ID);
+  function setupBridge() {
+    var slot    = document.getElementById('sioEmailSlot');
+    var quizBtn = document.getElementById('emailSubmitBtn');
 
-    // Si tout n'est pas encore chargé, on laisse la main au polling
-    if (!slot || !quizBtn || !realFirst || !realEmail || !realBtn) {
+    if (!slot || !quizBtn) {
+      dbg('slot ou quizBtn pas encore là', { slot: !!slot, quizBtn: !!quizBtn });
       return false;
     }
 
-    // (Optionnel) cacher la section Systeme.io "Click here" si tu veux
-    // Elle a l'id section-741e52a1
-    const sioSection = document.getElementById('section-741e52a1');
-    if (sioSection) {
-      sioSection.style.maxHeight     = '0';
-      sioSection.style.overflow      = 'hidden';
-      sioSection.style.opacity       = '0';
-      sioSection.style.pointerEvents = 'none';
+    // On remonte jusqu’au formulaire SIO qui entoure ton bloc HTML
+    var form = slot.closest('form');
+    if (!form) {
+      dbg('Aucun <form> ancêtre trouvé pour le slot');
+      return false;
     }
 
-    // Crée les champs visibles dans le quiz (dans #sioEmailSlot)
+    // Helper : prendre le premier élément d’une NodeList qui N’EST PAS dans le slot du quiz
+    function firstOutsideSlot(nodeList) {
+      for (var i = 0; i < nodeList.length; i++) {
+        if (!slot.contains(nodeList[i])) {
+          return nodeList[i];
+        }
+      }
+      return null;
+    }
+
+    // Champs réels Systeme.io (EN DEHORS du bloc du quiz)
+    var realEmail = firstOutsideSlot(
+      form.querySelectorAll('input[type="email"], input[name*="email" i]')
+    );
+    var realFirst = firstOutsideSlot(
+      form.querySelectorAll('input[name*="first" i], input[name*="prenom" i], input[type="text"]')
+    );
+    var realBtn = firstOutsideSlot(
+      form.querySelectorAll('button[type="submit"], input[type="submit"], button[id^="button-"], a[id^="button-"]')
+    );
+
+    dbg('Bridge trouvé ?', {
+      formFound: !!form,
+      realEmailFound: !!realEmail,
+      realFirstFound: !!realFirst,
+      realBtnFound: !!realBtn,
+      formId: form.id || null
+    });
+
+    // Sans email ni bouton, on ne peut rien faire
+    if (!realEmail || !realBtn) {
+      return false;
+    }
+
+    // OPTIONNEL : cacher le bloc natif Systeme.io
+    var formSection = form.closest('[id^="section-"]') || form;
+    formSection.style.maxHeight     = '0';
+    formSection.style.overflow      = 'hidden';
+    formSection.style.opacity       = '0';
+    formSection.style.pointerEvents = 'none';
+
+    // On remplace le "Chargement du formulaire..." par nos champs visibles du quiz
     slot.innerHTML = '';
 
-    const wrapper = document.createElement('div');
+    var wrapper = document.createElement('div');
     wrapper.style.display = 'flex';
     wrapper.style.flexDirection = 'column';
     wrapper.style.gap = '8px';
 
-    const firstInput = document.createElement('input');
+    var firstInput = document.createElement('input');
     firstInput.type = 'text';
     firstInput.name = 'quiz-first-name';
     firstInput.placeholder = 'Prénom';
     firstInput.required = true;
 
-    const emailInput = document.createElement('input');
+    var emailInput = document.createElement('input');
     emailInput.type = 'email';
     emailInput.name = 'quiz-email';
     emailInput.placeholder = 'Votre email';
@@ -1326,190 +1365,66 @@
     slot.appendChild(wrapper);
 
     function copyValuesToSysteme() {
-      realFirst.value = firstInput.value;
+      if (realFirst) realFirst.value = firstInput.value;
       realEmail.value = emailInput.value;
     }
 
     quizBtn.addEventListener('click', function (e) {
       e.preventDefault();
+      dbg('Click sur bouton QUIZ');
 
-      // mini validation
+      // Mini validation
       if (!firstInput.value.trim()) {
         firstInput.focus();
         return;
       }
-      if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
+      if (!emailInput.value.trim() || emailInput.value.indexOf('@') === -1) {
         emailInput.focus();
         if (emailInput.reportValidity) emailInput.reportValidity();
         return;
       }
 
+      // Copie dans les VRAIS champs Systeme.io
       copyValuesToSysteme();
+      dbg('Valeurs copiées vers SIO', {
+        prenom: realFirst ? realFirst.value : null,
+        email: realEmail.value
+      });
 
-      // On déclenche VRAIMENT le formulaire Systeme.io
-      const realForm = realEmail.closest('form') || realEmail.form || null;
-
-      if (typeof realBtn.click === 'function') {
-        realBtn.click();
-      } else if (realForm) {
-        if (realForm.requestSubmit) realForm.requestSubmit();
-        else realForm.submit();
+      // Soumission native du formulaire Systeme.io
+      if (form.requestSubmit) {
+        dbg('form.requestSubmit()');
+        form.requestSubmit();
+      } else {
+        dbg('form.submit()');
+        form.submit();
       }
+
+      // 👉 SI TU VEUX FORCER UNE REDIRECTION APRÈS OPTIN :
+      // window.location.href = 'TON_URL_DE_REDIRECT_ICI';
     });
 
     return true;
   }
 
-  function waitForSysteme() {
-    let tries = 0;
-    const interval = setInterval(function () {
-      if (setupOnce()) {
-        clearInterval(interval);
-      } else {
-        tries++;
-        if (tries >= MAX_TRIES) {
-          clearInterval(interval);
-        }
+  function init() {
+    var tries = 0;
+    var intervalId = setInterval(function () {
+      tries++;
+      if (setupBridge()) {
+        dbg('Bridge SIO/QUIZ initialisé ✅');
+        clearInterval(intervalId);
+      } else if (tries >= MAX_TRIES) {
+        dbg('Bridge SIO/QUIZ non initialisé ❌');
+        clearInterval(intervalId);
       }
-    }, 300);
+    }, TRY_DELAY);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', waitForSysteme);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    waitForSysteme();
-  }
-})();
-</script>
-
-<script>
-(function () {
-  // Petit helper pour tout loguer proprement
-  function dbg() {
-    const args = Array.prototype.slice.call(arguments);
-    args.unshift('%c[QUIZ DEBUG]', 'color:#10b981;font-weight:bold');
-    console.log.apply(console, args);
-  }
-
-  // IDs du formulaire SIO sur ta page Menoplus
-  const SIO_FIRST_ID  = 'field-bd53abd1';   // Prénom
-  const SIO_EMAIL_ID  = 'field-dcb233d5';   // Email
-  const SIO_BUTTON_ID = 'button-3588826c';  // Bouton "Click here" Systeme.io
-
-  function logInitialState() {
-    const slot      = document.getElementById('sioEmailSlot');
-    const quizBtn   = document.getElementById('emailSubmitBtn');
-    const realFirst = document.getElementById(SIO_FIRST_ID);
-    const realEmail = document.getElementById(SIO_EMAIL_ID);
-    const realBtn   = document.getElementById(SIO_BUTTON_ID);
-
-    dbg('ÉTAT INITIAL', {
-      sioEmailSlot: !!slot,
-      emailSubmitBtn: !!quizBtn,
-      realFirstInput: !!realFirst,
-      realEmailInput: !!realEmail,
-      realSioButton: !!realBtn
-    });
-
-    if (slot)   dbg('#sioEmailSlot innerHTML =', slot.innerHTML.slice(0, 300) + '...');
-    if (realFirst) dbg('realFirst.closest("form") id =', (realFirst.closest('form') || {}).id || null);
-    if (realEmail) dbg('realEmail.closest("form") id =', (realEmail.closest('form') || {}).id || null);
-  }
-
-  // Patch de showEmailQuestion pour voir s’il est bien appelé
-  function patchShowEmailQuestion() {
-    if (typeof window.showEmailQuestion === 'function') {
-      const original = window.showEmailQuestion;
-      window.showEmailQuestion = function () {
-        dbg('showEmailQuestion() APPELÉ');
-        try {
-          return original.apply(this, arguments);
-        } catch (e) {
-          dbg('ERREUR dans showEmailQuestion()', e);
-          throw e;
-        }
-      };
-      dbg('showEmailQuestion() patché pour debug');
-    } else {
-      dbg('showEmailQuestion() PAS trouvé au moment du patch');
-    }
-  }
-
-  // Log de tous les submit de formulaire (pour voir si SIO reçoit quelque chose)
-  document.addEventListener('submit', function (e) {
-    const form = e.target;
-    const hasEmail = !!form.querySelector('input[type="email"], input[name*="email" i]');
-    dbg('EVENT submit capté', {
-      formId: form.id || null,
-      hasEmailField: hasEmail,
-      action: form.getAttribute('action') || null
-    });
-  }, true);
-
-  // Log de tous les clics sur le bouton d’optin du quiz
-  document.addEventListener('click', function (e) {
-    const quizBtn = document.getElementById('emailSubmitBtn');
-    if (!quizBtn) return;
-
-    if (e.target === quizBtn || quizBtn.contains(e.target)) {
-      const slot = document.getElementById('sioEmailSlot') || document;
-      const firstInSlot = slot.querySelector(
-        'input[name="quiz-first-name"], ' +
-        '#sioEmailSlot input[type="text"], ' +
-        '#sioEmailSlot input[name*="first" i], ' +
-        '#sioEmailSlot input[name*="prenom" i]'
-      );
-      const emailInSlot = slot.querySelector(
-        'input[name="quiz-email"], ' +
-        '#sioEmailSlot input[type="email"], ' +
-        '#sioEmailSlot input[name*="email" i]'
-      );
-
-      const realFirst = document.getElementById(SIO_FIRST_ID);
-      const realEmail = document.getElementById(SIO_EMAIL_ID);
-      const realBtn   = document.getElementById(SIO_BUTTON_ID);
-      const realForm  = (realEmail && (realEmail.closest('form') || realEmail.form)) ||
-                        (realFirst && (realFirst.closest('form') || realFirst.form)) || null;
-
-      dbg('CLICK sur emailSubmitBtn', {
-        firstInSlotExists: !!firstInSlot,
-        emailInSlotExists: !!emailInSlot,
-        firstInSlotValue: firstInSlot && firstInSlot.value,
-        emailInSlotValue: emailInSlot && emailInSlot.value,
-        realFirstExists: !!realFirst,
-        realEmailExists: !!realEmail,
-        realBtnExists: !!realBtn,
-        realFormExists: !!realForm,
-        realFormId: realForm ? realForm.id || null : null
-      });
-
-      if (realFirst) dbg('realFirst.value AVANT copie =', realFirst.value);
-      if (realEmail) dbg('realEmail.value AVANT copie =', realEmail.value);
-    }
-  }, true);
-
-  // Log si on clique sur le bouton SIO natif (au cas où)
-  document.addEventListener('click', function (e) {
-    const realBtn = document.getElementById(SIO_BUTTON_ID);
-    if (!realBtn) return;
-    if (e.target === realBtn || realBtn.contains(e.target)) {
-      dbg('CLICK sur bouton Systeme.io natif', {
-        buttonId: SIO_BUTTON_ID
-      });
-    }
-  }, true);
-
-  // Lancement après chargement DOM
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      dbg('DOMContentLoaded');
-      logInitialState();
-      patchShowEmailQuestion();
-    });
-  } else {
-    dbg('DOM déjà prêt');
-    logInitialState();
-    patchShowEmailQuestion();
+    init();
   }
 })();
 </script>
